@@ -1,6 +1,7 @@
 package infrastructure
 
 import (
+	"finder/infrastructure/config"
 	"log"
 	"os"
 
@@ -9,19 +10,12 @@ import (
 )
 
 func NewGormConnect() *gorm.DB {
-	driver := os.Getenv("DB_DRIVER")
-	user := os.Getenv("DB_USER")
-	password := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
-
 	switch env := os.Getenv("ENV"); env {
 	case "production":
 		// NOTE: 実装中
 		return nil
 	default:
-		dbHost := os.Getenv("DB_HOST")
-		databaseUrl := user + ":" + password + "@" + dbHost + "/" + dbName + "?charset=utf8&parseTime=true&loc=Asia%2FTokyo"
-		db, err := gorm.Open(driver, databaseUrl)
+		db, err := gorm.Open(config.SqlDriver, config.DatabaseUrl)
 		if err != nil {
 			panic(err.Error())
 		}

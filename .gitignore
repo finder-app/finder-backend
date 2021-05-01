@@ -3,4 +3,4 @@ gin-bin
 .DS_Store
 main
 .env
-serviceAccountKey.json
+infrastructure/config/serviceAccountKey.json
