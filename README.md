@@ -1,5 +1,5 @@
 # 新規で参加する場合
-`.env`と`config/serviceAccountKey`をもらうこと
+`.env`と`serviceAccountKey.json`をもらうこと
 
 ## goコンテナだけbuildして再起動する場合
 docker-compose up -d --no-deps --build app

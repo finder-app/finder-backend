@@ -14,7 +14,7 @@ ENV CGO_ENABLED=0 \
   GOARCH=amd64 \
   GO111MODULE=on
 EXPOSE 8080
-CMD ["realize", "start", "--build","--run"]
+CMD ["realize", "start", "--build", "--run"]
 
 # webアプリに必要なライブラリのインストール
 # RUN go get github.com/gin-gonic/gin && \
