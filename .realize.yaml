@@ -1,0 +1,24 @@
+settings:
+  legacy:
+    force: true
+    interval: 0s
+schema:
+- name: test
+  path: .
+  commands:
+    install: # ファイルが変更された際に実行されます。今回はbuildしてmainというファイルに指定しています
+      status: true
+      method: go build -o main main.go
+    run: # buildしたファイルを実行しています
+      status: true
+      method: ./main
+  watcher: # ここでは監視するファイルを選択しています
+    extensions:
+    - go
+    - env
+    paths: # ここでは監視するディレクトリを選択しています。/api配下のファイルのみ監視したい場合は/apiと変更すれば大丈夫です
+    - /
+    ignored_paths: # ここでは監視から除外するファイルを選択しています
+    - .git
+    - .realize
+    - vendor

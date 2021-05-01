@@ -1,0 +1,6 @@
+db/sql_log
+gin-bin
+.DS_Store
+main
+.env
+config/serviceAccountKey.json
