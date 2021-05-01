@@ -11,14 +11,15 @@ brew install golang-migrate
 ```
 
 #### migration create
-`process=?`には処理する内容を**スネークケースで**追加してください
+~~`name=?`には処理する内容を**スネークケースで**追加してください~~
+今使えないからコマンドベタ打ちする
 
 例）
-- make migration process=create_users_table
-- make migration process=add_column_to_users
+- make migration name=create_users_table
+- make migration name=add_column_to_users
 ```
-make migration process=?
-migrate create -ext sql -dir infrastructure/migration/ddl -seq create_users_table
+make migration name=?
+migrate create -ext sql -dir ./migration/ddl -seq <処理する内容>
 ```
 
 #### migrate up
@@ -28,9 +29,9 @@ make migrate-up
 ```
 
 #### migrate down
-`count=?`には数値を渡してください
+`n=?`には数値を渡してください
 ```
-make migrate-down count=?
+make migrate-down n=?
 ```
 
 ## アノテーションコメント
