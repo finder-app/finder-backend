@@ -21,7 +21,7 @@ func NewGormConnect() *gorm.DB {
 		}
 
 		// NOTE: SQLログ出力先
-		file, err := os.OpenFile("./logger/sql_log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		file, err := os.OpenFile("./db/sql_log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err != nil {
 			panic(err.Error())
 		}

@@ -11,15 +11,13 @@ brew install golang-migrate
 ```
 
 #### migration create
-~~`name=?`には処理する内容を**スネークケースで**追加してください~~
-今使えないからコマンドベタ打ちする
+`name=?`には処理する内容を**スネークケースで**追加してください
 
 例）
-- make migration name=create_users_table
-- make migration name=add_column_to_users
+- `make migration name=create_users_table`
+- `make migration name=add_column_to_users`
 ```
 make migration name=?
-migrate create -ext sql -dir ./migration/ddl -seq <処理する内容>
 ```
 
 #### migrate up
