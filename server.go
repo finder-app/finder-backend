@@ -20,6 +20,9 @@ func main() {
 	router := infrastructure.NewRouter()
 	userRouter := router.Group("users")
 	{
+		userRouter.GET("/index", func(c *gin.Context) {
+			userController.Index(c)
+		})
 		userRouter.GET("/:id", func(c *gin.Context) {
 			userController.Show(c)
 		})
