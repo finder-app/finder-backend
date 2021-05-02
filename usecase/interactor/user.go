@@ -2,8 +2,13 @@ package interactor
 
 import (
 	"finder/domain"
-	"finder/usecase/repository"
+	"finder/interface/repository"
 )
+
+type UserInteractor interface {
+	GetUsers() ([]domain.User, error)
+	GetUserByID(userID int) (*domain.User, error)
+}
 
 type userInteractor struct {
 	userRepository repository.UserRepository

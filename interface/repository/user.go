@@ -6,6 +6,11 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+type UserRepository interface {
+	GetUsers() ([]domain.User, error)
+	GetUserByID(id int) (*domain.User, error)
+}
+
 type (
 	userRepository struct {
 		DB *gorm.DB

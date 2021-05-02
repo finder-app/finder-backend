@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"finder/interface/interactor"
+	"finder/usecase/interactor"
 	"net/http"
 	"strconv"
 )
