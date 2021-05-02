@@ -5,4 +5,5 @@ type Context interface {
 	Status(int)
 	JSON(int, interface{})
 	BindJSON(interface{}) error
+	AbortWithStatusJSON(int, interface{})
 }

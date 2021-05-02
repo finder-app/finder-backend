@@ -11,5 +11,5 @@ type User struct {
 	Email           string `json:"email" validate:"required,email"`
 	Password        string `json:"password" validate:"min=6,max=75"`
 	TelephoneNumber string `json:"telephone_number" validate:"required"`
-	Gender          int64  `json:"gender" validate:"min=1,max=3"`
+	Gender          int    `json:"gender" validate:"min=1,max=3"`
 }

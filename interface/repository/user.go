@@ -16,7 +16,7 @@ func NewUserRepository(db *gorm.DB) *userRepository {
 	return &userRepository{db}
 }
 
-func (r *userRepository) GetUserByID(id int64) (*domain.User, error) {
+func (r *userRepository) GetUserByID(id int) (*domain.User, error) {
 	user := domain.User{}
 	if err := r.DB.Find(&user, id).Error; err != nil {
 		return nil, err

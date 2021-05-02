@@ -5,6 +5,8 @@ import (
 	"finder/interface/controller"
 	"finder/interface/repository"
 	"finder/usecase/interactor"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -14,15 +16,14 @@ func main() {
 	userRepository := repository.NewUserRepository(db)
 	userInteractor := interactor.NewUserInteractor(userRepository)
 	userController := controller.NewUserController(userInteractor)
-	// userController := controllers.NewUserController(db)
 
-	// useCaseを抽象化する意味が分からん
 	router := infrastructure.NewRouter()
 	userRouter := router.Group("users")
 	{
-		userRouter.GET("/:id", userController.Show)
+		userRouter.GET("/:id", func(c *gin.Context) {
+			userController.Show(c)
+		})
 	}
-	// router.GET("/users/:id", userController.Show)
 
 	router.Run(":8080")
 }

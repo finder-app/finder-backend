@@ -1,25 +1,25 @@
 package controller
 
 import (
-	"finder/interface/usecase"
+	"finder/interface/interactor"
+	"net/http"
 	"strconv"
 )
 
 type userController struct {
-	userInteractor usecase.UserUsecase
+	userInteractor interactor.UserInteractor
 }
 
-func NewUserController(uc usecase.UserUsecase) *userController {
+func NewUserController(uc interactor.UserInteractor) *userController {
 	return &userController{uc}
 }
 
 func (uc *userController) Show(c Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	user, err := uc.userInteractor.GetUserByID(id)
+	userID, _ := strconv.Atoi(c.Param("id"))
+	user, err := uc.userInteractor.GetUserByID(userID)
 	if err != nil {
-		// c.AbortWithJSON使いたい〜
-		c.JSON()
-		return nil, err
+		c.AbortWithStatusJSON(http.StatusNotFound, err)
+		return
 	}
-	return user, nil
+	c.JSON(http.StatusOK, user)
 }
