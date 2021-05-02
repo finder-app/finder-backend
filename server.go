@@ -10,10 +10,10 @@ import (
 )
 
 func main() {
-	// validationもinfrastructureに作れ
 	db := infrastructure.NewGormConnect()
+	validate := infrastructure.NewValidator()
 
-	userRepository := repository.NewUserRepository(db)
+	userRepository := repository.NewUserRepository(db, validate)
 	userInteractor := interactor.NewUserInteractor(userRepository)
 	userController := controller.NewUserController(userInteractor)
 
@@ -21,6 +21,7 @@ func main() {
 	userRouter := router.Group("users")
 	{
 		userRouter.GET("/index", func(c *gin.Context) { userController.Index(c) })
+		userRouter.POST("/create", func(c *gin.Context) { userController.Create(c) })
 		userRouter.GET("/:id", func(c *gin.Context) { userController.Show(c) })
 	}
 

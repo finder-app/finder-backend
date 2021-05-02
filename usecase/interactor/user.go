@@ -8,6 +8,7 @@ import (
 type UserInteractor interface {
 	GetUsers() ([]domain.User, error)
 	GetUserByID(userID int) (*domain.User, error)
+	CreateUser(user *domain.User) (*domain.User, error)
 }
 
 type userInteractor struct {
@@ -28,6 +29,14 @@ func (i *userInteractor) GetUsers() ([]domain.User, error) {
 
 func (i *userInteractor) GetUserByID(userID int) (*domain.User, error) {
 	result, err := i.userRepository.GetUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (i *userInteractor) CreateUser(user *domain.User) (*domain.User, error) {
+	result, err := i.userRepository.CreateUser(user)
 	if err != nil {
 		return nil, err
 	}

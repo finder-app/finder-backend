@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"finder/domain"
 	"finder/usecase/interactor"
 	"net/http"
 	"strconv"
@@ -14,20 +15,32 @@ func NewUserController(uc interactor.UserInteractor) *userController {
 	return &userController{uc}
 }
 
-func (uc *userController) Index(c Context) {
+func (uc *userController) Index(ctx Context) {
 	user, err := uc.userInteractor.GetUsers()
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, user)
+	ctx.JSON(http.StatusOK, user)
 }
-func (uc *userController) Show(c Context) {
-	userID, _ := strconv.Atoi(c.Param("id"))
+
+func (uc *userController) Create(ctx Context) {
+	user := &domain.User{}
+	ctx.BindJSON(user)
+	user, err := uc.userInteractor.CreateUser(user)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, err.Error())
+		return
+	}
+	ctx.JSON(http.StatusCreated, user)
+}
+
+func (uc *userController) Show(ctx Context) {
+	userID, _ := strconv.Atoi(ctx.Param("id"))
 	user, err := uc.userInteractor.GetUserByID(userID)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusNotFound, err)
+		ctx.AbortWithStatusJSON(http.StatusNotFound, err)
 		return
 	}
-	c.JSON(http.StatusOK, user)
+	ctx.JSON(http.StatusOK, user)
 }
