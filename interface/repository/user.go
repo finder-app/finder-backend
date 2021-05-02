@@ -11,11 +11,9 @@ type UserRepository interface {
 	GetUserByID(id int) (*domain.User, error)
 }
 
-type (
-	userRepository struct {
-		DB *gorm.DB
-	}
-)
+type userRepository struct {
+	DB *gorm.DB
+}
 
 func NewUserRepository(db *gorm.DB) *userRepository {
 	return &userRepository{db}
