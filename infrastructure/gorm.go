@@ -17,18 +17,8 @@ func NewGormConnect() *gorm.DB {
 	default:
 		db, err := gorm.Open(config.SqlDriver, config.DatabaseUrl)
 		if err != nil {
-			panic(err.Error())
+			log.Fatal(err.Error())
 		}
-
-		// NOTE: SQLログ出力先
-		file, err := os.OpenFile("./db/sql_log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-		if err != nil {
-			panic(err.Error())
-		}
-		log.SetOutput(file)
-		db.LogMode(true)
-		db.SetLogger(log.New(file, "", 0))
-
 		return db
 	}
 }

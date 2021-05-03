@@ -2,28 +2,28 @@ package infrastructure
 
 import (
 	"context"
-	"log"
+	"fmt"
+	"os"
 
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
 	"google.golang.org/api/option"
 )
 
-func NewFirebaseApp() *firebase.App {
-	// firebaseからダウンロードした秘密鍵のjsonをぶち込んでる
-	opt := option.WithCredentialsFile("config/serviceAccountKey.json")
-	app, err := firebase.NewApp(context.Background(), nil, opt)
+func NewFirebaseApp(ctx context.Context) *firebase.App {
+	opt := option.WithCredentialsJSON([]byte(os.Getenv("GOOGLE_SERVICE_ACCOUNT_JSON")))
+	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
-		log.Fatalf("error initializing app: %v", err)
+		fmt.Errorf("error initializing app: %v", err)
 	}
 	return app
 }
 
-func NewAuthClient(app *firebase.App) *auth.Client {
+func NewAuthClient(app *firebase.App, ctx context.Context) *auth.Client {
 	// Access auth service from the default app
-	client, err := app.Auth(context.Background())
+	client, err := app.Auth(ctx)
 	if err != nil {
-		log.Fatalf("error getting Auth client: %v\n", err)
+		fmt.Errorf("error getting Auth client: %v", err)
 	}
 	return client
 }

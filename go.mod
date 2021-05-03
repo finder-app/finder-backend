@@ -13,4 +13,5 @@ require (
 	github.com/lib/pq v1.8.0 // indirect
 	golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899 // indirect
 	google.golang.org/api v0.45.0
+	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 )

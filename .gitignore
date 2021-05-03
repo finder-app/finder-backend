@@ -1,6 +1,11 @@
-db/sql_log
-gin-bin
+# ログファイル
+infrastructure/logger/logfile
+
+# mac OS
 .DS_Store
+
+# realize
 main
+
+# 環境変数
 .env
-infrastructure/config/serviceAccountKey.json

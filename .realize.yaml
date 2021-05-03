@@ -8,7 +8,7 @@ schema:
   commands:
     install: # ファイルが変更された際に実行されます。今回はbuildしてmainというファイルに指定しています
       status: true
-      method: go build -o main server.go
+      method: go build -o main main.go
     run: # buildしたファイルを実行しています
       status: true
       method: ./main
