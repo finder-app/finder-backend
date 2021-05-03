@@ -1,28 +1,28 @@
 package infrastructure
 
 import (
+	"finder/interface/controller"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Auth() gin.HandlerFunc {
+	// NOTE: 毎回firebaseを呼び出してほしくないので、アプリ初期化時に宣言しておく
+	app := NewFirebaseApp()
+	client := NewAuthClient(app)
 	return func(c *gin.Context) {
 		ctx := c.Request.Context()
-		app := NewFirebaseApp(ctx)
-		NewAuthClient(app, ctx)
-		client := NewAuthClient(app, ctx)
 		authHeader := c.Request.Header.Get("Authorization")
 		idToken := strings.Replace(authHeader, "Bearer ", "", 1)
 		token, err := client.VerifyIDToken(ctx, idToken)
 		if err != nil {
-			fmt.Println(err)
-			c.Next()
+			controller.ErrorResponse(c, http.StatusUnauthorized, err)
 			return
 		}
 		fmt.Println(token)
-		fmt.Println(*token)
 		c.Next()
 	}
 }

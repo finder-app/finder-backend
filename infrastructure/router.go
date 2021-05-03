@@ -6,9 +6,8 @@ import (
 
 func NewRouter() *gin.Engine {
 	router := gin.Default()
-	// TODO: gin.Loggerの挙動は要検証
-	router.Use(gin.Logger())
-	router.Use(Auth())
+	// NOTE: Cors()を先に設定すること。Auth()で401の場合は処理を中断させるため
 	router.Use(Cors())
+	router.Use(Auth())
 	return router
 }
