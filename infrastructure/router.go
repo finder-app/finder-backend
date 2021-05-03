@@ -7,6 +7,6 @@ import (
 func NewRouter() *gin.Engine {
 	router := gin.Default()
 	router.Use(gin.Logger())
-	// cors付け加えたり色々する
+	router.Use(Cors())
 	return router
 }

@@ -7,6 +7,6 @@ import (
 // User struct
 type User struct {
 	gorm.Model
-	Name  string `validate:"required"`
+	Name  string
 	Email string `validate:"required"`
 }
