@@ -11,8 +11,10 @@ type userController struct {
 	userInteractor interactor.UserInteractor
 }
 
-func NewUserController(uc interactor.UserInteractor) *userController {
-	return &userController{uc}
+func NewUserController(c interactor.UserInteractor) *userController {
+	return &userController{
+		userInteractor: c,
+	}
 }
 
 func (c *userController) Index(ctx Context) {

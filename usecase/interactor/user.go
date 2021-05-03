@@ -15,8 +15,10 @@ type userInteractor struct {
 	userRepository repository.UserRepository
 }
 
-func NewUserInteractor(ur repository.UserRepository) *userInteractor {
-	return &userInteractor{ur}
+func NewUserInteractor(r repository.UserRepository) *userInteractor {
+	return &userInteractor{
+		userRepository: r,
+	}
 }
 
 func (i *userInteractor) GetUsers() ([]domain.User, error) {
