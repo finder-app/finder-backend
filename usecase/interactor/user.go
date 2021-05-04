@@ -3,10 +3,11 @@ package interactor
 import (
 	"finder/domain"
 	"finder/interface/repository"
+	"fmt"
 )
 
 type UserInteractor interface {
-	GetUsers() ([]domain.User, error)
+	GetUsers(uid string) ([]domain.User, error)
 	GetUserByID(uid string) (*domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
 }
@@ -15,14 +16,23 @@ type userInteractor struct {
 	userRepository repository.UserRepository
 }
 
-func NewUserInteractor(r repository.UserRepository) *userInteractor {
+func NewUserInteractor(ur repository.UserRepository) *userInteractor {
 	return &userInteractor{
-		userRepository: r,
+		userRepository: ur,
 	}
 }
 
-func (i *userInteractor) GetUsers() ([]domain.User, error) {
-	users, err := i.userRepository.GetUsers()
+func (i *userInteractor) GetUsers(uid string) ([]domain.User, error) {
+	user, _ := i.userRepository.GetUserByID(uid)
+	fmt.Printf("検索するユーザー： %v\n", user.Email)
+	fmt.Printf("検索するユーザーのis_male： %v\n", user.IsMale)
+	var genderToSearch bool
+	if user.IsMale == true {
+		genderToSearch = false
+	} else {
+		genderToSearch = true
+	}
+	users, err := i.userRepository.GetUsers(genderToSearch)
 	if err != nil {
 		return nil, err
 	}

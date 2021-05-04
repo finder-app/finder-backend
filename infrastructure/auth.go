@@ -20,6 +20,7 @@ func Auth() gin.HandlerFunc {
 		authHeader := c.Request.Header.Get("Authorization")
 		idToken := strings.Replace(authHeader, "Bearer ", "", 1)
 		token, err := client.VerifyIDToken(ctx, idToken)
+		// fmt.Println(token)
 		if err != nil {
 			fmt.Println(err)
 			// NOTE: tokenが確認場合は意図的に401エラーを返して処理を中断させる
@@ -27,8 +28,9 @@ func Auth() gin.HandlerFunc {
 			controller.ErrorResponse(c, http.StatusUnauthorized, err)
 			return
 		}
-		email := token.Firebase.Identities["email"]
-		c.Set("email", email)
+		// NOTE: c.Setする時にinterfaceにされるけど、型が分かるからキャストする
+		currentUserId := token.Claims["user_id"].(string)
+		c.Set("currentUserId", currentUserId)
 		c.Next()
 	}
 }
