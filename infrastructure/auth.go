@@ -28,8 +28,8 @@ func Auth() gin.HandlerFunc {
 			return
 		}
 		// NOTE: c.Setする時にinterfaceにされるけど、型が分かるからキャストする
-		currentUserId := token.Claims["user_id"].(string)
-		c.Set("currentUserId", currentUserId)
+		currentUserUid := token.Claims["user_id"].(string)
+		c.Set("currentUserUid", currentUserUid)
 		c.Next()
 	}
 }

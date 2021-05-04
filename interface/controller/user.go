@@ -17,8 +17,8 @@ func NewUserController(c interactor.UserInteractor) *userController {
 }
 
 func (c *userController) Index(ctx Context) {
-	currentUserId := ctx.Value("currentUserId").(string)
-	user, err := c.userInteractor.GetUsers(currentUserId)
+	currentUserUid := ctx.Value("currentUserUid").(string)
+	user, err := c.userInteractor.GetUsersByUid(currentUserUid)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
@@ -39,7 +39,7 @@ func (c *userController) Create(ctx Context) {
 
 func (c *userController) Show(ctx Context) {
 	uid := ctx.Param("uid")
-	user, err := c.userInteractor.GetUserByID(uid)
+	user, err := c.userInteractor.GetUserByUid(uid)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusNotFound, err)
 		return
