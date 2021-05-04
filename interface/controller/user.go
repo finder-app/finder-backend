@@ -38,8 +38,9 @@ func (c *userController) Create(ctx Context) {
 }
 
 func (c *userController) Show(ctx Context) {
+	VisitorUid := ctx.Value("currentUserUid").(string)
 	uid := ctx.Param("uid")
-	user, err := c.userInteractor.GetUserByUid(uid)
+	user, err := c.userInteractor.GetUserByUid(uid, VisitorUid)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusNotFound, err)
 		return

@@ -8,17 +8,19 @@ import (
 
 type UserInteractor interface {
 	GetUsersByUid(uid string) ([]domain.User, error)
-	GetUserByUid(uid string) (*domain.User, error)
+	GetUserByUid(uid string, visitorUid string) (*domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
 }
 
 type userInteractor struct {
-	userRepository repository.UserRepository
+	userRepository      repository.UserRepository
+	footPrintRepository repository.FootPrintRepository
 }
 
-func NewUserInteractor(ur repository.UserRepository) *userInteractor {
+func NewUserInteractor(ur repository.UserRepository, fpr repository.FootPrintRepository) *userInteractor {
 	return &userInteractor{
-		userRepository: ur,
+		userRepository:      ur,
+		footPrintRepository: fpr,
 	}
 }
 
@@ -34,9 +36,12 @@ func (i *userInteractor) GetUsersByUid(uid string) ([]domain.User, error) {
 	return users, nil
 }
 
-func (i *userInteractor) GetUserByUid(uid string) (*domain.User, error) {
+func (i *userInteractor) GetUserByUid(uid string, visitorUid string) (*domain.User, error) {
 	user, err := i.userRepository.GetUserByUid(uid)
 	if err != nil {
+		return nil, err
+	}
+	if err := i.footPrintRepository.CreateFootPrint(uid, visitorUid); err != nil {
 		return nil, err
 	}
 	return user, nil
