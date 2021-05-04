@@ -20,7 +20,6 @@ func Auth() gin.HandlerFunc {
 		authHeader := c.Request.Header.Get("Authorization")
 		idToken := strings.Replace(authHeader, "Bearer ", "", 1)
 		token, err := client.VerifyIDToken(ctx, idToken)
-		// fmt.Println(token)
 		if err != nil {
 			fmt.Println(err)
 			// NOTE: tokenが確認場合は意図的に401エラーを返して処理を中断させる
