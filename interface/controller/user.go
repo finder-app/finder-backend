@@ -4,7 +4,6 @@ import (
 	"finder/domain"
 	"finder/usecase/interactor"
 	"net/http"
-	"strconv"
 )
 
 type userController struct {
@@ -42,8 +41,8 @@ func (c *userController) Create(ctx Context) {
 }
 
 func (c *userController) Show(ctx Context) {
-	userID, _ := strconv.Atoi(ctx.Param("id"))
-	user, err := c.userInteractor.GetUserByID(userID)
+	uid := ctx.Param("uid")
+	user, err := c.userInteractor.GetUserByID(uid)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusNotFound, err)
 		return

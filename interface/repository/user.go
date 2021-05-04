@@ -9,7 +9,7 @@ import (
 
 type UserRepository interface {
 	GetUsers() ([]domain.User, error)
-	GetUserByID(id int) (*domain.User, error)
+	GetUserByID(uid string) (*domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
 }
 
@@ -33,9 +33,9 @@ func (r *userRepository) GetUsers() ([]domain.User, error) {
 	return users, nil
 }
 
-func (r *userRepository) GetUserByID(id int) (*domain.User, error) {
+func (r *userRepository) GetUserByID(uid string) (*domain.User, error) {
 	user := domain.User{}
-	if err := r.db.Find(&user, id).Error; err != nil {
+	if err := r.db.Where("uid = ?", uid).Take(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil

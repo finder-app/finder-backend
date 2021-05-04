@@ -11,15 +11,14 @@ import (
 
 func Auth() gin.HandlerFunc {
 	// NOTE: 毎回firebaseを呼び出してほしくないので、アプリ初期化時に宣言しておく
+	app := NewFirebaseApp()
+	client := NewAuthClient(app)
 
 	// tokenのリセットで他でclientを使い回すかもだから、要検討
 	return func(c *gin.Context) {
-		app := NewFirebaseApp()
-		client := NewAuthClient(app)
 		ctx := c.Request.Context()
 		authHeader := c.Request.Header.Get("Authorization")
 		idToken := strings.Replace(authHeader, "Bearer ", "", 1)
-		fmt.Println(idToken)
 		token, err := client.VerifyIDToken(ctx, idToken)
 		if err != nil {
 			fmt.Println(err)

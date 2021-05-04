@@ -7,7 +7,7 @@ import (
 
 type UserInteractor interface {
 	GetUsers() ([]domain.User, error)
-	GetUserByID(userID int) (*domain.User, error)
+	GetUserByID(uid string) (*domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
 }
 
@@ -29,8 +29,8 @@ func (i *userInteractor) GetUsers() ([]domain.User, error) {
 	return users, nil
 }
 
-func (i *userInteractor) GetUserByID(userID int) (*domain.User, error) {
-	user, err := i.userRepository.GetUserByID(userID)
+func (i *userInteractor) GetUserByID(uid string) (*domain.User, error) {
+	user, err := i.userRepository.GetUserByID(uid)
 	if err != nil {
 		return nil, err
 	}
