@@ -17,34 +17,7 @@ https://docs.google.com/spreadsheets/d/1Y520iO3APF-pI23YjKtTqdSzs1fTduwQ7NaB2hnU
 brew install golang-migrate
 ```
 
-#### migration create
-`name=?`には処理する内容を**スネークケースで**追加してください
-
-例）
-- `make migration name=create_users_table`
-- `make migration name=add_column_to_users`
-```
-make migration name=?
-```
-
-#### migrate up
-未実行のmigrationが全て実行されます
-```
-make migrate-up
-```
-
-#### migrate down
-`n=?`には数値を渡してください
-```
-make migrate-down n=?
-```
-
-#### migrate force
-migrationのファイルをミスった時のバージョン修正用
-`v=?`には数値を渡してください
-```
-make migrate-force v=?
-```
+コマンドの詳細は`Makefile`を参照
 
 ## アノテーションコメント
 | prefix | 内容 |

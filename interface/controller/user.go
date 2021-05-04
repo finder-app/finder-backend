@@ -18,6 +18,10 @@ func NewUserController(c interactor.UserInteractor) *userController {
 }
 
 func (c *userController) Index(ctx Context) {
+	// NOTE: これでログインユーザーのemailを取れる
+	// email := ctx.Value("email")
+	// fmt.Printf("コントローラーのemailでーす %v \n", email)
+
 	user, err := c.userInteractor.GetUsers()
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)

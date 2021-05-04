@@ -1,12 +1,17 @@
 package domain
 
 import (
-	"github.com/jinzhu/gorm"
+	"time"
 )
 
-// User struct
 type User struct {
-	gorm.Model
-	Name  string
-	Email string `validate:"required"`
+	Uid       string `gorm:"primaryKey"`
+	Email     string `validate:"required"`
+	LastName  string `validate:"required"`
+	FirstName string `validate:"required"`
+	IsMale    bool   `validate:"required"`
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time `sql:"index"`
 }

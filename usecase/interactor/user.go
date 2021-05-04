@@ -22,25 +22,25 @@ func NewUserInteractor(r repository.UserRepository) *userInteractor {
 }
 
 func (i *userInteractor) GetUsers() ([]domain.User, error) {
-	result, err := i.userRepository.GetUsers()
+	users, err := i.userRepository.GetUsers()
 	if err != nil {
 		return nil, err
 	}
-	return result, nil
+	return users, nil
 }
 
 func (i *userInteractor) GetUserByID(userID int) (*domain.User, error) {
-	result, err := i.userRepository.GetUserByID(userID)
+	user, err := i.userRepository.GetUserByID(userID)
 	if err != nil {
 		return nil, err
 	}
-	return result, nil
+	return user, nil
 }
 
 func (i *userInteractor) CreateUser(user *domain.User) (*domain.User, error) {
-	result, err := i.userRepository.CreateUser(user)
+	user, err := i.userRepository.CreateUser(user)
 	if err != nil {
 		return nil, err
 	}
-	return result, nil
+	return user, nil
 }
