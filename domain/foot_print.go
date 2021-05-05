@@ -9,6 +9,7 @@ type FootPrint struct {
 	VisitorUid string
 	UserUid    string
 	Unread     bool
+	User       User
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

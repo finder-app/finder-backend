@@ -9,6 +9,7 @@ import (
 )
 
 type FootPrintRepository interface {
+	GetFootPrintUsersByUid(uid string) ([]domain.User, error)
 	CreateFootPrint(uid string, visitorUid string) error
 }
 
@@ -22,6 +23,18 @@ func NewFootPrintRepository(db *gorm.DB, validate *validator.Validate) *footPrin
 		db:       db,
 		validate: validate,
 	}
+}
+
+func (r *footPrintRepository) GetFootPrintUsersByUid(uid string) ([]domain.User, error) {
+	// 足跡を残したユーザー一覧を取得する！
+	users := []domain.User{}
+	query := `SELECT u.* FROM users AS u
+		INNER JOIN foot_prints AS fp ON (fp.user_uid = u.uid)
+		WHERE fp.visitor_uid = ?`
+	if err := r.db.Raw(query, uid).Scan(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
 }
 
 func (r *footPrintRepository) CreateFootPrint(uid string, visitorUid string) error {

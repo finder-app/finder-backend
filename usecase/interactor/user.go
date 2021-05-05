@@ -56,6 +56,7 @@ func (i *userInteractor) CreateUser(user *domain.User) (*domain.User, error) {
 }
 
 func getGenderForSearch(isMale bool) bool {
+	// 仮でstruct持たせても良さそう！分かりやすいし。性別とisMaleを持った
 	if isMale {
 		return false
 	} else {
