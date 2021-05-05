@@ -9,22 +9,8 @@ type FootPrint struct {
 	VisitorUid string
 	UserUid    string
 	Unread     bool
-	// これは取れるやつ。自分自身のIDがね
-	// User User `gorm:"foreignKey:UserUid"`
-
-	// User User `gorm:"foreignKey:VisitorUid"`
-	// User User `gorm:"foreignKey:VisitorUid references:Uid"`
-
-	// error
-	// User User `gorm:"references:Uid"`
-
-	//
-	// Visitor User
+	// NOTE: 理由は説明できないけど何か取得できた。Visitorっていう仮想のstructを作ったイメージ
 	Visitor User `gorm:"foreignKey:VisitorUid"`
-
-	// これが理想だけど、できない！なぜ！？
-	// User User `gorm:"foreignKey:VisitorUid"`
-	// User User `gorm:"foreignKey:VisitorUid references:Uid"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

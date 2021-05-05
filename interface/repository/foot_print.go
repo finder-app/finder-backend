@@ -29,54 +29,10 @@ func NewFootPrintRepository(db *gorm.DB, validate *validator.Validate) *footPrin
 // 足跡をつけた時間が欲しい！
 func (r *footPrintRepository) GetFootPrintUsersByUid(currentUserUid string) ([]domain.FootPrint, error) {
 	footPrints := []domain.FootPrint{}
-	// Preloadつかうとエラー吐く　モデル指定してるのにー
-	// result := r.db.Model(domain.FootPrint{}).Where("user_uid = ?", currentUserUid).Preload("User").Find(&footPrints)
-
-	// とれるw foreign_keyはuser_uid。逆の組み合わせってこと
-	// result := r.db.Model(domain.FootPrint{}).Where("visitor_uid = ?", currentUserUid).Preload("User").Find(&footPrints)
-	// result := r.db.Model(domain.FootPrint{}).Where("user_uid = ?", currentUserUid).Preload("User").Find(&footPrints)
-
-	// 現状の回答
-	// result := r.db.Model(domain.FootPrint{}).Where("user_uid = ?", currentUserUid).Find(&footPrints)
 	result := r.db.Model(domain.FootPrint{}).Where("user_uid = ?", currentUserUid).Preload("Visitor").Find(&footPrints)
 	if err := result.Error; err != nil {
 		return nil, err
 	}
-	// if err := result.Joins("users").Preload("User").Find(&footPrints).Error; err != nil {
-	// 	fmt.Println(err)
-	// 	return nil, err
-	// }
-
-	// 別解を試す。footPrintだけを先に取得。次にユーザーを取得して、
-	// footPrintsのUserに突っ込む。取れない気がしてきた
-	// if err := r.db.Model(domain.FootPrint{}).Where("user_uid = ?", currentUserUid).Preload("User").Find(&footPrints).Error; err != nil {
-	// 	return nil, err
-	// }
-
-	// resultをstructで作ってscanして、後からfoot_printsに追加するw
-	// query := `SELECT foot_prints.created_at, users.* FROM foot_prints
-	// INNER JOIN users on users.uid = foot_prints.visitor_uid
-	// WHERE foot_prints.user_uid = ?`
-	// rows, err := r.db.Raw(query, currentUserUid).Rows()
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return nil, err
-	// }
-	// defer rows.Close()
-	// for rows.Next() {
-	// 	footPrint := domain.FootPrint{}
-	// 	rows.Scan(
-	// 		&footPrint.CreatedAt,
-	// 		&footPrint.User.Uid,
-	// 		&footPrint.User.LastName,
-	// 		&footPrint.User.FirstName,
-	// 	)
-	// 	footPrints = append(footPrints, footPrint)
-	// }
-
-	// if err := r.db.Raw(query, currentUserUid).Scan(&footPrints).Error; err != nil {
-	// 	return nil, err
-	// }
 	return footPrints, nil
 }
 
@@ -99,7 +55,6 @@ func (r *footPrintRepository) CreateFootPrint(currentUserUid string, visitorUid 
 
 func (r *footPrintRepository) UpdateToAlreadyRead(currentUserUid string) error {
 	result := r.db.Exec("UPDATE foot_prints SET unread = 0 WHERE unread = 1 AND user_uid = ?", currentUserUid)
-	// result := r.db.Exec("UPDATE foot_prints SET unread = 1 WHERE unread = 0 AND user_uid = ?", currentUserUid)
 	if err := result.Error; err != nil {
 		return err
 	}
