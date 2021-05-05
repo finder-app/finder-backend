@@ -17,12 +17,12 @@ func NewFootPrintController(fpi interactor.FootPrintInteractor) *footPrintContro
 
 func (c *footPrintController) Index(ctx Context) {
 	uid := ctx.Value("currentUserUid").(string)
-	users, err := c.footPrintInteractor.GetFootPrintUsersByUid(uid)
+	footPrints, err := c.footPrintInteractor.GetFootPrintsByUid(uid)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
 	}
-	ctx.JSON(http.StatusOK, users)
+	ctx.JSON(http.StatusOK, footPrints)
 }
 
 // 未読の足跡数を返すエンドポイント

@@ -9,7 +9,7 @@ type FootPrint struct {
 	VisitorUid string
 	UserUid    string
 	Unread     bool
-	User       User
+	User       User `gorm:"foreignKey:UserUid"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

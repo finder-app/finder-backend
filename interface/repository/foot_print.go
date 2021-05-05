@@ -9,8 +9,9 @@ import (
 )
 
 type FootPrintRepository interface {
-	GetFootPrintUsersByUid(uid string) ([]domain.User, error)
+	GetFootPrintsByUid(uid string) ([]domain.FootPrint, error)
 	CreateFootPrint(uid string, visitorUid string) error
+	UpdateFootPrint(footPrints *[]domain.FootPrint) error
 }
 
 type footPrintRepository struct {
@@ -25,16 +26,12 @@ func NewFootPrintRepository(db *gorm.DB, validate *validator.Validate) *footPrin
 	}
 }
 
-func (r *footPrintRepository) GetFootPrintUsersByUid(uid string) ([]domain.User, error) {
-	// 足跡を残したユーザー一覧を取得する！
-	users := []domain.User{}
-	query := `SELECT u.* FROM users AS u
-		INNER JOIN foot_prints AS fp ON (fp.user_uid = u.uid)
-		WHERE fp.visitor_uid = ?`
-	if err := r.db.Raw(query, uid).Scan(&users).Error; err != nil {
+func (r *footPrintRepository) GetFootPrintsByUid(visitorUid string) ([]domain.FootPrint, error) {
+	footPrints := []domain.FootPrint{}
+	if err := r.db.Model(domain.FootPrint{}).Where("visitor_uid = ?", visitorUid).Preload("User").Find(&footPrints).Error; err != nil {
 		return nil, err
 	}
-	return users, nil
+	return footPrints, nil
 }
 
 func (r *footPrintRepository) CreateFootPrint(uid string, visitorUid string) error {
@@ -61,5 +58,21 @@ func (r *footPrintRepository) CreateFootPrint(uid string, visitorUid string) err
 		fmt.Println(err)
 		return err
 	}
+	return nil
+}
+
+func (r *footPrintRepository) UpdateFootPrint(footPrints *[]domain.FootPrint) error {
+	tx := r.db.Begin()
+	for _, footPrint := range *footPrints {
+		footPrint.Unread = false
+		if err := tx.Table("foot_prints").Update(&footPrint).Error; err != nil {
+			fmt.Println("UpdateFootPrint error")
+			fmt.Println(err)
+			tx.Rollback()
+			return err
+		}
+		fmt.Println(footPrint.Unread)
+	}
+	tx.Commit()
 	return nil
 }
