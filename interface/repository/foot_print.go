@@ -68,15 +68,6 @@ func (r *footPrintRepository) CreateFootPrint(currentUserUid string, visitorUid 
 		// FIX: UnreadはMySQL側でdefault '1'にしてるけど、何故か'0'でレコードが作られるため。要検証
 		Unread: true,
 	}
-	// EXISTSで判別したかったけど、gormで再現できないから諦め。レコードあってもboolがfalseになる
-	// var result bool
-	// r.db.Raw(`
-	// SELECT EXISTS (
-	// 	SELECT * FROM foot_prints
-	// 	WHERE visitor_uid = ?	AND user_uid = ?
-	// )`, footPrint.VisitorUid, footPrint.UserUid).Scan(&result)
-	// fmt.Println(result)
-
 	where := domain.FootPrint{
 		VisitorUid: footPrint.VisitorUid,
 		UserUid:    footPrint.UserUid,
@@ -89,24 +80,11 @@ func (r *footPrintRepository) CreateFootPrint(currentUserUid string, visitorUid 
 }
 
 func (r *footPrintRepository) UpdateToAlreadyRead(currentUserUid string) error {
-	// 後でトランザクションする
-	// tx := r.db.Begin()
-	var unreadFootPrintIds []int
-	r.db.Raw(`SELECT id FROM foot_prints
-		WHERE visitor_uid = ? AND unread = 1`, currentUserUid).Scan(&unreadFootPrintIds)
-	fmt.Println(unreadFootPrintIds)
-
-	// footPrint.Unread = false
-	// if err := r.db.Model(domain.FootPrint{}).Where("id = ?", footPrint.ID).Update("").Error; err != nil {
-	// 	fmt.Println("UpdateToAlreadyRead error")
-	// 	fmt.Println(err)
-	// 	// r.db.Rollback()
-	// 	return err
-	// }
-	// fmt.Printf("footPrintのUnreadは%v", footPrint.Unread)
-
-	// tx.Commit()
+	result := r.db.Exec("UPDATE foot_prints SET unread = 0 WHERE unread = 1 AND user_uid = ?", currentUserUid)
+	if err := result.Error; err != nil {
+		return err
+	}
 	// TODO: このアクションに現在の未読数を返すobjectを追加したい。
-	// headerで表示してるはずなので、それを更新できるように。state.UnreadFootPrintCountを変える？
+	// headerで表示してるはずなので、それを更新できるように。state.UnreadFootPrintCountを変える？仕様は検討する
 	return nil
 }
