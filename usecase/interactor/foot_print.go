@@ -6,7 +6,7 @@ import (
 )
 
 type FootPrintInteractor interface {
-	GetFootPrintsByUid(uid string) ([]domain.FootPrint, error)
+	GetFootPrintUsersByUid(currentUserUid string) ([]domain.FootPrint, error)
 }
 
 type footPrintInteractor struct {
@@ -19,14 +19,13 @@ func NewFootPrintInteractor(ur repository.FootPrintRepository) *footPrintInterac
 	}
 }
 
-func (i *footPrintInteractor) GetFootPrintsByUid(uid string) ([]domain.FootPrint, error) {
-	footPrints, err := i.footPrintRepository.GetFootPrintsByUid(uid)
+func (i *footPrintInteractor) GetFootPrintUsersByUid(currentUserUid string) ([]domain.FootPrint, error) {
+	footPrints, err := i.footPrintRepository.GetFootPrintUsersByUid(currentUserUid)
 	if err != nil {
 		return nil, err
-
 	}
 	// 取得したfoot_printsを使って、未読の足跡を全て既読にする！
-	// if err := i.footPrintRepository.UpdateFootPrint(&footPrints); err != nil {
+	// if err := i.footPrintRepository.UpdateToAlreadyRead(currentUserUid); err != nil {
 	// 	return nil, err
 	// }
 	return footPrints, nil

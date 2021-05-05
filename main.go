@@ -18,7 +18,6 @@ func main() {
 
 	footPrintRepository := repository.NewFootPrintRepository(db, validate)
 	footPrintInteractor := interactor.NewFootPrintInteractor(footPrintRepository)
-	// 足跡一覧を確認する機能をやる時に実装！
 	footPrintController := controller.NewFootPrintController(footPrintInteractor)
 
 	footPrintRouter := router.Group("foot_prints")

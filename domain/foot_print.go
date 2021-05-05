@@ -9,7 +9,14 @@ type FootPrint struct {
 	VisitorUid string
 	UserUid    string
 	Unread     bool
-	User       User `gorm:"foreignKey:UserUid"`
+	// これは取れるやつ
+	User User `gorm:"foreignKey:UserUid"`
+
+	// User User `gorm:"foreignKey:VisitorUid"`
+	// User User `gorm:"foreignKey:VisitorUid references:Uid"`
+
+	// これが理想だけど、できない！なぜ！？
+	// User User `gorm:"references:Uid"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

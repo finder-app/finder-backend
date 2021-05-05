@@ -16,8 +16,8 @@ func NewFootPrintController(fpi interactor.FootPrintInteractor) *footPrintContro
 }
 
 func (c *footPrintController) Index(ctx Context) {
-	uid := ctx.Value("currentUserUid").(string)
-	footPrints, err := c.footPrintInteractor.GetFootPrintsByUid(uid)
+	currentUserUid := ctx.Value("currentUserUid").(string)
+	footPrints, err := c.footPrintInteractor.GetFootPrintUsersByUid(currentUserUid)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
