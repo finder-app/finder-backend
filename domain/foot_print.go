@@ -5,18 +5,26 @@ import (
 )
 
 type FootPrint struct {
-	ID         uint   `gorm:"primaryKey"`
-	VisitorUid string `gorm:"references:Uid foreignKey:UserUid"`
-	UserUid    string `gorm:"references:Uid foreignKey:UserUid"`
+	ID         uint
+	VisitorUid string
+	UserUid    string
 	Unread     bool
 	// これは取れるやつ。自分自身のIDがね
-	User User `gorm:"foreignKey:UserUid"`
+	// User User `gorm:"foreignKey:UserUid"`
 
 	// User User `gorm:"foreignKey:VisitorUid"`
 	// User User `gorm:"foreignKey:VisitorUid references:Uid"`
 
+	// error
+	// User User `gorm:"references:Uid"`
+
+	//
+	// Visitor User
+	Visitor User `gorm:"foreignKey:VisitorUid"`
+
 	// これが理想だけど、できない！なぜ！？
-	// User User `gorm:"references:Uid foreignKey:UserUid"`
+	// User User `gorm:"foreignKey:VisitorUid"`
+	// User User `gorm:"foreignKey:VisitorUid references:Uid"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
