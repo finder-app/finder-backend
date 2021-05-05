@@ -26,7 +26,6 @@ func NewFootPrintRepository(db *gorm.DB, validate *validator.Validate) *footPrin
 	}
 }
 
-// 足跡をつけた時間が欲しい！
 func (r *footPrintRepository) GetFootPrintUsersByUid(currentUserUid string) ([]domain.FootPrint, error) {
 	footPrints := []domain.FootPrint{}
 	result := r.db.Model(domain.FootPrint{}).Where("user_uid = ?", currentUserUid).Preload("Visitor").Find(&footPrints)
