@@ -2,6 +2,7 @@ package repository
 
 import (
 	"finder/domain"
+	"fmt"
 
 	"github.com/go-playground/validator"
 	"github.com/jinzhu/gorm"
@@ -27,8 +28,24 @@ func (r *footPrintRepository) CreateFootPrint(uid string, visitorUid string) err
 	footPrint := &domain.FootPrint{
 		VisitorUid: visitorUid,
 		UserUid:    uid,
+		// FIX: UnreadはMySQL側でdefault '1'にしてるけど、何故か'0'でレコードが作られるため。要検証
+		Unread: true,
 	}
-	if err := r.db.Create(footPrint).Error; err != nil {
+	// EXISTSで判別したかったけど、gormで再現できないから諦め。レコードあってもboolがfalseになる
+	// var result bool
+	// r.db.Raw(`
+	// SELECT EXISTS (
+	// 	SELECT * FROM foot_prints
+	// 	WHERE visitor_uid = ?	AND user_uid = ?
+	// )`, footPrint.VisitorUid, footPrint.UserUid).Scan(&result)
+	// fmt.Println(result)
+
+	where := domain.FootPrint{
+		VisitorUid: footPrint.VisitorUid,
+		UserUid:    footPrint.UserUid,
+	}
+	if err := r.db.FirstOrCreate(footPrint, where).Error; err != nil {
+		fmt.Println(err)
 		return err
 	}
 	return nil
