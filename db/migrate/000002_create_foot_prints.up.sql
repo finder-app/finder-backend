@@ -1,6 +1,6 @@
--- idはいらないと思うので作ってない！
 CREATE TABLE foot_prints(
-  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  -- idは不要なのでコメントアウトしとく。消すのめんどくさいから
+  -- id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   visitor_uid VARCHAR(255) NOT NULL,
 	user_uid VARCHAR(255) NOT NULL,
   unread BOOLEAN NOT NULL DEFAULT '1',
