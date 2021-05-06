@@ -7,7 +7,7 @@ import (
 )
 
 type FootPrintInteractor interface {
-	GetFootPrintUsersByUid(currentUserUid string) ([]domain.FootPrint, error)
+	GetFootPrintsByUid(currentUserUid string) ([]domain.FootPrint, error)
 }
 
 type footPrintInteractor struct {
@@ -20,12 +20,12 @@ func NewFootPrintInteractor(ur repository.FootPrintRepository) *footPrintInterac
 	}
 }
 
-func (i *footPrintInteractor) GetFootPrintUsersByUid(currentUserUid string) ([]domain.FootPrint, error) {
+func (i *footPrintInteractor) GetFootPrintsByUid(currentUserUid string) ([]domain.FootPrint, error) {
 	if err := i.footPrintRepository.UpdateToAlreadyRead(currentUserUid); err != nil {
 		fmt.Printf("interactor error %v", err)
 		return nil, err
 	}
-	footPrints, err := i.footPrintRepository.GetFootPrintUsersByUid(currentUserUid)
+	footPrints, err := i.footPrintRepository.GetFootPrintsByUid(currentUserUid)
 	if err != nil {
 		return nil, err
 	}

@@ -9,7 +9,7 @@ import (
 )
 
 type FootPrintRepository interface {
-	GetFootPrintUsersByUid(currentUserUid string) ([]domain.FootPrint, error)
+	GetFootPrintsByUid(currentUserUid string) ([]domain.FootPrint, error)
 	CreateFootPrint(currentUserUid string, visitorUid string) error
 	UpdateToAlreadyRead(currentUserUid string) error
 }
@@ -26,7 +26,7 @@ func NewFootPrintRepository(db *gorm.DB, validate *validator.Validate) *footPrin
 	}
 }
 
-func (r *footPrintRepository) GetFootPrintUsersByUid(currentUserUid string) ([]domain.FootPrint, error) {
+func (r *footPrintRepository) GetFootPrintsByUid(currentUserUid string) ([]domain.FootPrint, error) {
 	footPrints := []domain.FootPrint{}
 	result := r.db.Model(domain.FootPrint{}).Where("user_uid = ?", currentUserUid).Preload("Visitor").Find(&footPrints)
 	if err := result.Error; err != nil {
