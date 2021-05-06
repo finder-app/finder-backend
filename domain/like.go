@@ -5,11 +5,10 @@ import (
 )
 
 type Like struct {
-	SentUesrUid     string
+	SentUserUid     string
 	RecievedUserUid string
 	Unread          bool
 	Consented       bool
-	SentUesr        User `gorm:"foreignKey:SentUesrUid"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

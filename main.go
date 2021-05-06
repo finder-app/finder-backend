@@ -20,20 +20,21 @@ func main() {
 	footPrintInteractor := interactor.NewFootPrintInteractor(footPrintRepository)
 	footPrintController := controller.NewFootPrintController(footPrintInteractor)
 
-	footPrintRouter := router.Group("foot_prints")
-	{
-		footPrintRouter.GET("", func(c *gin.Context) { footPrintController.Index(c) })
-	}
-
 	userRepository := repository.NewUserRepository(db, validate)
 	userInteractor := interactor.NewUserInteractor(userRepository, footPrintRepository)
 	userController := controller.NewUserController(userInteractor)
 
-	userRouter := router.Group("users")
-	{
-		userRouter.GET("/index", func(c *gin.Context) { userController.Index(c) })
-		userRouter.POST("/create", func(c *gin.Context) { userController.Create(c) })
-		userRouter.GET("/:uid", func(c *gin.Context) { userController.Show(c) })
-	}
+	likeRepository := repository.NewLikeRepository(db, validate)
+	likeInteractor := interactor.NewLikeInteractor(likeRepository)
+	likeController := controller.NewLikeController(likeInteractor)
+
+	router.GET("/foot_prints", func(c *gin.Context) { footPrintController.Index(c) })
+	router.GET("/users", func(c *gin.Context) { userController.Index(c) })
+	router.POST("/users", func(c *gin.Context) { userController.Create(c) })
+	router.GET("/users/:uid", func(c *gin.Context) { userController.Show(c) })
+	router.POST("/users/:uid/likes", func(c *gin.Context) { likeController.Create(c) })
+	router.GET("/likes/recieved", func(c *gin.Context) { likeController.Create(c) })
+	router.GET("/likes/sent", func(c *gin.Context) { likeController.Create(c) })
+
 	router.Run(":8080")
 }
