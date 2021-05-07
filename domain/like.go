@@ -7,8 +7,9 @@ import (
 type Like struct {
 	SentUserUid     string
 	RecievedUserUid string
-	Unread          bool
+	Skipped         bool
 	Consented       bool
+	SentUser        User `gorm:"foreignKey:SentUserUid"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

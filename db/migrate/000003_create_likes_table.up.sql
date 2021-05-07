@@ -2,7 +2,7 @@ CREATE TABLE likes(
   sent_user_uid VARCHAR(255) NOT NULL,
 	recieved_user_uid VARCHAR(255) NOT NULL,
   consented BOOLEAN NOT NULL DEFAULT '0',
-  unread BOOLEAN NOT NULL DEFAULT '1',
+  skipped BOOLEAN NOT NULL DEFAULT '0',
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   KEY `index_likes_on_sent_user_uid` (`sent_user_uid`),
