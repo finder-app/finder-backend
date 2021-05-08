@@ -29,7 +29,7 @@ func main() {
 	likeController := controller.NewLikeController(likeInteractor)
 
 	router.GET("/foot_prints", func(c *gin.Context) { footPrintController.Index(c) })
-	router.GET("/users", func(c *gin.Context) { userController.Index(c) })
+	router.GET("/users/index", func(c *gin.Context) { userController.Index(c) })
 	router.POST("/users", func(c *gin.Context) { userController.Create(c) })
 	router.GET("/users/:uid", func(c *gin.Context) { userController.Show(c) })
 	router.POST("/users/:uid/likes", func(c *gin.Context) { likeController.Create(c) })
