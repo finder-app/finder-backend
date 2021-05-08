@@ -2,7 +2,6 @@ package repository
 
 import (
 	"finder/domain"
-	"fmt"
 
 	"github.com/go-playground/validator"
 	"github.com/jinzhu/gorm"
@@ -38,21 +37,13 @@ func (r *likeRepository) CreateLike(sentUesrUid string, recievedUserUid string) 
 }
 
 func (r *likeRepository) GetOldestLikeByUid(currentUserUid string) (*domain.Like, error) {
-	query := `SELECT id FROM likes
-	WHERE recieved_user_uid = ?
-	AND skipped = 0
-	AND consented = 0
-	ORDER BY CAST(created_at AS DATE) ASC
-	LIMIT 1`
-	var result struct {
-		ID int
-	}
-	if err := r.db.Raw(query, currentUserUid).Scan(&result).Error; err != nil {
-		return nil, err
-	}
 	like := &domain.Like{}
-	if err := r.db.Model(domain.Like{}).Preload("SentUser").Take(like, result.ID).Error; err != nil {
-		fmt.Println(err)
+	result := r.db.Model(domain.Like{}).
+		Where(`recieved_user_uid = ? AND skipped = 0 AND consented = 0`, currentUserUid).
+		Order("CAST(created_at AS DATE) ASC").
+		Preload("SentUser").
+		Take(like)
+	if err := result.Error; err != nil {
 		return nil, err
 	}
 	return like, nil

@@ -33,7 +33,7 @@ func (c *likeController) Index(ctx Context) {
 	currentUserUid := ctx.Value("currentUserUid").(string)
 	like, err := c.likeInteractor.GetOldestLikeByUid(currentUserUid)
 	if err != nil {
-		ErrorResponse(ctx, http.StatusInternalServerError, err)
+		ErrorResponse(ctx, http.StatusNotFound, err)
 		return
 	}
 	ctx.JSON(http.StatusOK, like)
