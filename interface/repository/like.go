@@ -11,6 +11,7 @@ type LikeRepository interface {
 	CreateLike(sentUesrUid string, recievedUserUid string) (*domain.Like, error)
 	GetOldestLikeByUid(currentUserUid string) (*domain.Like, error)
 	NopeUserByUid(recievedUserUid string, sentUesrUid string) error
+	Consent(recievedUserUid string, sentUesrUid string) error
 }
 
 type likeRepository struct {
@@ -51,6 +52,15 @@ func (r *likeRepository) GetOldestLikeByUid(currentUserUid string) (*domain.Like
 
 func (r *likeRepository) NopeUserByUid(recievedUserUid string, sentUesrUid string) error {
 	query := `UPDATE likes SET skipped = 1
+		WHERE recieved_user_uid = ? AND sent_user_uid = ?`
+	if err := r.db.Exec(query, recievedUserUid, sentUesrUid).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *likeRepository) Consent(recievedUserUid string, sentUesrUid string) error {
+	query := `UPDATE likes SET consented = 1
 		WHERE recieved_user_uid = ? AND sent_user_uid = ?`
 	if err := r.db.Exec(query, recievedUserUid, sentUesrUid).Error; err != nil {
 		return err

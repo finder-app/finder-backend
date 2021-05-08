@@ -8,7 +8,8 @@ import (
 type LikeInteractor interface {
 	CreateLike(sentUesrUid string, recievedUserUid string) (*domain.Like, error)
 	GetOldestLikeByUid(currentUserUid string) (*domain.Like, error)
-	NextUserByUid(recievedUserUid string, sentUesrUid string) (*domain.Like, error)
+	GetNextUserByUid(recievedUserUid string, sentUesrUid string) (*domain.Like, error)
+	Consent(recievedUserUid string, sentUesrUid string) error
 }
 
 type likeInteractor struct {
@@ -37,7 +38,7 @@ func (i *likeInteractor) GetOldestLikeByUid(currentUserUid string) (*domain.Like
 	return like, nil
 }
 
-func (i *likeInteractor) NextUserByUid(recievedUserUid string, sentUesrUid string) (*domain.Like, error) {
+func (i *likeInteractor) GetNextUserByUid(recievedUserUid string, sentUesrUid string) (*domain.Like, error) {
 	if err := i.likeRepository.NopeUserByUid(recievedUserUid, sentUesrUid); err != nil {
 		return nil, err
 	}
@@ -46,4 +47,11 @@ func (i *likeInteractor) NextUserByUid(recievedUserUid string, sentUesrUid strin
 		return nil, err
 	}
 	return like, nil
+}
+
+func (i *likeInteractor) Consent(recievedUserUid string, sentUesrUid string) error {
+	if err := i.likeRepository.Consent(recievedUserUid, sentUesrUid); err != nil {
+		return err
+	}
+	return nil
 }

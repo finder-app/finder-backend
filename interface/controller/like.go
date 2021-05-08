@@ -1,11 +1,8 @@
 package controller
 
 import (
-	"errors"
 	"finder/usecase/interactor"
 	"net/http"
-
-	"github.com/jinzhu/gorm"
 )
 
 type likeController struct {
@@ -42,14 +39,24 @@ func (c *likeController) Index(ctx Context) {
 func (c *likeController) Next(ctx Context) {
 	recievedUserUid := ctx.Value("currentUserUid").(string)
 	sentUesrUid := ctx.Param("sent_uesr_uid")
-	like, err := c.likeInteractor.NextUserByUid(recievedUserUid, sentUesrUid)
+	like, err := c.likeInteractor.GetNextUserByUid(recievedUserUid, sentUesrUid)
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			ErrorResponse(ctx, http.StatusNotFound, err)
-			return
-		}
-		ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
+		ErrorResponse(ctx, http.StatusNotFound, err)
 		return
 	}
 	ctx.JSON(http.StatusOK, like)
+}
+
+func (c *likeController) Update(ctx Context) {
+	recievedUserUid := ctx.Value("currentUserUid").(string)
+	sentUesrUid := ctx.Param("sent_uesr_uid")
+	err := c.likeInteractor.Consent(recievedUserUid, sentUesrUid)
+	if err != nil {
+		ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, map[string]interface{}{
+		"message": "update!",
+		"data":    "data",
+	})
 }
