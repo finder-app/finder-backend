@@ -35,8 +35,8 @@ func main() {
 	router.POST("/users/:uid/likes", func(c *gin.Context) { likeController.Create(c) })
 	router.GET("/likes", func(c *gin.Context) { likeController.Index(c) })
 	router.PUT("/likes/:sent_uesr_uid/next", func(c *gin.Context) { likeController.Next(c) })
-	router.GET("/likes/recieved", func(c *gin.Context) { likeController.Create(c) })
-	router.GET("/likes/sent", func(c *gin.Context) { likeController.Create(c) })
+	// router.GET("/likes/recieved", func(c *gin.Context) { likeController.Recieved(c) })
+	// router.GET("/likes/sent", func(c *gin.Context) { likeController.Sent(c) })
 
 	router.Run(":8080")
 }

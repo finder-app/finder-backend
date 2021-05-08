@@ -38,30 +38,30 @@ func (r *likeRepository) CreateLike(sentUesrUid string, recievedUserUid string) 
 }
 
 func (r *likeRepository) GetOldestLikeByUid(currentUserUid string) (*domain.Like, error) {
-	like := &domain.Like{}
-	query := `SELECT * FROM likes
-		WHERE recieved_user_uid = ?
-			AND skipped = 0
-			AND consented = 0
-		ORDER BY CAST(created_at AS DATE) ASC
-		LIMIT 1`
-	if err := r.db.Raw(query, currentUserUid).Scan(like).Error; err != nil {
+	query := `SELECT id FROM likes
+	WHERE recieved_user_uid = ?
+	AND skipped = 0
+	AND consented = 0
+	ORDER BY CAST(created_at AS DATE) ASC
+	LIMIT 1`
+	var result struct {
+		ID int
+	}
+	if err := r.db.Raw(query, currentUserUid).Scan(&result).Error; err != nil {
 		return nil, err
 	}
-	// NOTE: 生SQLを発行してるからか、上だとSentUserを取得できないので改めて取得。リファクタしたい
-	if err := r.db.Model(domain.Like{}).Preload("SentUser").Take(like).Error; err != nil {
+	like := &domain.Like{}
+	if err := r.db.Model(domain.Like{}).Preload("SentUser").Take(like, result.ID).Error; err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 	return like, nil
 }
 
 func (r *likeRepository) NopeUserByUid(recievedUserUid string, sentUesrUid string) error {
-	fmt.Println(recievedUserUid, sentUesrUid)
 	query := `UPDATE likes SET skipped = 1
 		WHERE recieved_user_uid = ? AND sent_user_uid = ?`
-	result := r.db.Exec(query, recievedUserUid, sentUesrUid)
-	if err := result.Error; err != nil {
-		fmt.Println(err)
+	if err := r.db.Exec(query, recievedUserUid, sentUesrUid).Error; err != nil {
 		return err
 	}
 	return nil
