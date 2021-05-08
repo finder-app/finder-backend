@@ -5,6 +5,7 @@ import (
 )
 
 type Like struct {
+	ID              uint
 	SentUserUid     string
 	RecievedUserUid string
 	Skipped         bool
