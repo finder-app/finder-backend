@@ -15,7 +15,9 @@ func Cors() gin.HandlerFunc {
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, token, accept, origin, Cache-Control, X-Requested-With")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "OPTIONS, POST, PATCH, GET, PUT, DELETE")
 		if c.Request.Method == "OPTIONS" {
-			c.Status(http.StatusNoContent)
+			// NOTE: c.Statusだとpreflight request時にresponseを返せないので、c.JSONに変更
+			c.JSON(http.StatusNoContent, nil)
+			// c.Status(http.StatusNoContent)
 			return
 		}
 		c.Next()
