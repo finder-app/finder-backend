@@ -37,7 +37,7 @@ brew install golang-migrate
 `docker-compose up -d --no-deps --build app`
 
 ### 単体で実行
-`docker-compose exec app go run server.go`
+`docker-compose exec app go run main.go`
 
 ### realizeのログ監視
 `make attach`(`alias ath`)

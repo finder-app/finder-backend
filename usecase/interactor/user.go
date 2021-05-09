@@ -3,7 +3,6 @@ package interactor
 import (
 	"finder/domain"
 	"finder/interface/repository"
-	"fmt"
 )
 
 type UserInteractor interface {
@@ -26,8 +25,6 @@ func NewUserInteractor(ur repository.UserRepository, fpr repository.FootPrintRep
 
 func (i *userInteractor) GetUsersByUid(uid string) ([]domain.User, error) {
 	user, _ := i.userRepository.GetUserByUid(uid)
-	fmt.Printf("検索するユーザー： %v\n", user.Email)
-	fmt.Printf("検索するユーザーのis_male： %v\n", user.IsMale)
 	gender := getGenderForSearch(user.IsMale)
 	users, err := i.userRepository.GetUsersByGender(gender)
 	if err != nil {
