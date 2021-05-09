@@ -31,7 +31,9 @@ func (c *userController) Index(ctx Context) {
 
 func (c *userController) Create(ctx Context) {
 	user := &domain.User{}
-	ctx.BindJSON(user)
+	if err := ctx.BindJSON(user); err != nil {
+		ErrorResponse(ctx, http.StatusBadRequest, err)
+	}
 	user, err := c.userInteractor.CreateUser(user)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
