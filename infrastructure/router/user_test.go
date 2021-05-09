@@ -8,7 +8,6 @@ import (
 	"finder/interface/controller"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"strings"
 	"testing"
 
@@ -17,18 +16,30 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestIndex(t *testing.T) {
+func getUsersRouter() *router.Router {
 	mockUseCase := new(mocks.UserUsecase)
 	userController := controller.NewUserController(mockUseCase)
-
-	response := httptest.NewRecorder()
-	ctx, _ := gin.CreateTestContext(response)
 	router := router.NewRouter()
 	router.Users(userController)
+	return router
+}
+
+func setCurrentUserUid(req *http.Request, t *testing.T) {
+	var mockUser domain.User
+	err := faker.FakeData(&mockUser)
+	assert.NoError(t, err)
+	currentUserUid := mockUser.Uid
+	req.Header.Set("currentUserUid", currentUserUid)
+}
+
+func TestIndex(t *testing.T) {
+	response := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(response)
 
 	ctx.Request, _ = http.NewRequest("GET", "/users", nil)
-	idToken := os.Getenv("IDTOKEN")
-	ctx.Request.Header.Set("Authorization", idToken)
+	setCurrentUserUid(ctx.Request, t)
+
+	router := getUsersRouter()
 	router.Engine.ServeHTTP(response, ctx.Request)
 	assert.Equal(t, http.StatusOK, response.Code)
 }
@@ -37,30 +48,18 @@ func TestShow(t *testing.T) {
 	var mockUser domain.User
 	err := faker.FakeData(&mockUser)
 	assert.NoError(t, err)
-	mockUseCase := new(mocks.UserUsecase)
-	userController := controller.NewUserController(mockUseCase)
 
 	response := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(response)
-	router := router.NewRouter()
-	router.Users(userController)
-
 	ctx.Request, _ = http.NewRequest("GET", "/users/"+mockUser.Uid, nil)
-	idToken := os.Getenv("IDTOKEN")
-	ctx.Request.Header.Set("Authorization", idToken)
+	setCurrentUserUid(ctx.Request, t)
+
+	router := getUsersRouter()
 	router.Engine.ServeHTTP(response, ctx.Request)
 	assert.Equal(t, http.StatusOK, response.Code)
 }
 
 func TestCreate(t *testing.T) {
-	mockUseCase := new(mocks.UserUsecase)
-	userController := controller.NewUserController(mockUseCase)
-
-	response := httptest.NewRecorder()
-	ctx, _ := gin.CreateTestContext(response)
-	router := router.NewRouter()
-	router.Users(userController)
-
 	// create User
 	mockUser := domain.User{
 		Uid:       "Uid",
@@ -73,9 +72,13 @@ func TestCreate(t *testing.T) {
 	assert.NoError(t, err)
 	body := strings.NewReader(string(json))
 
+	response := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(response)
+
 	ctx.Request, _ = http.NewRequest("POST", "/users", body)
-	idToken := os.Getenv("IDTOKEN")
-	ctx.Request.Header.Set("Authorization", idToken)
+	setCurrentUserUid(ctx.Request, t)
+
+	router := getUsersRouter()
 	router.Engine.ServeHTTP(response, ctx.Request)
 	assert.Equal(t, http.StatusCreated, response.Code)
 }

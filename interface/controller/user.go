@@ -30,7 +30,7 @@ func (c *UserController) Index(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, user)
 }
 
-func (c *UserController) Create(ctx Context) {
+func (c *UserController) Create(ctx *gin.Context) {
 	user := &domain.User{}
 	if err := ctx.BindJSON(user); err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
@@ -43,8 +43,8 @@ func (c *UserController) Create(ctx Context) {
 	ctx.JSON(http.StatusCreated, user)
 }
 
-func (c *UserController) Show(ctx Context) {
-	VisitorUid := ctx.Value("currentUserUid").(string)
+func (c *UserController) Show(ctx *gin.Context) {
+	VisitorUid := ctx.Request.Header.Get("currentUserUid")
 	uid := ctx.Param("uid")
 	user, err := c.userInteractor.GetUserByUid(uid, VisitorUid)
 	if err != nil {
