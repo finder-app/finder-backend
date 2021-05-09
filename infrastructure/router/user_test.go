@@ -1,9 +1,10 @@
-package router
+package router_test
 
 import (
 	"encoding/json"
 	"finder/domain"
 	"finder/domain/mocks"
+	"finder/infrastructure/router"
 	"finder/interface/controller"
 	"net/http"
 	"net/http/httptest"
@@ -22,7 +23,7 @@ func TestIndex(t *testing.T) {
 
 	response := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(response)
-	router := NewRouter()
+	router := router.NewRouter()
 	router.Users(userController)
 
 	ctx.Request, _ = http.NewRequest("GET", "/users", nil)
@@ -41,7 +42,7 @@ func TestShow(t *testing.T) {
 
 	response := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(response)
-	router := NewRouter()
+	router := router.NewRouter()
 	router.Users(userController)
 
 	ctx.Request, _ = http.NewRequest("GET", "/users/"+mockUser.Uid, nil)
@@ -57,7 +58,7 @@ func TestCreate(t *testing.T) {
 
 	response := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(response)
-	router := NewRouter()
+	router := router.NewRouter()
 	router.Users(userController)
 
 	// create User
