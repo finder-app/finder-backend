@@ -9,17 +9,17 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type userController struct {
+type UserController struct {
 	userInteractor interactor.UserInteractor
 }
 
-func NewUserController(ui interactor.UserInteractor) *userController {
-	return &userController{
+func NewUserController(ui interactor.UserInteractor) *UserController {
+	return &UserController{
 		userInteractor: ui,
 	}
 }
 
-func (c *userController) Index(ctx Context) {
+func (c *UserController) Index(ctx Context) {
 	currentUserUid := ctx.Value("currentUserUid").(string)
 	user, err := c.userInteractor.GetUsersByUid(currentUserUid)
 	if err != nil {
@@ -29,7 +29,7 @@ func (c *userController) Index(ctx Context) {
 	ctx.JSON(http.StatusOK, user)
 }
 
-func (c *userController) Create(ctx Context) {
+func (c *UserController) Create(ctx Context) {
 	user := &domain.User{}
 	if err := ctx.BindJSON(user); err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
@@ -42,7 +42,7 @@ func (c *userController) Create(ctx Context) {
 	ctx.JSON(http.StatusCreated, user)
 }
 
-func (c *userController) Show(ctx Context) {
+func (c *UserController) Show(ctx Context) {
 	VisitorUid := ctx.Value("currentUserUid").(string)
 	uid := ctx.Param("uid")
 	user, err := c.userInteractor.GetUserByUid(uid, VisitorUid)

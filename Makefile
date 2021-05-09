@@ -1,6 +1,12 @@
 attach:
 	docker attach finder-backend_app_1
 
+test:
+	docker-compose exec app go test -v -cover ./infrastructure/router/
+
+all-test:
+	docker-compose exec app go test -v -cover ./...
+
 m-file:
 	migrate create -ext sql -dir ./db/migrate -seq $(name)
 
