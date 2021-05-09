@@ -4,6 +4,9 @@ attach:
 test:
 	docker-compose exec app go test -v -cover ./infrastructure/router/
 
+test2:
+	docker-compose exec app go test -v -cover ./interface/repository/
+
 all-test:
 	docker-compose exec app go test -v -cover ./...
 

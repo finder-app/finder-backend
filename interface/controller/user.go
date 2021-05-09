@@ -6,6 +6,7 @@ import (
 	"finder/usecase/interactor"
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
 
@@ -19,8 +20,8 @@ func NewUserController(ui interactor.UserInteractor) *UserController {
 	}
 }
 
-func (c *UserController) Index(ctx Context) {
-	currentUserUid := ctx.Value("currentUserUid").(string)
+func (c *UserController) Index(ctx *gin.Context) {
+	currentUserUid := ctx.Request.Header.Get("currentUserUid")
 	user, err := c.userInteractor.GetUsersByUid(currentUserUid)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
