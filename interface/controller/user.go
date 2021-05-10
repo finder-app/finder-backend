@@ -21,7 +21,7 @@ func NewUserController(ui interactor.UserInteractor) *UserController {
 }
 
 func (c *UserController) Index(ctx *gin.Context) {
-	currentUserUid := ctx.Request.Header.Get("currentUserUid")
+	currentUserUid := ctx.Value("currentUserUid").(string)
 	user, err := c.userInteractor.GetUsersByUid(currentUserUid)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
@@ -44,7 +44,7 @@ func (c *UserController) Create(ctx *gin.Context) {
 }
 
 func (c *UserController) Show(ctx *gin.Context) {
-	VisitorUid := ctx.Request.Header.Get("currentUserUid")
+	VisitorUid := ctx.Value("currentUserUid").(string)
 	uid := ctx.Param("uid")
 	user, err := c.userInteractor.GetUserByUid(uid, VisitorUid)
 	if err != nil {

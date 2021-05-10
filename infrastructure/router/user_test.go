@@ -16,30 +16,34 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func getUsersRouter() *router.Router {
+func getUsersRouter(t *testing.T) *router.Router {
 	mockUseCase := new(mocks.UserUsecase)
 	userController := controller.NewUserController(mockUseCase)
-	router := router.NewRouter()
+	router := &router.Router{
+		Engine: gin.Default(),
+	}
+	router.Engine.Use(setCurrentUserUid(t))
 	router.Users(userController)
 	return router
 }
 
-func setCurrentUserUid(req *http.Request, t *testing.T) {
-	var mockUser domain.User
-	err := faker.FakeData(&mockUser)
-	assert.NoError(t, err)
-	currentUserUid := mockUser.Uid
-	req.Header.Set("currentUserUid", currentUserUid)
+func setCurrentUserUid(t *testing.T) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var mockUser domain.User
+		err := faker.FakeData(&mockUser)
+		assert.NoError(t, err)
+		currentUserUid := mockUser.Uid
+		c.Set("currentUserUid", currentUserUid)
+		c.Next()
+	}
 }
 
 func TestIndex(t *testing.T) {
 	response := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(response)
-
 	ctx.Request, _ = http.NewRequest("GET", "/users", nil)
-	setCurrentUserUid(ctx.Request, t)
 
-	router := getUsersRouter()
+	router := getUsersRouter(t)
 	router.Engine.ServeHTTP(response, ctx.Request)
 	assert.Equal(t, http.StatusOK, response.Code)
 }
@@ -52,9 +56,8 @@ func TestShow(t *testing.T) {
 	response := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(response)
 	ctx.Request, _ = http.NewRequest("GET", "/users/"+mockUser.Uid, nil)
-	setCurrentUserUid(ctx.Request, t)
 
-	router := getUsersRouter()
+	router := getUsersRouter(t)
 	router.Engine.ServeHTTP(response, ctx.Request)
 	assert.Equal(t, http.StatusOK, response.Code)
 }
@@ -74,11 +77,9 @@ func TestCreate(t *testing.T) {
 
 	response := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(response)
-
 	ctx.Request, _ = http.NewRequest("POST", "/users", body)
-	setCurrentUserUid(ctx.Request, t)
 
-	router := getUsersRouter()
+	router := getUsersRouter(t)
 	router.Engine.ServeHTTP(response, ctx.Request)
 	assert.Equal(t, http.StatusCreated, response.Code)
 }

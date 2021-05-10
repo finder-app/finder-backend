@@ -28,7 +28,7 @@ services:
       - db-data:/var/lib/mysql
       - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
-      - 3308:3306
+      - 13306:3306
 
 volumes:
   db-data:
