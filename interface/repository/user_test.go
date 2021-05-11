@@ -36,6 +36,7 @@ func setMockUsers() []domain.User {
 			IsMale:    true,
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
+			DeletedAt: nil,
 		},
 		{
 			Uid:       "Uid2",
@@ -45,6 +46,7 @@ func setMockUsers() []domain.User {
 			IsMale:    false,
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
+			DeletedAt: nil,
 		},
 	}
 	return mockUsers
@@ -145,4 +147,34 @@ func TestGetUserByUid(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, user)
 	assert.Equal(t, user.Uid, mockUsers[0].Uid)
+}
+
+func TestCreateUser(t *testing.T) {
+	db, mock, err := NewGormConnectMock()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	mockUsers := setMockUsers()
+	mockUser := mockUsers[0]
+
+	mock.ExpectBegin()
+	query := regexp.QuoteMeta("INSERT INTO `users` (`uid`,`email`,`last_name`,`first_name`,`is_male`,`created_at`,`updated_at`,`deleted_at`) VALUES (?,?,?,?,?,?,?,?)")
+
+	mock.ExpectExec(query).WithArgs(
+		mockUser.Uid,
+		mockUser.Email,
+		mockUser.LastName,
+		mockUser.FirstName,
+		mockUser.IsMale,
+		mockUser.CreatedAt,
+		mockUser.UpdatedAt,
+		mockUser.DeletedAt,
+	).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectCommit()
+
+	validate := validator.New()
+	userRepository := repository.NewUserRepository(db, validate)
+	user, err := userRepository.CreateUser(&mockUser)
+	assert.NoError(t, err)
+	assert.NotNil(t, user)
 }
