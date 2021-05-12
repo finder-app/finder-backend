@@ -29,8 +29,12 @@ func main() {
 	likeUsecase := usecase.NewLikeUsecase(likeRepository)
 	likeController := controller.NewLikeController(likeUsecase)
 
-	router.Engine.GET("/foot_prints", func(c *gin.Context) { footPrintController.Index(c) })
+	profileUsecase := usecase.NewProfileUsecase(userRepository)
+	profileController := controller.NewProfileController(profileUsecase)
+
 	router.Users(userController)
+	router.Engine.GET("/profile", func(c *gin.Context) { profileController.Index(c) })
+	router.Engine.GET("/foot_prints", func(c *gin.Context) { footPrintController.Index(c) })
 	router.Engine.POST("/users/:uid/likes", func(c *gin.Context) { likeController.Create(c) })
 	router.Engine.GET("/likes", func(c *gin.Context) { likeController.Index(c) })
 	router.Engine.PUT("/likes/:sent_uesr_uid", func(c *gin.Context) { likeController.Update(c) })
