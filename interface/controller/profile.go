@@ -29,10 +29,10 @@ func (c *ProfileController) Index(ctx *gin.Context) {
 }
 
 func (c *ProfileController) Update(ctx *gin.Context) {
-	updateUser := &domain.UpdateUser{}
-	ctx.BindJSON(&updateUser)
+	user := &domain.User{}
+	ctx.BindJSON(&user)
 	currentUserUid := ctx.Value("currentUserUid").(string)
-	user, err := c.profileUsecase.UpdateUser(currentUserUid, updateUser)
+	user, err := c.profileUsecase.UpdateUser(currentUserUid, user)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
 		return

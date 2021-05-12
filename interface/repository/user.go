@@ -11,7 +11,7 @@ type UserRepository interface {
 	GetUsersByGender(gender bool) ([]domain.User, error)
 	GetUserByUid(uid string) (*domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
-	UpdateUser(currentUserUid string, user *domain.User) (*domain.User, error)
+	UpdateUser(user *domain.User) (*domain.User, error)
 }
 
 type userRepository struct {
@@ -52,14 +52,15 @@ func (r *userRepository) CreateUser(user *domain.User) (*domain.User, error) {
 	return user, nil
 }
 
-func (r *userRepository) UpdateUser(currentUserUid string, user *domain.User) (*domain.User, error) {
-	// TODO: omitemptyすればvalidationひっかからんけど微妙なのでなし。対策を考える
-	// if err := r.validate.Struct(user); err != nil {
-	// 	return nil, err
-	// }
-	// TODO: テストが通らないので一旦レスポンスを編集する
-	// if err := r.db.Model(domain.User{}).Where("uid = ?", currentUserUid).Update(user).Scan(user).Error; err != nil {
-	if err := r.db.Model(domain.User{}).Where("uid = ?", currentUserUid).Update(user).Error; err != nil {
+func (r *userRepository) UpdateUser(user *domain.User) (*domain.User, error) {
+	if err := r.validate.Struct(user); err != nil {
+		return nil, err
+	}
+	result := r.db.Model(domain.User{}).Where("uid = ?", user.Uid).Update(
+		user.LastName,
+		user.FirstName,
+	)
+	if err := result.Error; err != nil {
 		return nil, err
 	}
 	return user, nil

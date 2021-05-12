@@ -180,15 +180,16 @@ func TestCreateUser(t *testing.T) {
 	assert.NotNil(t, user)
 }
 
+// NOTE: UpdateUserのテストで使用する
+// https://github.com/DATA-DOG/go-sqlmock#matching-arguments-like-timetime
 type AnyTime struct{}
 
-// Match satisfies sqlmock.Argument interface
 func (a AnyTime) Match(v driver.Value) bool {
 	_, ok := v.(time.Time)
 	return ok
 }
 
-func TestUpdateeUser(t *testing.T) {
+func TestUpdateUser(t *testing.T) {
 	db, mock, err := NewGormConnectMock()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
@@ -198,24 +199,19 @@ func TestUpdateeUser(t *testing.T) {
 	mockUser.LastName = "updateLastName"
 
 	mock.ExpectBegin()
-	query := regexp.QuoteMeta("UPDATE `users` SET `created_at` = ?, `email` = ?, `first_name` = ?, `is_male` = ?, `last_name` = ?, `uid` = ?, `updated_at` = ? WHERE `users`.`deleted_at` IS NULL AND ((uid = ?))")
+	query := regexp.QuoteMeta("UPDATE `users` SET `first_name` = ?, `last_name` = ?, `updated_at` = ? WHERE `users`.`deleted_at` IS NULL AND ((uid = ?))")
 
-	currentUserUid := mockUser.Uid
 	mock.ExpectExec(query).WithArgs(
-		mockUser.CreatedAt,
-		mockUser.Email,
 		mockUser.FirstName,
-		mockUser.IsMale,
 		mockUser.LastName,
-		mockUser.Uid,
 		AnyTime{},
-		currentUserUid,
+		mockUser.Uid,
 	).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectCommit()
 
 	validate := validator.New()
 	userRepository := repository.NewUserRepository(db, validate)
-	user, err := userRepository.UpdateUser(mockUser.Uid, &mockUser)
+	user, err := userRepository.UpdateUser(&mockUser)
 	assert.NoError(t, err)
-	assert.NotNil(t, user)
+	assert.Equal(t, mockUser.LastName, user.LastName)
 }
