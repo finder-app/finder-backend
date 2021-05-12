@@ -26,30 +26,18 @@ func NewUserUsecase(ur repository.UserRepository, fpr repository.FootPrintReposi
 func (i *userUsecase) GetUsersByUid(uid string) ([]domain.User, error) {
 	user, _ := i.userRepository.GetUserByUid(uid)
 	gender := getGenderForSearch(user.IsMale)
-	users, err := i.userRepository.GetUsersByGender(gender)
-	if err != nil {
-		return nil, err
-	}
-	return users, nil
+	return i.userRepository.GetUsersByGender(gender)
 }
 
 func (i *userUsecase) GetUserByUid(uid string, visitorUid string) (*domain.User, error) {
-	user, err := i.userRepository.GetUserByUid(uid)
-	if err != nil {
-		return nil, err
-	}
 	if err := i.footPrintRepository.CreateFootPrint(uid, visitorUid); err != nil {
 		return nil, err
 	}
-	return user, nil
+	return i.userRepository.GetUserByUid(uid)
 }
 
 func (i *userUsecase) CreateUser(user *domain.User) (*domain.User, error) {
-	user, err := i.userRepository.CreateUser(user)
-	if err != nil {
-		return nil, err
-	}
-	return user, nil
+	return i.userRepository.CreateUser(user)
 }
 
 func getGenderForSearch(isMale bool) bool {
