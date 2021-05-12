@@ -1,11 +1,11 @@
-package router_test
+package controller_test
 
 import (
 	"encoding/json"
 	"finder/domain"
-	"finder/domain/mocks"
 	"finder/infrastructure/router"
 	"finder/interface/controller"
+	"finder/usecase/mocks"
 	"net/http"
 	"net/http/httptest"
 	"strings"
