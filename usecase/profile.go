@@ -28,7 +28,6 @@ func (i *profileUsecase) GetProfileByUid(currentUserUid string) (*domain.User, e
 	return user, nil
 }
 func (i *profileUsecase) UpdateUser(currentUserUid string, updateUser *domain.UpdateUser) (*domain.User, error) {
-	// userに移し替え
 	user := &domain.User{
 		LastName:  updateUser.LastName,
 		FirstName: updateUser.FirstName,

@@ -1,6 +1,7 @@
 package repository_test
 
 import (
+	"database/sql/driver"
 	"finder/domain"
 	"finder/interface/repository"
 	"regexp"
@@ -175,6 +176,46 @@ func TestCreateUser(t *testing.T) {
 	validate := validator.New()
 	userRepository := repository.NewUserRepository(db, validate)
 	user, err := userRepository.CreateUser(&mockUser)
+	assert.NoError(t, err)
+	assert.NotNil(t, user)
+}
+
+type AnyTime struct{}
+
+// Match satisfies sqlmock.Argument interface
+func (a AnyTime) Match(v driver.Value) bool {
+	_, ok := v.(time.Time)
+	return ok
+}
+
+func TestUpdateeUser(t *testing.T) {
+	db, mock, err := NewGormConnectMock()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	mockUsers := setMockUsers()
+	mockUser := mockUsers[0]
+	mockUser.LastName = "updateLastName"
+
+	mock.ExpectBegin()
+	query := regexp.QuoteMeta("UPDATE `users` SET `created_at` = ?, `email` = ?, `first_name` = ?, `is_male` = ?, `last_name` = ?, `uid` = ?, `updated_at` = ? WHERE `users`.`deleted_at` IS NULL AND ((uid = ?))")
+
+	currentUserUid := mockUser.Uid
+	mock.ExpectExec(query).WithArgs(
+		mockUser.CreatedAt,
+		mockUser.Email,
+		mockUser.FirstName,
+		mockUser.IsMale,
+		mockUser.LastName,
+		mockUser.Uid,
+		AnyTime{},
+		currentUserUid,
+	).WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectCommit()
+
+	validate := validator.New()
+	userRepository := repository.NewUserRepository(db, validate)
+	user, err := userRepository.UpdateUser(mockUser.Uid, &mockUser)
 	assert.NoError(t, err)
 	assert.NotNil(t, user)
 }
