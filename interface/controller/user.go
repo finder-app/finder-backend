@@ -34,6 +34,7 @@ func (c *UserController) Create(ctx *gin.Context) {
 	user := &domain.User{}
 	if err := ctx.BindJSON(user); err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
+		return
 	}
 	user, err := c.userUsecase.CreateUser(user)
 	if err != nil {

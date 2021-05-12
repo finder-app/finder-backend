@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"finder/domain"
 	"finder/usecase"
 	"net/http"
 
@@ -28,13 +29,13 @@ func (c *ProfileController) Index(ctx *gin.Context) {
 }
 
 func (c *ProfileController) Update(ctx *gin.Context) {
-	// if err := ctx.BindJSON(user); err != nil {
-	// 	ErrorResponse(ctx, http.StatusBadRequest, err)
-	// }
-	// user, err := c.userUsecase.CreateProfile(user)
-	// if err != nil {
-	// 	ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
-	// 	return
-	// }
-	// ctx.JSON(http.StatusCreated, user)
+	updateUser := &domain.UpdateUser{}
+	ctx.BindJSON(&updateUser)
+	currentUserUid := ctx.Value("currentUserUid").(string)
+	user, err := c.profileUsecase.UpdateUser(currentUserUid, updateUser)
+	if err != nil {
+		ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, user)
 }

@@ -32,3 +32,12 @@ func (r *Router) Users(userController *controller.UserController) {
 		userController.Show(c)
 	})
 }
+
+func (r *Router) Profile(profileController *controller.ProfileController) {
+	r.Engine.GET("/profile", func(c *gin.Context) {
+		profileController.Index(c)
+	})
+	r.Engine.PUT("/profile", func(c *gin.Context) {
+		profileController.Update(c)
+	})
+}

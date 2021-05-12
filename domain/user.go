@@ -15,3 +15,8 @@ type User struct {
 	UpdatedAt time.Time
 	DeletedAt *time.Time `sql:"index"`
 }
+
+type UpdateUser struct {
+	LastName  string
+	FirstName string
+}

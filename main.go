@@ -34,7 +34,6 @@ func main() {
 
 	router.Users(userController)
 	router.Profile(profileController)
-	// router.Engine.GET("/profile", func(c *gin.Context) { profileController.Index(c) })
 
 	router.Engine.GET("/foot_prints", func(c *gin.Context) { footPrintController.Index(c) })
 	router.Engine.POST("/users/:uid/likes", func(c *gin.Context) { likeController.Create(c) })
