@@ -1,29 +1,29 @@
-package interactor
+package usecase
 
 import (
 	"finder/domain"
 	"finder/interface/repository"
 )
 
-type UserInteractor interface {
+type UserUsecase interface {
 	GetUsersByUid(uid string) ([]domain.User, error)
 	GetUserByUid(uid string, visitorUid string) (*domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
 }
 
-type userInteractor struct {
+type userUsecase struct {
 	userRepository      repository.UserRepository
 	footPrintRepository repository.FootPrintRepository
 }
 
-func NewUserInteractor(ur repository.UserRepository, fpr repository.FootPrintRepository) *userInteractor {
-	return &userInteractor{
+func NewUserUsecase(ur repository.UserRepository, fpr repository.FootPrintRepository) *userUsecase {
+	return &userUsecase{
 		userRepository:      ur,
 		footPrintRepository: fpr,
 	}
 }
 
-func (i *userInteractor) GetUsersByUid(uid string) ([]domain.User, error) {
+func (i *userUsecase) GetUsersByUid(uid string) ([]domain.User, error) {
 	user, _ := i.userRepository.GetUserByUid(uid)
 	gender := getGenderForSearch(user.IsMale)
 	users, err := i.userRepository.GetUsersByGender(gender)
@@ -33,7 +33,7 @@ func (i *userInteractor) GetUsersByUid(uid string) ([]domain.User, error) {
 	return users, nil
 }
 
-func (i *userInteractor) GetUserByUid(uid string, visitorUid string) (*domain.User, error) {
+func (i *userUsecase) GetUserByUid(uid string, visitorUid string) (*domain.User, error) {
 	user, err := i.userRepository.GetUserByUid(uid)
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func (i *userInteractor) GetUserByUid(uid string, visitorUid string) (*domain.Us
 	return user, nil
 }
 
-func (i *userInteractor) CreateUser(user *domain.User) (*domain.User, error) {
+func (i *userUsecase) CreateUser(user *domain.User) (*domain.User, error) {
 	user, err := i.userRepository.CreateUser(user)
 	if err != nil {
 		return nil, err

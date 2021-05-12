@@ -3,7 +3,7 @@ package controller
 import (
 	"errors"
 	"finder/domain"
-	"finder/usecase/interactor"
+	"finder/usecase"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,18 +11,18 @@ import (
 )
 
 type UserController struct {
-	userInteractor interactor.UserInteractor
+	userUsecase usecase.UserUsecase
 }
 
-func NewUserController(ui interactor.UserInteractor) *UserController {
+func NewUserController(ui usecase.UserUsecase) *UserController {
 	return &UserController{
-		userInteractor: ui,
+		userUsecase: ui,
 	}
 }
 
 func (c *UserController) Index(ctx *gin.Context) {
 	currentUserUid := ctx.Value("currentUserUid").(string)
-	user, err := c.userInteractor.GetUsersByUid(currentUserUid)
+	user, err := c.userUsecase.GetUsersByUid(currentUserUid)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
@@ -35,7 +35,7 @@ func (c *UserController) Create(ctx *gin.Context) {
 	if err := ctx.BindJSON(user); err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 	}
-	user, err := c.userInteractor.CreateUser(user)
+	user, err := c.userUsecase.CreateUser(user)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
 		return
@@ -46,7 +46,7 @@ func (c *UserController) Create(ctx *gin.Context) {
 func (c *UserController) Show(ctx *gin.Context) {
 	VisitorUid := ctx.Value("currentUserUid").(string)
 	uid := ctx.Param("uid")
-	user, err := c.userInteractor.GetUserByUid(uid, VisitorUid)
+	user, err := c.userUsecase.GetUserByUid(uid, VisitorUid)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			ErrorResponse(ctx, http.StatusNotFound, err)

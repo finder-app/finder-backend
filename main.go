@@ -6,7 +6,7 @@ import (
 	finderRouter "finder/infrastructure/router"
 	"finder/interface/controller"
 	"finder/interface/repository"
-	"finder/usecase/interactor"
+	"finder/usecase"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,16 +18,16 @@ func main() {
 	router := finderRouter.NewRouter()
 
 	footPrintRepository := repository.NewFootPrintRepository(db, validate)
-	footPrintInteractor := interactor.NewFootPrintInteractor(footPrintRepository)
-	footPrintController := controller.NewFootPrintController(footPrintInteractor)
+	footPrintUsecase := usecase.NewFootPrintUsecase(footPrintRepository)
+	footPrintController := controller.NewFootPrintController(footPrintUsecase)
 
 	userRepository := repository.NewUserRepository(db, validate)
-	userInteractor := interactor.NewUserInteractor(userRepository, footPrintRepository)
-	userController := controller.NewUserController(userInteractor)
+	userUsecase := usecase.NewUserUsecase(userRepository, footPrintRepository)
+	userController := controller.NewUserController(userUsecase)
 
 	likeRepository := repository.NewLikeRepository(db, validate)
-	likeInteractor := interactor.NewLikeInteractor(likeRepository)
-	likeController := controller.NewLikeController(likeInteractor)
+	likeUsecase := usecase.NewLikeUsecase(likeRepository)
+	likeController := controller.NewLikeController(likeUsecase)
 
 	router.Engine.GET("/foot_prints", func(c *gin.Context) { footPrintController.Index(c) })
 	router.Users(userController)

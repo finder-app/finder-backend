@@ -1,24 +1,24 @@
 package controller
 
 import (
-	"finder/usecase/interactor"
+	"finder/usecase"
 	"net/http"
 )
 
 type likeController struct {
-	likeInteractor interactor.LikeInteractor
+	likeUsecase usecase.LikeUsecase
 }
 
-func NewLikeController(li interactor.LikeInteractor) *likeController {
+func NewLikeController(li usecase.LikeUsecase) *likeController {
 	return &likeController{
-		likeInteractor: li,
+		likeUsecase: li,
 	}
 }
 
 func (c *likeController) Create(ctx Context) {
 	sentUesrUid := ctx.Value("currentUserUid").(string)
 	recievedUserUid := ctx.Param("uid")
-	like, err := c.likeInteractor.CreateLike(sentUesrUid, recievedUserUid)
+	like, err := c.likeUsecase.CreateLike(sentUesrUid, recievedUserUid)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
 		return
@@ -28,7 +28,7 @@ func (c *likeController) Create(ctx Context) {
 
 func (c *likeController) Index(ctx Context) {
 	currentUserUid := ctx.Value("currentUserUid").(string)
-	like, err := c.likeInteractor.GetOldestLikeByUid(currentUserUid)
+	like, err := c.likeUsecase.GetOldestLikeByUid(currentUserUid)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusNotFound, err)
 		return
@@ -39,7 +39,7 @@ func (c *likeController) Index(ctx Context) {
 func (c *likeController) Next(ctx Context) {
 	recievedUserUid := ctx.Value("currentUserUid").(string)
 	sentUesrUid := ctx.Param("sent_uesr_uid")
-	like, err := c.likeInteractor.GetNextUserByUid(recievedUserUid, sentUesrUid)
+	like, err := c.likeUsecase.GetNextUserByUid(recievedUserUid, sentUesrUid)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusNotFound, err)
 		return
@@ -50,7 +50,7 @@ func (c *likeController) Next(ctx Context) {
 func (c *likeController) Update(ctx Context) {
 	recievedUserUid := ctx.Value("currentUserUid").(string)
 	sentUesrUid := ctx.Param("sent_uesr_uid")
-	err := c.likeInteractor.Consent(recievedUserUid, sentUesrUid)
+	err := c.likeUsecase.Consent(recievedUserUid, sentUesrUid)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
 		return

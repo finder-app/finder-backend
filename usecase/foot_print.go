@@ -1,28 +1,26 @@
-package interactor
+package usecase
 
 import (
 	"finder/domain"
 	"finder/interface/repository"
-	"fmt"
 )
 
-type FootPrintInteractor interface {
+type FootPrintUsecase interface {
 	GetFootPrintsByUid(currentUserUid string) ([]domain.FootPrint, error)
 }
 
-type footPrintInteractor struct {
+type footPrintUsecase struct {
 	footPrintRepository repository.FootPrintRepository
 }
 
-func NewFootPrintInteractor(ur repository.FootPrintRepository) *footPrintInteractor {
-	return &footPrintInteractor{
+func NewFootPrintUsecase(ur repository.FootPrintRepository) *footPrintUsecase {
+	return &footPrintUsecase{
 		footPrintRepository: ur,
 	}
 }
 
-func (i *footPrintInteractor) GetFootPrintsByUid(currentUserUid string) ([]domain.FootPrint, error) {
+func (i *footPrintUsecase) GetFootPrintsByUid(currentUserUid string) ([]domain.FootPrint, error) {
 	if err := i.footPrintRepository.UpdateToAlreadyRead(currentUserUid); err != nil {
-		fmt.Printf("interactor error %v", err)
 		return nil, err
 	}
 	footPrints, err := i.footPrintRepository.GetFootPrintsByUid(currentUserUid)
