@@ -3,7 +3,7 @@ package repository_test
 import (
 	"database/sql/driver"
 	"finder/domain"
-	"finder/interface/repository"
+	"finder/infrastructure/repository"
 	"regexp"
 	"testing"
 	"time"

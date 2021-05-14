@@ -3,9 +3,9 @@ package main
 import (
 	"finder/infrastructure"
 	"finder/infrastructure/logger"
+	"finder/infrastructure/repository"
 	finderRouter "finder/infrastructure/router"
 	"finder/interface/controller"
-	"finder/interface/repository"
 	"finder/usecase"
 
 	"github.com/gin-gonic/gin"

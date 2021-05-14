@@ -3,7 +3,7 @@ package usecase
 import (
 	"errors"
 	"finder/domain"
-	"finder/interface/repository"
+	"finder/infrastructure/repository"
 )
 
 type ProfileUsecase interface {

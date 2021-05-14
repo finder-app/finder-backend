@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"finder/domain"
-	"finder/interface/repository"
+	"finder/infrastructure/repository"
 )
 
 type FootPrintUsecase interface {

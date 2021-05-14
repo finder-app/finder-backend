@@ -4,7 +4,7 @@ attach:
 test:
 	docker-compose exec app go test -v -cover ./interface/repository/
 
-all-test:
+test-all:
 	docker-compose exec app go test -v -cover ./...
 
 m-file:
