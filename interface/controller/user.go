@@ -14,9 +14,9 @@ type UserController struct {
 	userUsecase usecase.UserUsecase
 }
 
-func NewUserController(ui usecase.UserUsecase) *UserController {
+func NewUserController(uu usecase.UserUsecase) *UserController {
 	return &UserController{
-		userUsecase: ui,
+		userUsecase: uu,
 	}
 }
 

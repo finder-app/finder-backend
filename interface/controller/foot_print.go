@@ -3,19 +3,21 @@ package controller
 import (
 	"finder/usecase"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type footPrintController struct {
 	footPrintUsecase usecase.FootPrintUsecase
 }
 
-func NewFootPrintController(fpi usecase.FootPrintUsecase) *footPrintController {
+func NewFootPrintController(fpu usecase.FootPrintUsecase) *footPrintController {
 	return &footPrintController{
-		footPrintUsecase: fpi,
+		footPrintUsecase: fpu,
 	}
 }
 
-func (c *footPrintController) Index(ctx Context) {
+func (c *footPrintController) Index(ctx *gin.Context) {
 	currentUserUid := ctx.Value("currentUserUid").(string)
 	footPrints, err := c.footPrintUsecase.GetFootPrintsByUid(currentUserUid)
 	if err != nil {
