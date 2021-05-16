@@ -12,33 +12,15 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-// func setMockUsers(t *testing.T) (mockMaleUser domain.User, mockFemaleUser domain.User) {
-// 	err := faker.FakeData(&mockMaleUser)
-// 	assert.NoError(t, err)
-// 	mockMaleUser.Gender = "男性"
-
-// 	err = faker.FakeData(&mockFemaleUser)
-// 	assert.NoError(t, err)
-// 	mockFemaleUser.Gender = "女性"
-// 	return
-// }
-
-func setMockUsers(t *testing.T) []domain.User {
-	mockMaleUser := domain.User{}
+func setMockUsers(t *testing.T) (mockMaleUser domain.User, mockFemaleUser domain.User) {
 	err := faker.FakeData(&mockMaleUser)
 	assert.NoError(t, err)
 	mockMaleUser.Gender = "男性"
 
-	mockFemaleUser := domain.User{}
 	err = faker.FakeData(&mockFemaleUser)
 	assert.NoError(t, err)
 	mockFemaleUser.Gender = "女性"
-
-	mockUsers := []domain.User{
-		mockMaleUser,
-		mockFemaleUser,
-	}
-	return mockUsers
+	return
 }
 
 func TestGetUsersByUid(t *testing.T) {
@@ -46,16 +28,14 @@ func TestGetUsersByUid(t *testing.T) {
 	mockFootPrintRepository := new(mocks.FootPrintRepository)
 	mockUsecase := usecase.NewUserUsecase(mockUserRepository, mockFootPrintRepository)
 
-	mockUsers := setMockUsers(t)
-
-	mockMaleUser := mockUsers[0]
+	mockMaleUser, mockFemaleUser := setMockUsers(t)
 	mockMaleUsers := []domain.User{mockMaleUser}
-	mockFemaleUser := mockUsers[1]
 	mockFemaleUsers := []domain.User{mockFemaleUser}
 
 	t.Run("男性が女性の一覧を取得", func(t *testing.T) {
 		mockUserRepository.On("GetUserByUid", mock.AnythingOfType("string")).Return(mockMaleUser, nil).Once()
 		mockUserRepository.On("GetUsersByGender", mock.AnythingOfType("string")).Return(mockFemaleUsers, nil).Once()
+
 		femaleUsers, err := mockUsecase.GetUsersByUid(mockMaleUser.Uid)
 		assert.NoError(t, err)
 		assert.Equal(t, femaleUsers[0].Uid, (mockFemaleUsers[0].Uid))
@@ -64,6 +44,7 @@ func TestGetUsersByUid(t *testing.T) {
 	t.Run("女性が男性の一覧を取得", func(t *testing.T) {
 		mockUserRepository.On("GetUserByUid", mock.AnythingOfType("string")).Return(mockFemaleUser, nil).Once()
 		mockUserRepository.On("GetUsersByGender", mock.AnythingOfType("string")).Return(mockMaleUsers, nil).Once()
+
 		maleUsers, err := mockUsecase.GetUsersByUid(mockFemaleUser.Uid)
 		assert.NoError(t, err)
 		assert.Equal(t, maleUsers[0].Uid, (mockMaleUsers[0].Uid))
@@ -73,6 +54,7 @@ func TestGetUsersByUid(t *testing.T) {
 		mockUserRepository.On("GetUserByUid", mock.AnythingOfType("string")).Return(mockMaleUser, nil).Once()
 		err := errors.New("Unexpexted Error")
 		mockUserRepository.On("GetUsersByGender", mock.AnythingOfType("string")).Return(nil, err).Once()
+
 		femaleUsers, err := mockUsecase.GetUsersByUid(mockMaleUser.Uid)
 		assert.Error(t, err)
 		assert.Len(t, femaleUsers, 0)
@@ -83,10 +65,7 @@ func TestGetUserByUid(t *testing.T) {
 	mockUserRepository := new(mocks.UserRepository)
 	mockFootPrintRepository := new(mocks.FootPrintRepository)
 	mockUsecase := usecase.NewUserUsecase(mockUserRepository, mockFootPrintRepository)
-
-	mockUsers := setMockUsers(t)
-	mockMaleUser := mockUsers[0]
-	mockFemaleUser := mockUsers[1]
+	mockMaleUser, mockFemaleUser := setMockUsers(t)
 
 	t.Run("男性が女性の詳細を取得", func(t *testing.T) {
 		mockUserRepository.On("GetUserByVisitorUid", mock.AnythingOfType("string")).Return(mockMaleUser, nil).Once()
@@ -111,10 +90,7 @@ func TestGetUserByUidError(t *testing.T) {
 	mockUserRepository := new(mocks.UserRepository)
 	mockFootPrintRepository := new(mocks.FootPrintRepository)
 	mockUsecase := usecase.NewUserUsecase(mockUserRepository, mockFootPrintRepository)
-
-	mockUsers := setMockUsers(t)
-	mockMaleUser := mockUsers[0]
-	mockFemaleUser := mockUsers[1]
+	mockMaleUser, mockFemaleUser := setMockUsers(t)
 
 	t.Run("異常値（同性の詳細へリクエストを送った場合）", func(t *testing.T) {
 		mockUserRepository.On("GetUserByUid", mock.AnythingOfType("string")).Return(mockMaleUser, nil).Once()
@@ -148,20 +124,20 @@ func TestCreateUser(t *testing.T) {
 	mockUserRepository := new(mocks.UserRepository)
 	mockFootPrintRepository := new(mocks.FootPrintRepository)
 	mockUsecase := usecase.NewUserUsecase(mockUserRepository, mockFootPrintRepository)
-	mockUser := setMockUsers(t)[0]
+	mockMaleUser, _ := setMockUsers(t)
 
 	t.Run("正常", func(t *testing.T) {
-		mockUserRepository.On("CreateUser", mock.AnythingOfType("*domain.User")).Return(&mockUser, nil).Once()
-		user, err := mockUsecase.CreateUser(&mockUser)
+		mockUserRepository.On("CreateUser", mock.AnythingOfType("*domain.User")).Return(&mockMaleUser, nil).Once()
+		user, err := mockUsecase.CreateUser(&mockMaleUser)
 		assert.NoError(t, err)
-		assert.Equal(t, user.Uid, mockUser.Uid)
+		assert.Equal(t, user.Uid, mockMaleUser.Uid)
 	})
 	t.Run("異常値", func(t *testing.T) {
 		err := errors.New("StatusUnprocessable Entity")
 		mockUserRepository.On("CreateUser", mock.AnythingOfType("*domain.User")).Return(nil, err).Once()
 		// NOTE: 多分pointerでuserを渡してるから、userの値が返ってきちゃう。テストしない。
 		// errが返ってくるかのテストなので。go-clean-archも確認してない。あれは返り値ないからだけど
-		_, err = mockUsecase.CreateUser(&mockUser)
+		_, err = mockUsecase.CreateUser(&mockMaleUser)
 		assert.Error(t, err)
 	})
 }

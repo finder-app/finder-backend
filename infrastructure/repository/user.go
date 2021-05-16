@@ -34,30 +34,21 @@ func (r *userRepository) GetUsersByGender(genderToSearch string) ([]domain.User,
 }
 
 func (r *userRepository) GetUserByUid(uid string) (domain.User, error) {
+	return getUserByUid(r, uid)
+}
+
+// NOTE: testを通すために、GetUserByUidと全く同じメソッドを作成する。
+func (r *userRepository) GetUserByVisitorUid(visitorUid string) (domain.User, error) {
+	return getUserByUid(r, visitorUid)
+}
+
+func getUserByUid(r *userRepository, uid string) (domain.User, error) {
 	user := domain.User{}
 	if err := r.db.Where("uid = ?", uid).Take(&user).Error; err != nil {
 		return domain.User{}, err
 	}
 	return user, nil
 }
-
-// NOTE: testを通すために、GetUserByUidと全く同じメソッドを作成する。scope化したい
-func (r *userRepository) GetUserByVisitorUid(visitorUid string) (domain.User, error) {
-	visitor := domain.User{}
-	if err := r.db.Where("uid = ?", visitorUid).Take(&visitor).Error; err != nil {
-		return domain.User{}, err
-	}
-	return visitor, nil
-}
-
-// ここに共通化する
-// func getUserByUid(r *userRepository, uid string) (domain.User, error) {
-// 	user := domain.User{}
-// 	if err := r.db.Where("uid = ?", uid).Take(&user).Error; err != nil {
-// 		return domain.User{}, err
-// 	}
-// 	return user, nil
-// }
 
 func (r *userRepository) CreateUser(user *domain.User) (*domain.User, error) {
 	if err := validations.ValidateUser(user); err != nil {
