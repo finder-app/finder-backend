@@ -35,7 +35,7 @@ func (u *userUsecase) GetUserByUid(uid string, visitorUid string) (domain.User, 
 	if err != nil {
 		return domain.User{}, err
 	}
-	visitor, err := u.userRepository.GetUserByUid(visitorUid)
+	visitor, err := u.userRepository.GetUserByVisitorUid(visitorUid)
 	if err != nil {
 		return domain.User{}, err
 	}

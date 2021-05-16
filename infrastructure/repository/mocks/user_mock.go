@@ -33,6 +33,17 @@ func (r *UserRepository) GetUserByUid(uid string) (domain.User, error) {
 	return user, err
 }
 
+func (r *UserRepository) GetUserByVisitorUid(visitorUid string) (domain.User, error) {
+	arguments := r.Called(visitorUid)
+
+	user := domain.User{}
+	if arguments.Get(0) != nil {
+		user = arguments.Get(0).(domain.User)
+	}
+	err := shared.MockArgumentsError(arguments, 1)
+	return user, err
+}
+
 func (r *UserRepository) CreateUser(user *domain.User) (*domain.User, error) {
 	arguments := r.Called(user)
 

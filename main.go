@@ -14,18 +14,17 @@ import (
 func main() {
 	db := infrastructure.NewGormConnect()
 	logger.NewLogger(db)
-	validate := infrastructure.NewValidator()
 	router := finderRouter.NewRouter()
 
-	footPrintRepository := repository.NewFootPrintRepository(db, validate)
+	footPrintRepository := repository.NewFootPrintRepository(db)
 	footPrintUsecase := usecase.NewFootPrintUsecase(footPrintRepository)
 	footPrintController := controller.NewFootPrintController(footPrintUsecase)
 
-	userRepository := repository.NewUserRepository(db, validate)
+	userRepository := repository.NewUserRepository(db)
 	userUsecase := usecase.NewUserUsecase(userRepository, footPrintRepository)
 	userController := controller.NewUserController(userUsecase)
 
-	likeRepository := repository.NewLikeRepository(db, validate)
+	likeRepository := repository.NewLikeRepository(db)
 	likeUsecase := usecase.NewLikeUsecase(likeRepository)
 	likeController := controller.NewLikeController(likeUsecase)
 

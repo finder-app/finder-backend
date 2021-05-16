@@ -3,7 +3,6 @@ package repository
 import (
 	"finder/domain"
 
-	"github.com/go-playground/validator"
 	"github.com/jinzhu/gorm"
 )
 
@@ -14,14 +13,12 @@ type FootPrintRepository interface {
 }
 
 type footPrintRepository struct {
-	db       *gorm.DB
-	validate *validator.Validate
+	db *gorm.DB
 }
 
-func NewFootPrintRepository(db *gorm.DB, validate *validator.Validate) *footPrintRepository {
+func NewFootPrintRepository(db *gorm.DB) *footPrintRepository {
 	return &footPrintRepository{
-		db:       db,
-		validate: validate,
+		db: db,
 	}
 }
 

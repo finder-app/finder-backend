@@ -12,6 +12,17 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
+// func setMockUsers(t *testing.T) (mockMaleUser domain.User, mockFemaleUser domain.User) {
+// 	err := faker.FakeData(&mockMaleUser)
+// 	assert.NoError(t, err)
+// 	mockMaleUser.Gender = "男性"
+
+// 	err = faker.FakeData(&mockFemaleUser)
+// 	assert.NoError(t, err)
+// 	mockFemaleUser.Gender = "女性"
+// 	return
+// }
+
 func setMockUsers(t *testing.T) []domain.User {
 	mockMaleUser := domain.User{}
 	err := faker.FakeData(&mockMaleUser)
@@ -78,32 +89,58 @@ func TestGetUserByUid(t *testing.T) {
 	mockFemaleUser := mockUsers[1]
 
 	t.Run("男性が女性の詳細を取得", func(t *testing.T) {
-		mockUserRepository.On("GetUserByUid", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(mockFemaleUser, nil).Once()
-		mockFootPrintRepository.On("CreateFootPrint", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(nil).Once()
-		femaleUser, err := mockUsecase.GetUserByUid(mockFemaleUser.Uid, mockMaleUser.Uid)
+		mockUserRepository.On("GetUserByVisitorUid", mock.AnythingOfType("string")).Return(mockMaleUser, nil).Once()
+		mockUserRepository.On("GetUserByUid", mock.AnythingOfType("string")).Return(mockFemaleUser, nil).Once()
+		mockFootPrintRepository.On("CreateFootPrint", mock.AnythingOfType("*domain.FootPrint")).Return(nil).Once()
+
+		_, err := mockUsecase.GetUserByUid(mockFemaleUser.Uid, mockMaleUser.Uid)
 		assert.NoError(t, err)
-		assert.Equal(t, femaleUser.Uid, mockFemaleUser.Uid)
 	})
 	t.Run("女性が男性の詳細を取得", func(t *testing.T) {
 		mockUserRepository.On("GetUserByUid", mock.AnythingOfType("string")).Return(mockMaleUser, nil).Once()
-		mockFootPrintRepository.On("CreateFootPrint", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(nil).Once()
-		maleUser, err := mockUsecase.GetUserByUid(mockMaleUser.Uid, mockFemaleUser.Uid)
+		mockUserRepository.On("GetUserByVisitorUid", mock.AnythingOfType("string")).Return(mockFemaleUser, nil).Once()
+		mockFootPrintRepository.On("CreateFootPrint", mock.AnythingOfType("*domain.FootPrint")).Return(nil).Once()
+
+		_, err := mockUsecase.GetUserByUid(mockMaleUser.Uid, mockFemaleUser.Uid)
 		assert.NoError(t, err)
-		assert.Equal(t, maleUser.Uid, mockMaleUser.Uid)
+	})
+}
+
+// NOTE: 成功時と同じmockUsecaseを使用するとエラーが発生するため、関数を分ける
+func TestGetUserByUidError(t *testing.T) {
+	mockUserRepository := new(mocks.UserRepository)
+	mockFootPrintRepository := new(mocks.FootPrintRepository)
+	mockUsecase := usecase.NewUserUsecase(mockUserRepository, mockFootPrintRepository)
+
+	mockUsers := setMockUsers(t)
+	mockMaleUser := mockUsers[0]
+	mockFemaleUser := mockUsers[1]
+
+	t.Run("異常値（同性の詳細へリクエストを送った場合）", func(t *testing.T) {
+		mockUserRepository.On("GetUserByUid", mock.AnythingOfType("string")).Return(mockMaleUser, nil).Once()
+		mockUserRepository.On("GetUserByVisitorUid", mock.AnythingOfType("string")).Return(mockMaleUser, nil).Once()
+
+		user, err := mockUsecase.GetUserByUid(mockMaleUser.Uid, mockMaleUser.Uid)
+		assert.Error(t, err)
+		assert.Equal(t, domain.User{}, user)
 	})
 	t.Run("異常値（存在しないユーザー）", func(t *testing.T) {
-		err := errors.New("record not found")
-		mockUserRepository.On("GetUserByUid", mock.AnythingOfType("string")).Return(nil, err).Once()
-		mockFootPrintRepository.On("CreateFootPrint", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(nil).Once()
-		femaleUser, err := mockUsecase.GetUserByUid(mockFemaleUser.Uid, mockMaleUser.Uid)
+		newError := errors.New("record not found")
+		mockUserRepository.On("GetUserByUid", mock.AnythingOfType("string")).Return(nil, newError).Once()
+
+		user, err := mockUsecase.GetUserByUid(mockFemaleUser.Uid, mockMaleUser.Uid)
 		assert.Error(t, err)
-		assert.Equal(t, domain.User{}, femaleUser)
+		assert.Equal(t, domain.User{}, user)
 	})
 	t.Run("異常値（足跡が作成できない）", func(t *testing.T) {
+		mockUserRepository.On("GetUserByUid", mock.AnythingOfType("string")).Return(mockMaleUser, nil).Once()
+		mockUserRepository.On("GetUserByVisitorUid", mock.AnythingOfType("string")).Return(mockFemaleUser, nil).Once()
 		err := errors.New("StatusUnprocessable Entity")
-		mockFootPrintRepository.On("CreateFootPrint", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(err).Once()
-		_, err = mockUsecase.GetUserByUid(mockMaleUser.Uid, mockFemaleUser.Uid)
+		mockFootPrintRepository.On("CreateFootPrint", mock.AnythingOfType("*domain.FootPrint")).Return(err).Once()
+
+		user, err := mockUsecase.GetUserByUid(mockMaleUser.Uid, mockFemaleUser.Uid)
 		assert.Error(t, err)
+		assert.Equal(t, domain.User{}, user)
 	})
 }
 

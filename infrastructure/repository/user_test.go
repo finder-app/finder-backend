@@ -10,7 +10,6 @@ import (
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/bxcodec/faker"
-	"github.com/go-playground/validator"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"github.com/stretchr/testify/assert"
@@ -78,8 +77,7 @@ func TestGetUsersByGender(t *testing.T) {
 	mock.ExpectQuery(query).WithArgs(male).WillReturnRows(maleRows)
 	mock.ExpectQuery(query).WithArgs(female).WillReturnRows(femaleRows)
 
-	validate := validator.New()
-	userRepository := repository.NewUserRepository(db, validate)
+	userRepository := repository.NewUserRepository(db)
 
 	maleUsers, err := userRepository.GetUsersByGender(male)
 	assert.NoError(t, err)
@@ -99,8 +97,7 @@ func TestGetUserByUid(t *testing.T) {
 	rows := getRows(mockUser)
 	mock.ExpectQuery(query).WithArgs(uid).WillReturnRows(rows)
 
-	validate := validator.New()
-	userRepository := repository.NewUserRepository(db, validate)
+	userRepository := repository.NewUserRepository(db)
 	user, err := userRepository.GetUserByUid(uid)
 	assert.NoError(t, err)
 	assert.NotNil(t, user)
@@ -125,8 +122,7 @@ func TestCreateUser(t *testing.T) {
 	).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectCommit()
 
-	validate := validator.New()
-	userRepository := repository.NewUserRepository(db, validate)
+	userRepository := repository.NewUserRepository(db)
 	user, err := userRepository.CreateUser(&mockUser)
 	assert.NoError(t, err)
 	assert.NotNil(t, user)
@@ -157,8 +153,7 @@ func TestUpdateUser(t *testing.T) {
 	).WillReturnResult(sqlmock.NewResult(1, 1))
 	mock.ExpectCommit()
 
-	validate := validator.New()
-	userRepository := repository.NewUserRepository(db, validate)
+	userRepository := repository.NewUserRepository(db)
 	user, err := userRepository.UpdateUser(&mockUser)
 	assert.NoError(t, err)
 	assert.Equal(t, mockUser.LastName, user.LastName)

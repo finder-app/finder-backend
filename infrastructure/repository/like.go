@@ -3,7 +3,6 @@ package repository
 import (
 	"finder/domain"
 
-	"github.com/go-playground/validator"
 	"github.com/jinzhu/gorm"
 )
 
@@ -15,14 +14,12 @@ type LikeRepository interface {
 }
 
 type likeRepository struct {
-	db       *gorm.DB
-	validate *validator.Validate
+	db *gorm.DB
 }
 
-func NewLikeRepository(db *gorm.DB, validate *validator.Validate) *likeRepository {
+func NewLikeRepository(db *gorm.DB) *likeRepository {
 	return &likeRepository{
-		db:       db,
-		validate: validate,
+		db: db,
 	}
 }
 

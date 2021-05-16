@@ -16,8 +16,8 @@ func (r *FootPrintRepository) GetFootPrintsByUid(currentUserUid string) ([]domai
 	return footPrints, nil
 }
 
-func (r *FootPrintRepository) CreateFootPrint(currentUserUid string, visitorUid string) error {
-	arguments := r.Called(currentUserUid, visitorUid)
+func (r *FootPrintRepository) CreateFootPrint(footPrint *domain.FootPrint) error {
+	arguments := r.Called(footPrint)
 
 	err := shared.MockArgumentsError(arguments, 0)
 	return err

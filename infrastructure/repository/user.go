@@ -4,26 +4,24 @@ import (
 	"finder/domain"
 	"finder/infrastructure/validations"
 
-	"github.com/go-playground/validator"
 	"github.com/jinzhu/gorm"
 )
 
 type UserRepository interface {
 	GetUsersByGender(genderToSearch string) ([]domain.User, error)
 	GetUserByUid(uid string) (domain.User, error)
+	GetUserByVisitorUid(visitorUid string) (domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
 	UpdateUser(user *domain.User) (*domain.User, error)
 }
 
 type userRepository struct {
-	db       *gorm.DB
-	validate *validator.Validate
+	db *gorm.DB
 }
 
-func NewUserRepository(db *gorm.DB, validate *validator.Validate) *userRepository {
+func NewUserRepository(db *gorm.DB) *userRepository {
 	return &userRepository{
-		db:       db,
-		validate: validate,
+		db: db,
 	}
 }
 
@@ -42,6 +40,24 @@ func (r *userRepository) GetUserByUid(uid string) (domain.User, error) {
 	}
 	return user, nil
 }
+
+// NOTE: testを通すために、GetUserByUidと全く同じメソッドを作成する。scope化したい
+func (r *userRepository) GetUserByVisitorUid(visitorUid string) (domain.User, error) {
+	visitor := domain.User{}
+	if err := r.db.Where("uid = ?", visitorUid).Take(&visitor).Error; err != nil {
+		return domain.User{}, err
+	}
+	return visitor, nil
+}
+
+// ここに共通化する
+// func getUserByUid(r *userRepository, uid string) (domain.User, error) {
+// 	user := domain.User{}
+// 	if err := r.db.Where("uid = ?", uid).Take(&user).Error; err != nil {
+// 		return domain.User{}, err
+// 	}
+// 	return user, nil
+// }
 
 func (r *userRepository) CreateUser(user *domain.User) (*domain.User, error) {
 	if err := validations.ValidateUser(user); err != nil {
