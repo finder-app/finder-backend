@@ -8,7 +8,7 @@ import (
 )
 
 type UserRepository interface {
-	GetUsersByGender(gender bool) ([]domain.User, error)
+	GetUsersByGender(genderToSearch string) ([]domain.User, error)
 	GetUserByUid(uid string) (domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
 	UpdateUser(user *domain.User) (*domain.User, error)
@@ -26,9 +26,9 @@ func NewUserRepository(db *gorm.DB, validate *validator.Validate) *userRepositor
 	}
 }
 
-func (r *userRepository) GetUsersByGender(gender bool) ([]domain.User, error) {
+func (r *userRepository) GetUsersByGender(genderToSearch string) ([]domain.User, error) {
 	users := []domain.User{}
-	if err := r.db.Where("is_male = ?", gender).Find(&users).Error; err != nil {
+	if err := r.db.Where("gender = ?", genderToSearch).Find(&users).Error; err != nil {
 		return nil, err
 	}
 	return users, nil

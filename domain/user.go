@@ -9,7 +9,7 @@ type User struct {
 	Email     string `validate:"required"`
 	LastName  string `validate:"required"`
 	FirstName string `validate:"required"`
-	IsMale    bool
+	Gender    string `validate:"required"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time

@@ -2,7 +2,7 @@ attach:
 	docker attach finder-backend_app_1
 
 test:
-	docker-compose exec app go test -v -cover ./interface/controller/
+	docker-compose exec app go test -v -cover ./infrastructure/repository/
 
 test-all:
 	docker-compose exec app go test -v -cover ./...
@@ -11,10 +11,10 @@ m-file:
 	migrate create -ext sql -dir ./db/migrate -seq $(name)
 
 m-up:
-	migrate -source file://./db/migrate -database 'mysql://root:finder0501@tcp(localhost:3308)/finder_development' up
+	migrate -source file://./db/migrate -database 'mysql://root:finder0501@tcp(localhost:13306)/finder_development' up
 
 m-down:
-	migrate -source file://./db/migrate -database 'mysql://root:finder0501@tcp(localhost:3308)/finder_development' down $(n)
+	migrate -source file://./db/migrate -database 'mysql://root:finder0501@tcp(localhost:13306)/finder_development' down $(n)
 
 m-force:
-	migrate -source file://./db/migrate -database 'mysql://root:finder0501@tcp(localhost:3308)/finder_development' force $(v)
+	migrate -source file://./db/migrate -database 'mysql://root:finder0501@tcp(localhost:13306)/finder_development' force $(v)

@@ -9,98 +9,69 @@ import (
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/bxcodec/faker"
 	"github.com/go-playground/validator"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"github.com/stretchr/testify/assert"
 )
 
-func NewGormConnectMock() (*gorm.DB, sqlmock.Sqlmock, error) {
+func NewMockGormConnect(t *testing.T) (*gorm.DB, sqlmock.Sqlmock) {
 	sqlDB, mock, err := sqlmock.New()
-	if err != nil {
-		return nil, nil, err
-	}
-	db, err := gorm.Open("mysql", sqlDB)
-	if err != nil {
-		return nil, nil, err
-	}
-	return db, mock, nil
-}
-
-// TODO: これfaker使えそう。男女だけ指定して
-func setMockUsers() []domain.User {
-	mockUsers := []domain.User{
-		{
-			Uid:       "Uid",
-			Email:     "ohishikaito@gmail.com",
-			LastName:  "大石",
-			FirstName: "海渡",
-			IsMale:    true,
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
-			DeletedAt: nil,
-		},
-		{
-			Uid:       "Uid2",
-			Email:     "ohishikaito2@gmail.com",
-			LastName:  "きじま",
-			FirstName: "あすか",
-			IsMale:    false,
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
-			DeletedAt: nil,
-		},
-	}
-	return mockUsers
-}
-
-func TestGetUsersByGender(t *testing.T) {
-	db, mock, err := NewGormConnectMock()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	mockUsers := setMockUsers()
+	db, err := gorm.Open("mysql", sqlDB)
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	return db, mock
+}
 
-	maleRows := sqlmock.NewRows([]string{
+func setMockUsers() (mockUsers []domain.User) {
+	mockMaleUser := domain.User{}
+	faker.FakeData(&mockMaleUser)
+	mockMaleUser.Gender = "男性"
+	mockUsers = append(mockUsers, mockMaleUser)
+
+	femockMaleUser := domain.User{}
+	faker.FakeData(&femockMaleUser)
+	mockMaleUser.Gender = "女性"
+	mockUsers = append(mockUsers, femockMaleUser)
+	return
+}
+
+func getRows(mockUser domain.User) *sqlmock.Rows {
+	rows := sqlmock.NewRows([]string{
 		"uid",
 		"email",
 		"last_name",
 		"first_name",
-		"is_male",
+		"gender",
 		"created_at",
 		"updated_at",
 		"deleted_at",
 	}).AddRow(
-		mockUsers[0].Uid,
-		mockUsers[0].Email,
-		mockUsers[0].LastName,
-		mockUsers[0].FirstName,
-		mockUsers[0].IsMale,
-		mockUsers[0].CreatedAt,
-		mockUsers[0].UpdatedAt,
-		mockUsers[0].DeletedAt,
+		mockUser.Uid,
+		mockUser.Email,
+		mockUser.LastName,
+		mockUser.FirstName,
+		mockUser.Gender,
+		mockUser.CreatedAt,
+		mockUser.UpdatedAt,
+		mockUser.DeletedAt,
 	)
-	femaleRows := sqlmock.NewRows([]string{
-		"uid",
-		"email",
-		"last_name",
-		"first_name",
-		"is_male",
-		"created_at",
-		"updated_at",
-	}).AddRow(
-		mockUsers[1].Uid,
-		mockUsers[1].Email,
-		mockUsers[1].LastName,
-		mockUsers[1].FirstName,
-		mockUsers[1].IsMale,
-		mockUsers[1].CreatedAt,
-		mockUsers[1].UpdatedAt,
-	)
+	return rows
+}
 
-	male := true
-	female := false
-	query := regexp.QuoteMeta("SELECT * FROM `users` WHERE `users`.`deleted_at` IS NULL AND ((is_male = ?))")
+func TestGetUsersByGender(t *testing.T) {
+	db, mock := NewMockGormConnect(t)
+	mockUsers := setMockUsers()
+
+	query := regexp.QuoteMeta("SELECT * FROM `users` WHERE `users`.`deleted_at` IS NULL AND ((gender = ?))")
+	male, female := "男性", "女性"
+	maleRows := getRows(mockUsers[0])
+	femaleRows := getRows(mockUsers[1])
 	mock.ExpectQuery(query).WithArgs(male).WillReturnRows(maleRows)
 	mock.ExpectQuery(query).WithArgs(female).WillReturnRows(femaleRows)
 
@@ -117,30 +88,12 @@ func TestGetUsersByGender(t *testing.T) {
 }
 
 func TestGetUserByUid(t *testing.T) {
-	db, mock, err := NewGormConnectMock()
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-	mockUsers := setMockUsers()
-	rows := sqlmock.NewRows([]string{
-		"uid",
-		"email",
-		"last_name",
-		"first_name",
-		"is_male",
-		"created_at",
-		"updated_at",
-	}).AddRow(
-		mockUsers[0].Uid,
-		mockUsers[0].Email,
-		mockUsers[0].LastName,
-		mockUsers[0].FirstName,
-		mockUsers[0].IsMale,
-		mockUsers[0].CreatedAt,
-		mockUsers[0].UpdatedAt,
-	)
+	db, mock := NewMockGormConnect(t)
+	mockUser := setMockUsers()[0]
+
 	query := regexp.QuoteMeta("SELECT * FROM `users` WHERE `users`.`deleted_at` IS NULL AND ((uid = ?)) LIMIT 1")
-	uid := mockUsers[0].Uid
+	uid := mockUser.Uid
+	rows := getRows(mockUser)
 	mock.ExpectQuery(query).WithArgs(uid).WillReturnRows(rows)
 
 	validate := validator.New()
@@ -148,26 +101,21 @@ func TestGetUserByUid(t *testing.T) {
 	user, err := userRepository.GetUserByUid(uid)
 	assert.NoError(t, err)
 	assert.NotNil(t, user)
-	assert.Equal(t, user.Uid, mockUsers[0].Uid)
+	assert.Equal(t, user.Uid, mockUser.Uid)
 }
 
 func TestCreateUser(t *testing.T) {
-	db, mock, err := NewGormConnectMock()
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-	mockUsers := setMockUsers()
-	mockUser := mockUsers[0]
+	db, mock := NewMockGormConnect(t)
+	mockUser := setMockUsers()[0]
 
 	mock.ExpectBegin()
-	query := regexp.QuoteMeta("INSERT INTO `users` (`uid`,`email`,`last_name`,`first_name`,`is_male`,`created_at`,`updated_at`,`deleted_at`) VALUES (?,?,?,?,?,?,?,?)")
-
+	query := regexp.QuoteMeta("INSERT INTO `users` (`uid`,`email`,`last_name`,`first_name`,`gender`,`created_at`,`updated_at`,`deleted_at`) VALUES (?,?,?,?,?,?,?,?)")
 	mock.ExpectExec(query).WithArgs(
 		mockUser.Uid,
 		mockUser.Email,
 		mockUser.LastName,
 		mockUser.FirstName,
-		mockUser.IsMale,
+		mockUser.Gender,
 		mockUser.CreatedAt,
 		mockUser.UpdatedAt,
 		mockUser.DeletedAt,
@@ -191,12 +139,8 @@ func (a AnyTime) Match(v driver.Value) bool {
 }
 
 func TestUpdateUser(t *testing.T) {
-	db, mock, err := NewGormConnectMock()
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-	mockUsers := setMockUsers()
-	mockUser := mockUsers[0]
+	db, mock := NewMockGormConnect(t)
+	mockUser := setMockUsers()[0]
 	mockUser.LastName = "updateLastName"
 
 	mock.ExpectBegin()

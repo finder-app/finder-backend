@@ -25,8 +25,8 @@ func NewUserUsecase(ur repository.UserRepository, fpr repository.FootPrintReposi
 
 func (i *userUsecase) GetUsersByUid(uid string) ([]domain.User, error) {
 	user, _ := i.userRepository.GetUserByUid(uid)
-	gender := getGenderForSearch(user.IsMale)
-	return i.userRepository.GetUsersByGender(gender)
+	genderToSearch := getGenderForSearch(user.Gender)
+	return i.userRepository.GetUsersByGender(genderToSearch)
 }
 
 func (i *userUsecase) GetUserByUid(uid string, visitorUid string) (domain.User, error) {
@@ -40,11 +40,14 @@ func (i *userUsecase) CreateUser(user *domain.User) (*domain.User, error) {
 	return i.userRepository.CreateUser(user)
 }
 
-func getGenderForSearch(isMale bool) bool {
-	// 仮でstruct持たせても良さそう！分かりやすいし。性別とisMaleを持った
-	if isMale {
-		return false
-	} else {
-		return true
+func getGenderForSearch(userGender string) string {
+	male, female := "男性", "女性"
+	switch userGender {
+	case male:
+		return female
+	case female:
+		return male
+	default:
+		panic("不正な値です")
 	}
 }
