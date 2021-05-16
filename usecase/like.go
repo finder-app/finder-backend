@@ -3,7 +3,6 @@ package usecase
 import (
 	"finder/domain"
 	"finder/infrastructure/repository"
-	"fmt"
 )
 
 type LikeUsecase interface {
@@ -14,14 +13,20 @@ type LikeUsecase interface {
 }
 
 type likeUsecase struct {
-	likeRepository repository.LikeRepository
-	roomRepository repository.RoomRepository
+	likeRepository     repository.LikeRepository
+	roomRepository     repository.RoomRepository
+	roomUserRepository repository.RoomUserRepository
 }
 
-func NewLikeUsecase(lr repository.LikeRepository, rr repository.RoomRepository) *likeUsecase {
+func NewLikeUsecase(
+	lr repository.LikeRepository,
+	rr repository.RoomRepository,
+	rur repository.RoomUserRepository,
+) *likeUsecase {
 	return &likeUsecase{
-		likeRepository: lr,
-		roomRepository: rr,
+		likeRepository:     lr,
+		roomRepository:     rr,
+		roomUserRepository: rur,
 	}
 }
 
@@ -58,13 +63,29 @@ func (u *likeUsecase) Consent(recievedUserUid string, sentUesrUid string) error 
 		tx.Rollback()
 		return err
 	}
-	room, err := u.roomRepository.CreateRoom(tx)
-	if err != nil {
+	room := domain.Room{}
+	if err := u.roomRepository.CreateRoom(tx, &room); err != nil {
 		tx.Rollback()
 		return err
 	}
-	fmt.Println(room)
-	tx.Rollback()
-	// tx.Commit()
+	roomUser1 := domain.RoomUser{
+		RoomId:  room.Id,
+		UserUid: recievedUserUid,
+	}
+	if err := u.roomUserRepository.CreateRoomUser(tx, roomUser1); err != nil {
+		tx.Rollback()
+		return err
+	}
+	roomUser2 := domain.RoomUser{
+		RoomId:  room.Id,
+		UserUid: sentUesrUid,
+	}
+	if err := u.roomUserRepository.CreateRoomUser(tx, roomUser2); err != nil {
+		tx.Rollback()
+		return err
+	}
+	// tx.Rollback()
+	tx.Commit()
+	// roomIdをresponseにかえして、部屋に移動できるように！
 	return nil
 }

@@ -38,18 +38,7 @@ func (c *likeController) Index(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, like)
 }
 
-func (c *likeController) Next(ctx *gin.Context) {
-	recievedUserUid := ctx.Value("currentUserUid").(string)
-	sentUesrUid := ctx.Param("sent_uesr_uid")
-	like, err := c.likeUsecase.GetNextUserByUid(recievedUserUid, sentUesrUid)
-	if err != nil {
-		ErrorResponse(ctx, http.StatusNotFound, err)
-		return
-	}
-	ctx.JSON(http.StatusOK, like)
-}
-
-func (c *likeController) Update(ctx *gin.Context) {
+func (c *likeController) Consent(ctx *gin.Context) {
 	recievedUserUid := ctx.Value("currentUserUid").(string)
 	sentUesrUid := ctx.Param("sent_uesr_uid")
 	err := c.likeUsecase.Consent(recievedUserUid, sentUesrUid)
@@ -61,4 +50,15 @@ func (c *likeController) Update(ctx *gin.Context) {
 		"message": "実装中 messageができるようにする",
 		"data":    "data",
 	})
+}
+
+func (c *likeController) Next(ctx *gin.Context) {
+	recievedUserUid := ctx.Value("currentUserUid").(string)
+	sentUesrUid := ctx.Param("sent_uesr_uid")
+	like, err := c.likeUsecase.GetNextUserByUid(recievedUserUid, sentUesrUid)
+	if err != nil {
+		ErrorResponse(ctx, http.StatusNotFound, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, like)
 }

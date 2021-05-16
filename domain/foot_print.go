@@ -5,8 +5,6 @@ import (
 )
 
 type FootPrint struct {
-	// NOTE: IDは使ってないからコメントアウト
-	// ID         uint
 	VisitorUid string
 	UserUid    string
 	Unread     bool

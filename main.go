@@ -26,8 +26,14 @@ func main() {
 
 	roomRepository := repository.NewRoomRepository(db)
 
+	roomUserRepository := repository.NewRoomUserRepository(db)
+
 	likeRepository := repository.NewLikeRepository(db)
-	likeUsecase := usecase.NewLikeUsecase(likeRepository, roomRepository)
+	likeUsecase := usecase.NewLikeUsecase(
+		likeRepository,
+		roomRepository,
+		roomUserRepository,
+	)
 	likeController := controller.NewLikeController(likeUsecase)
 
 	profileUsecase := usecase.NewProfileUsecase(userRepository)
@@ -39,7 +45,7 @@ func main() {
 	router.Engine.GET("/foot_prints", func(c *gin.Context) { footPrintController.Index(c) })
 	router.Engine.POST("/users/:uid/likes", func(c *gin.Context) { likeController.Create(c) })
 	router.Engine.GET("/likes", func(c *gin.Context) { likeController.Index(c) })
-	router.Engine.PUT("/likes/:sent_uesr_uid", func(c *gin.Context) { likeController.Update(c) })
+	router.Engine.PUT("/likes/:sent_uesr_uid/consent", func(c *gin.Context) { likeController.Consent(c) })
 	router.Engine.PUT("/likes/:sent_uesr_uid/next", func(c *gin.Context) { likeController.Next(c) })
 	// router.Engine.GET("/likes/recieved", func(c *gin.Context) { likeController.Recieved(c) })
 	// router.Engine.GET("/likes/sent", func(c *gin.Context) { likeController.Sent(c) })

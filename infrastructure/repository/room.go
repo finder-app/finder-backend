@@ -7,7 +7,7 @@ import (
 )
 
 type RoomRepository interface {
-	CreateRoom(tx *gorm.DB) (domain.Room, error)
+	CreateRoom(tx *gorm.DB, room *domain.Room) error
 }
 
 type roomRepository struct {
@@ -20,10 +20,9 @@ func NewRoomRepository(db *gorm.DB) *roomRepository {
 	}
 }
 
-func (r *roomRepository) CreateRoom(tx *gorm.DB) (domain.Room, error) {
-	room := domain.Room{}
-	if err := tx.Create(&room).Error; err != nil {
-		return domain.Room{}, err
+func (r *roomRepository) CreateRoom(tx *gorm.DB, room *domain.Room) error {
+	if err := tx.Create(room).Error; err != nil {
+		return err
 	}
-	return room, nil
+	return nil
 }
