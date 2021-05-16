@@ -30,6 +30,7 @@ func (u *userUsecase) GetUsersByUid(uid string) ([]domain.User, error) {
 }
 
 func (u *userUsecase) GetUserByUid(uid string, visitorUid string) (domain.User, error) {
+	// NOTE: URL直打ち対策で、uidとvisitorUidを見て同性の詳細を見れないように。ってできる？
 	if err := u.footPrintRepository.CreateFootPrint(uid, visitorUid); err != nil {
 		return domain.User{}, err
 	}

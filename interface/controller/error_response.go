@@ -5,8 +5,7 @@ import (
 )
 
 func ErrorResponse(ctx *gin.Context, statusCode int, err error) {
-	type errorResponse map[string]interface{}
-	ctx.AbortWithStatusJSON(statusCode, errorResponse{
+	ctx.AbortWithStatusJSON(statusCode, gin.H{
 		"errorMessage": string(err.Error()),
 	})
 }
