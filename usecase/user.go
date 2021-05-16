@@ -23,21 +23,21 @@ func NewUserUsecase(ur repository.UserRepository, fpr repository.FootPrintReposi
 	}
 }
 
-func (i *userUsecase) GetUsersByUid(uid string) ([]domain.User, error) {
-	user, _ := i.userRepository.GetUserByUid(uid)
+func (u *userUsecase) GetUsersByUid(uid string) ([]domain.User, error) {
+	user, _ := u.userRepository.GetUserByUid(uid)
 	genderToSearch := getGenderForSearch(user.Gender)
-	return i.userRepository.GetUsersByGender(genderToSearch)
+	return u.userRepository.GetUsersByGender(genderToSearch)
 }
 
-func (i *userUsecase) GetUserByUid(uid string, visitorUid string) (domain.User, error) {
-	if err := i.footPrintRepository.CreateFootPrint(uid, visitorUid); err != nil {
+func (u *userUsecase) GetUserByUid(uid string, visitorUid string) (domain.User, error) {
+	if err := u.footPrintRepository.CreateFootPrint(uid, visitorUid); err != nil {
 		return domain.User{}, err
 	}
-	return i.userRepository.GetUserByUid(uid)
+	return u.userRepository.GetUserByUid(uid)
 }
 
-func (i *userUsecase) CreateUser(user *domain.User) (*domain.User, error) {
-	return i.userRepository.CreateUser(user)
+func (u *userUsecase) CreateUser(user *domain.User) (*domain.User, error) {
+	return u.userRepository.CreateUser(user)
 }
 
 func getGenderForSearch(userGender string) string {
