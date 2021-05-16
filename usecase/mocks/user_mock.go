@@ -2,19 +2,13 @@ package mocks
 
 import (
 	"finder/domain"
+	"finder/shared"
 
 	"github.com/stretchr/testify/mock"
 )
 
 type UserUsecase struct {
 	mock.Mock
-}
-
-func argumentError(arguments mock.Arguments, index int) (err error) {
-	if arguments.Error(index) != nil {
-		err = arguments.Error(index)
-	}
-	return
 }
 
 func (u *UserUsecase) GetUsersByUid(uid string) ([]domain.User, error) {
@@ -30,7 +24,7 @@ func (u *UserUsecase) GetUsersByUid(uid string) ([]domain.User, error) {
 	if arguments.Get(0) != nil {
 		users = arguments.Get(0).([]domain.User)
 	}
-	err := argumentError(arguments, 1)
+	err := shared.MockArgumentsError(arguments, 1)
 	return users, err
 }
 
@@ -41,7 +35,7 @@ func (u *UserUsecase) GetUserByUid(uid string, visitorUid string) (domain.User, 
 	if arguments.Get(0) != nil {
 		user = arguments.Get(0).(domain.User)
 	}
-	err := argumentError(arguments, 1)
+	err := shared.MockArgumentsError(arguments, 1)
 	return user, err
 }
 
@@ -51,6 +45,6 @@ func (u *UserUsecase) CreateUser(user *domain.User) (*domain.User, error) {
 	if arguments.Get(0) != nil {
 		user = arguments.Get(0).(*domain.User)
 	}
-	err := argumentError(arguments, 1)
+	err := shared.MockArgumentsError(arguments, 1)
 	return user, err
 }

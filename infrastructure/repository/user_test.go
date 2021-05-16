@@ -28,17 +28,20 @@ func NewMockGormConnect(t *testing.T) (*gorm.DB, sqlmock.Sqlmock) {
 	return db, mock
 }
 
-func setMockUsers() (mockUsers []domain.User) {
+func setMockUsers() []domain.User {
 	mockMaleUser := domain.User{}
 	faker.FakeData(&mockMaleUser)
 	mockMaleUser.Gender = "男性"
-	mockUsers = append(mockUsers, mockMaleUser)
 
 	femockMaleUser := domain.User{}
 	faker.FakeData(&femockMaleUser)
 	mockMaleUser.Gender = "女性"
-	mockUsers = append(mockUsers, femockMaleUser)
-	return
+
+	mockUsers := []domain.User{
+		mockMaleUser,
+		femockMaleUser,
+	}
+	return mockUsers
 }
 
 func getRows(mockUser domain.User) *sqlmock.Rows {

@@ -2,6 +2,7 @@ package mocks
 
 import (
 	"finder/domain"
+	"finder/shared"
 
 	"github.com/stretchr/testify/mock"
 )
@@ -16,7 +17,10 @@ func (r *FootPrintRepository) GetFootPrintsByUid(currentUserUid string) ([]domai
 }
 
 func (r *FootPrintRepository) CreateFootPrint(currentUserUid string, visitorUid string) error {
-	return nil
+	arguments := r.Called(currentUserUid, visitorUid)
+
+	err := shared.MockArgumentsError(arguments, 0)
+	return err
 }
 
 func (r *FootPrintRepository) UpdateToAlreadyRead(currentUserUid string) error {
