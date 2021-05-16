@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"errors"
 	"finder/domain"
 	"finder/infrastructure/repository"
 )
@@ -30,11 +31,27 @@ func (u *userUsecase) GetUsersByUid(uid string) ([]domain.User, error) {
 }
 
 func (u *userUsecase) GetUserByUid(uid string, visitorUid string) (domain.User, error) {
-	// NOTE: URL直打ち対策で、uidとvisitorUidを見て同性の詳細を見れないように。ってできる？
-	if err := u.footPrintRepository.CreateFootPrint(uid, visitorUid); err != nil {
+	user, err := u.userRepository.GetUserByUid(uid)
+	if err != nil {
 		return domain.User{}, err
 	}
-	return u.userRepository.GetUserByUid(uid)
+	visitor, err := u.userRepository.GetUserByUid(visitorUid)
+	if err != nil {
+		return domain.User{}, err
+	}
+	if user.Gender == visitor.Gender {
+		return domain.User{}, errors.New("該当するユーザーは表示できません")
+	}
+
+	footPrint := &domain.FootPrint{
+		VisitorUid: visitorUid,
+		UserUid:    uid,
+		Unread:     true,
+	}
+	if err := u.footPrintRepository.CreateFootPrint(footPrint); err != nil {
+		return domain.User{}, err
+	}
+	return user, nil
 }
 
 func (u *userUsecase) CreateUser(user *domain.User) (*domain.User, error) {

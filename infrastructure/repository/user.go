@@ -2,6 +2,7 @@ package repository
 
 import (
 	"finder/domain"
+	"finder/infrastructure/validations"
 
 	"github.com/go-playground/validator"
 	"github.com/jinzhu/gorm"
@@ -43,7 +44,7 @@ func (r *userRepository) GetUserByUid(uid string) (domain.User, error) {
 }
 
 func (r *userRepository) CreateUser(user *domain.User) (*domain.User, error) {
-	if err := r.validate.Struct(user); err != nil {
+	if err := validations.ValidateUser(user); err != nil {
 		return nil, err
 	}
 	if err := r.db.Create(user).Error; err != nil {
@@ -53,7 +54,7 @@ func (r *userRepository) CreateUser(user *domain.User) (*domain.User, error) {
 }
 
 func (r *userRepository) UpdateUser(user *domain.User) (*domain.User, error) {
-	if err := r.validate.Struct(user); err != nil {
+	if err := validations.ValidateUser(user); err != nil {
 		return nil, err
 	}
 	result := r.db.Model(domain.User{}).Where("uid = ?", user.Uid).Update(

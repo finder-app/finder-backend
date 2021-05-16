@@ -2,7 +2,6 @@ package repository
 
 import (
 	"finder/domain"
-	"fmt"
 
 	"github.com/go-playground/validator"
 	"github.com/jinzhu/gorm"
@@ -10,7 +9,7 @@ import (
 
 type FootPrintRepository interface {
 	GetFootPrintsByUid(currentUserUid string) ([]domain.FootPrint, error)
-	CreateFootPrint(currentUserUid string, visitorUid string) error
+	CreateFootPrint(footPrint *domain.FootPrint) error
 	UpdateToAlreadyRead(currentUserUid string) error
 }
 
@@ -35,18 +34,12 @@ func (r *footPrintRepository) GetFootPrintsByUid(currentUserUid string) ([]domai
 	return footPrints, nil
 }
 
-func (r *footPrintRepository) CreateFootPrint(currentUserUid string, visitorUid string) error {
-	footPrint := &domain.FootPrint{
-		VisitorUid: visitorUid,
-		UserUid:    currentUserUid,
-		Unread:     true,
-	}
+func (r *footPrintRepository) CreateFootPrint(footPrint *domain.FootPrint) error {
 	where := domain.FootPrint{
 		VisitorUid: footPrint.VisitorUid,
 		UserUid:    footPrint.UserUid,
 	}
 	if err := r.db.FirstOrCreate(footPrint, where).Error; err != nil {
-		fmt.Println(err)
 		return err
 	}
 	return nil
