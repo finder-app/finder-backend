@@ -60,6 +60,7 @@ func TestIndex(t *testing.T) {
 	router.Engine.ServeHTTP(response, ctx.Request)
 	assert.Equal(t, http.StatusOK, response.Code)
 }
+
 func TestIndexError(t *testing.T) {
 	response := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(response)
