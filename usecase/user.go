@@ -7,7 +7,7 @@ import (
 
 type UserUsecase interface {
 	GetUsersByUid(uid string) ([]domain.User, error)
-	GetUserByUid(uid string, visitorUid string) (*domain.User, error)
+	GetUserByUid(uid string, visitorUid string) (domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
 }
 
@@ -29,9 +29,9 @@ func (i *userUsecase) GetUsersByUid(uid string) ([]domain.User, error) {
 	return i.userRepository.GetUsersByGender(gender)
 }
 
-func (i *userUsecase) GetUserByUid(uid string, visitorUid string) (*domain.User, error) {
+func (i *userUsecase) GetUserByUid(uid string, visitorUid string) (domain.User, error) {
 	if err := i.footPrintRepository.CreateFootPrint(uid, visitorUid); err != nil {
-		return nil, err
+		return domain.User{}, err
 	}
 	return i.userRepository.GetUserByUid(uid)
 }

@@ -2,7 +2,7 @@ attach:
 	docker attach finder-backend_app_1
 
 test:
-	docker-compose exec app go test -v -cover ./interface/repository/
+	docker-compose exec app go test -v -cover ./interface/controller/
 
 test-all:
 	docker-compose exec app go test -v -cover ./...

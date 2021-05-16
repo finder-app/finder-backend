@@ -2,6 +2,7 @@ package controller_test
 
 import (
 	"encoding/json"
+	"errors"
 	"finder/domain"
 	"finder/infrastructure/router"
 	"finder/interface/controller"
@@ -14,28 +15,37 @@ import (
 	"github.com/bxcodec/faker"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
-func getUsersRouter(t *testing.T) *router.Router {
-	mockUseCase := new(mocks.UserUsecase)
+// FIXME: ここmockUsecaseを引数に渡すの微妙な気がする
+func getUsersRouter(mockUseCase *mocks.UserUsecase) *router.Router {
 	userController := controller.NewUserController(mockUseCase)
 	router := &router.Router{
 		Engine: gin.Default(),
 	}
-	router.Engine.Use(setCurrentUserUid(t))
+	router.Engine.Use(setCurrentUserUid())
 	router.Users(userController)
 	return router
 }
 
-func setCurrentUserUid(t *testing.T) gin.HandlerFunc {
+func setCurrentUserUid() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var mockUser domain.User
-		err := faker.FakeData(&mockUser)
-		assert.NoError(t, err)
+		mockUser := domain.User{}
+		faker.FakeData(&mockUser)
 		currentUserUid := mockUser.Uid
 		c.Set("currentUserUid", currentUserUid)
 		c.Next()
 	}
+}
+
+func setMockUsers(t *testing.T) []domain.User {
+	mockUsers := make([]domain.User, 0)
+	mockUser := domain.User{}
+	err := faker.FakeData(&mockUser)
+	assert.NoError(t, err)
+	mockUsers = append(mockUsers, mockUser)
+	return mockUsers
 }
 
 func TestIndex(t *testing.T) {
@@ -43,34 +53,62 @@ func TestIndex(t *testing.T) {
 	ctx, _ := gin.CreateTestContext(response)
 	ctx.Request, _ = http.NewRequest("GET", "/users", nil)
 
-	router := getUsersRouter(t)
+	mockUseCase := new(mocks.UserUsecase)
+	mockUsers := setMockUsers(t)
+	mockUseCase.On("GetUsersByUid", mock.AnythingOfType("string")).Return(mockUsers, nil).Once()
+
+	router := getUsersRouter(mockUseCase)
 	router.Engine.ServeHTTP(response, ctx.Request)
 	assert.Equal(t, http.StatusOK, response.Code)
 }
+func TestIndexError(t *testing.T) {
+	response := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(response)
+	ctx.Request, _ = http.NewRequest("GET", "/users", nil)
+
+	mockUseCase := new(mocks.UserUsecase)
+	err := errors.New("Unexpexted Error")
+	mockUseCase.On("GetUsersByUid", mock.AnythingOfType("string")).Return(nil, err).Once()
+
+	router := getUsersRouter(mockUseCase)
+	router.Engine.ServeHTTP(response, ctx.Request)
+	assert.Equal(t, http.StatusInternalServerError, response.Code)
+}
 
 func TestShow(t *testing.T) {
-	var mockUser domain.User
-	err := faker.FakeData(&mockUser)
-	assert.NoError(t, err)
+	mockUseCase := new(mocks.UserUsecase)
+	mockUser := setMockUsers(t)[0]
+	mockUseCase.On("GetUserByUid", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(mockUser, nil).Once()
 
 	response := httptest.NewRecorder()
 	ctx, _ := gin.CreateTestContext(response)
 	ctx.Request, _ = http.NewRequest("GET", "/users/"+mockUser.Uid, nil)
 
-	router := getUsersRouter(t)
+	router := getUsersRouter(mockUseCase)
 	router.Engine.ServeHTTP(response, ctx.Request)
 	assert.Equal(t, http.StatusOK, response.Code)
 }
 
+func TestShowError(t *testing.T) {
+	mockUseCase := new(mocks.UserUsecase)
+	err := errors.New("record not found")
+	mockUseCase.On("GetUserByUid", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(nil, err).Once()
+
+	response := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(response)
+	ctx.Request, _ = http.NewRequest("GET", "/users/"+"nil", nil)
+
+	router := getUsersRouter(mockUseCase)
+	router.Engine.ServeHTTP(response, ctx.Request)
+	assert.Equal(t, http.StatusNotFound, response.Code)
+}
+
 func TestCreate(t *testing.T) {
-	// create User
-	mockUser := domain.User{
-		Uid:       "Uid",
-		Email:     "ohishikaito@gmail.com",
-		LastName:  "大石",
-		FirstName: "海渡",
-		IsMale:    true,
-	}
+	mockUseCase := new(mocks.UserUsecase)
+	mockUser := domain.User{}
+	faker.FakeData(&mockUser)
+	mockUseCase.On("CreateUser", mock.AnythingOfType("*domain.User")).Return(&mockUser, nil).Once()
+
 	json, err := json.Marshal(mockUser)
 	assert.NoError(t, err)
 	body := strings.NewReader(string(json))
@@ -79,7 +117,27 @@ func TestCreate(t *testing.T) {
 	ctx, _ := gin.CreateTestContext(response)
 	ctx.Request, _ = http.NewRequest("POST", "/users", body)
 
-	router := getUsersRouter(t)
+	router := getUsersRouter(mockUseCase)
 	router.Engine.ServeHTTP(response, ctx.Request)
 	assert.Equal(t, http.StatusCreated, response.Code)
+}
+
+func TestCreateError(t *testing.T) {
+	mockUseCase := new(mocks.UserUsecase)
+	err := errors.New("status unprocessable entity ")
+	mockUseCase.On("CreateUser", mock.AnythingOfType("*domain.User")).Return(nil, err).Once()
+
+	mockUser := domain.User{}
+	faker.FakeData(&mockUser)
+	json, err := json.Marshal(mockUser)
+	assert.NoError(t, err)
+	body := strings.NewReader(string(json))
+
+	response := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(response)
+	ctx.Request, _ = http.NewRequest("POST", "/users", body)
+
+	router := getUsersRouter(mockUseCase)
+	router.Engine.ServeHTTP(response, ctx.Request)
+	assert.Equal(t, http.StatusUnprocessableEntity, response.Code)
 }

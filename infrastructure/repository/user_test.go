@@ -27,6 +27,7 @@ func NewGormConnectMock() (*gorm.DB, sqlmock.Sqlmock, error) {
 	return db, mock, nil
 }
 
+// TODO: これfaker使えそう。男女だけ指定して
 func setMockUsers() []domain.User {
 	mockUsers := []domain.User{
 		{

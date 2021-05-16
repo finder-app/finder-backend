@@ -1,13 +1,11 @@
 package controller
 
 import (
-	"errors"
 	"finder/domain"
 	"finder/usecase"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 )
 
 type UserController struct {
@@ -49,11 +47,7 @@ func (c *UserController) Show(ctx *gin.Context) {
 	uid := ctx.Param("uid")
 	user, err := c.userUsecase.GetUserByUid(uid, VisitorUid)
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			ErrorResponse(ctx, http.StatusNotFound, err)
-			return
-		}
-		ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
+		ErrorResponse(ctx, http.StatusNotFound, err)
 		return
 	}
 	ctx.JSON(http.StatusOK, user)
