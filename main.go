@@ -24,8 +24,10 @@ func main() {
 	userUsecase := usecase.NewUserUsecase(userRepository, footPrintRepository)
 	userController := controller.NewUserController(userUsecase)
 
+	roomRepository := repository.NewRoomRepository(db)
+
 	likeRepository := repository.NewLikeRepository(db)
-	likeUsecase := usecase.NewLikeUsecase(likeRepository)
+	likeUsecase := usecase.NewLikeUsecase(likeRepository, roomRepository)
 	likeController := controller.NewLikeController(likeUsecase)
 
 	profileUsecase := usecase.NewProfileUsecase(userRepository)

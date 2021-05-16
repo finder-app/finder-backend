@@ -10,7 +10,8 @@ type LikeRepository interface {
 	CreateLike(sentUesrUid string, recievedUserUid string) (*domain.Like, error)
 	GetOldestLikeByUid(currentUserUid string) (*domain.Like, error)
 	NopeUserByUid(recievedUserUid string, sentUesrUid string) error
-	Consent(recievedUserUid string, sentUesrUid string) error
+	Begin() *gorm.DB
+	Consent(tx *gorm.DB, recievedUserUid string, sentUesrUid string) error
 }
 
 type likeRepository struct {
@@ -56,10 +57,16 @@ func (r *likeRepository) NopeUserByUid(recievedUserUid string, sentUesrUid strin
 	return nil
 }
 
-func (r *likeRepository) Consent(recievedUserUid string, sentUesrUid string) error {
-	query := `UPDATE likes SET consented = 1
-		WHERE recieved_user_uid = ? AND sent_user_uid = ?`
-	if err := r.db.Exec(query, recievedUserUid, sentUesrUid).Error; err != nil {
+func (r *likeRepository) Begin() *gorm.DB {
+	return r.db.Begin()
+}
+
+func (r *likeRepository) Consent(tx *gorm.DB, recievedUserUid string, sentUesrUid string) error {
+	query := `UPDATE likes SET consented = 0
+	WHERE recieved_user_uid = ? AND sent_user_uid = ?`
+	// query := `UPDATE likes SET consented = 1
+	// WHERE recieved_user_uid = ? AND sent_user_uid = ?`
+	if err := tx.Exec(query, recievedUserUid, sentUesrUid).Error; err != nil {
 		return err
 	}
 	return nil

@@ -58,7 +58,7 @@ func (c *likeController) Update(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, map[string]interface{}{
-		"message": "update!",
+		"message": "実装中 messageができるようにする",
 		"data":    "data",
 	})
 }
