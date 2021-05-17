@@ -41,14 +41,14 @@ func (c *likeController) Index(ctx *gin.Context) {
 func (c *likeController) Consent(ctx *gin.Context) {
 	recievedUserUid := ctx.Value("currentUserUid").(string)
 	sentUesrUid := ctx.Param("sent_uesr_uid")
-	err := c.likeUsecase.Consent(recievedUserUid, sentUesrUid)
+	like, room, err := c.likeUsecase.Consent(recievedUserUid, sentUesrUid)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
 		return
 	}
-	ctx.JSON(http.StatusOK, map[string]interface{}{
-		"message": "実装中 messageができるようにする",
-		"data":    "data",
+	ctx.JSON(http.StatusCreated, gin.H{
+		"like": like,
+		"room": room,
 	})
 }
 

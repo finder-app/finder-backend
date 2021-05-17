@@ -11,7 +11,7 @@ type LikeRepository interface {
 	GetOldestLikeByUid(currentUserUid string) (*domain.Like, error)
 	NopeUserByUid(recievedUserUid string, sentUesrUid string) error
 	Begin() *gorm.DB
-	Consent(tx *gorm.DB, recievedUserUid string, sentUesrUid string) error
+	Consent(tx *gorm.DB, like *domain.Like) error
 }
 
 type likeRepository struct {
@@ -25,6 +25,7 @@ func NewLikeRepository(db *gorm.DB) *likeRepository {
 }
 
 func (r *likeRepository) CreateLike(sentUesrUid string, recievedUserUid string) (*domain.Like, error) {
+	// TODO: usecaseでstructを作成するようにする！
 	like := &domain.Like{
 		SentUserUid:     sentUesrUid,
 		RecievedUserUid: recievedUserUid,
@@ -61,12 +62,10 @@ func (r *likeRepository) Begin() *gorm.DB {
 	return r.db.Begin()
 }
 
-func (r *likeRepository) Consent(tx *gorm.DB, recievedUserUid string, sentUesrUid string) error {
-	query := `UPDATE likes SET consented = 0
+func (r *likeRepository) Consent(tx *gorm.DB, like *domain.Like) error {
+	query := `UPDATE likes SET consented = ?
 	WHERE recieved_user_uid = ? AND sent_user_uid = ?`
-	// query := `UPDATE likes SET consented = 1
-	// WHERE recieved_user_uid = ? AND sent_user_uid = ?`
-	if err := tx.Exec(query, recievedUserUid, sentUesrUid).Error; err != nil {
+	if err := tx.Exec(query, like.Consented, like.RecievedUserUid, like.SentUserUid).Error; err != nil {
 		return err
 	}
 	return nil

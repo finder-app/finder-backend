@@ -9,7 +9,7 @@ type LikeUsecase interface {
 	CreateLike(sentUesrUid string, recievedUserUid string) (*domain.Like, error)
 	GetOldestLikeByUid(currentUserUid string) (*domain.Like, error)
 	GetNextUserByUid(recievedUserUid string, sentUesrUid string) (*domain.Like, error)
-	Consent(recievedUserUid string, sentUesrUid string) error
+	Consent(recievedUserUid string, sentUesrUid string) (domain.Like, domain.Room, error)
 }
 
 type likeUsecase struct {
@@ -57,16 +57,21 @@ func (u *likeUsecase) GetNextUserByUid(recievedUserUid string, sentUesrUid strin
 	return like, nil
 }
 
-func (u *likeUsecase) Consent(recievedUserUid string, sentUesrUid string) error {
+func (u *likeUsecase) Consent(recievedUserUid string, sentUesrUid string) (domain.Like, domain.Room, error) {
 	tx := u.likeRepository.Begin()
-	if err := u.likeRepository.Consent(tx, recievedUserUid, sentUesrUid); err != nil {
+	like := domain.Like{
+		RecievedUserUid: recievedUserUid,
+		SentUserUid:     sentUesrUid,
+		Consented:       true,
+	}
+	if err := u.likeRepository.Consent(tx, &like); err != nil {
 		tx.Rollback()
-		return err
+		return domain.Like{}, domain.Room{}, err
 	}
 	room := domain.Room{}
 	if err := u.roomRepository.CreateRoom(tx, &room); err != nil {
 		tx.Rollback()
-		return err
+		return domain.Like{}, domain.Room{}, err
 	}
 	roomUser1 := domain.RoomUser{
 		RoomId:  room.Id,
@@ -74,7 +79,7 @@ func (u *likeUsecase) Consent(recievedUserUid string, sentUesrUid string) error 
 	}
 	if err := u.roomUserRepository.CreateRoomUser(tx, roomUser1); err != nil {
 		tx.Rollback()
-		return err
+		return domain.Like{}, domain.Room{}, err
 	}
 	roomUser2 := domain.RoomUser{
 		RoomId:  room.Id,
@@ -82,10 +87,8 @@ func (u *likeUsecase) Consent(recievedUserUid string, sentUesrUid string) error 
 	}
 	if err := u.roomUserRepository.CreateRoomUser(tx, roomUser2); err != nil {
 		tx.Rollback()
-		return err
+		return domain.Like{}, domain.Room{}, err
 	}
-	// tx.Rollback()
 	tx.Commit()
-	// roomIdをresponseにかえして、部屋に移動できるように！
-	return nil
+	return like, room, nil
 }
