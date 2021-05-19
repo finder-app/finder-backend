@@ -11,12 +11,12 @@ import (
 
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		app := NewFirebaseApp()
-		client := NewAuthClient(app)
-		authHeader := c.Request.Header.Get("Authorization")
-		idToken := strings.Replace(authHeader, "Bearer ", "", 1)
+		firebaseApp := NewFirebaseApp()
+		authClient := NewAuthClient(firebaseApp)
+		authorization := c.Request.Header.Get("Authorization")
+		idToken := strings.Replace(authorization, "Bearer ", "", 1)
 		ctx := c.Request.Context()
-		token, err := client.VerifyIDToken(ctx, idToken)
+		token, err := authClient.VerifyIDToken(ctx, idToken)
 		if err != nil {
 			// NOTE: tokenが確認場合は意図的に401エラーを返して処理を中断させる
 			// returnがないと関数から抜け出せず、後続の処理が実行される
