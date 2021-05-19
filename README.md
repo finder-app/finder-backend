@@ -5,9 +5,6 @@ https://lucid.app/lucidchart/7a209f76-55c7-40f9-b1b4-daf1ff28962b/edit?beaconFlo
 ### 機能一覧
 https://docs.google.com/spreadsheets/d/1Y520iO3APF-pI23YjKtTqdSzs1fTduwQ7NaB2hnUnko/edit#gid=0
 
-## 新規で参加する場合
-`.env`をもらってください
-
 ## db管理
 ### migration
 [`golang-migrate`](https://github.com/golang-migrate/migrate)を使用しています
