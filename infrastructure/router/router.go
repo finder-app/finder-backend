@@ -22,9 +22,10 @@ func NewRouter() *Router {
 }
 
 func (r *Router) Users(userController *controller.UserController) {
-	r.Engine.GET("/users", func(c *gin.Context) {
-		userController.Index(c)
-	})
+	r.Engine.GET("/users", userController.Index)
+	// r.Engine.GET("/users", func(c *gin.Context) {
+	// 	userController.Index(c)
+	// })
 	r.Engine.POST("/users", func(c *gin.Context) {
 		userController.Create(c)
 	})
