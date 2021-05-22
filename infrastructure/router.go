@@ -20,6 +20,7 @@ func NewRouter() *Router {
 	}
 }
 
+// NOTE: routingのテストをするため、router配下に書くこと
 func (r *Router) Users(userController *controller.UserController) {
 	r.Engine.GET("/users", userController.Index)
 	r.Engine.POST("/users", userController.Create)
