@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"finder/domain"
-	"finder/infrastructure/router"
+	"finder/infrastructure"
 	"finder/interface/controller"
 	"finder/usecase/mocks"
 	"net/http"
@@ -19,9 +19,9 @@ import (
 )
 
 // FIXME: ここmockUsecaseを引数に渡すの微妙な気がする
-func getUsersRouter(mockUseCase *mocks.UserUsecase) *router.Router {
+func getUsersRouter(mockUseCase *mocks.UserUsecase) *infrastructure.Router {
 	userController := controller.NewUserController(mockUseCase)
-	router := &router.Router{
+	router := &infrastructure.Router{
 		Engine: gin.Default(),
 	}
 	router.Engine.Use(setCurrentUserUid())

@@ -4,17 +4,14 @@ import (
 	"finder/infrastructure"
 	"finder/infrastructure/logger"
 	"finder/infrastructure/repository"
-	finderRouter "finder/infrastructure/router"
 	"finder/interface/controller"
 	"finder/usecase"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	db := infrastructure.NewGormConnect()
 	logger.NewLogger(db)
-	router := finderRouter.NewRouter()
+	router := infrastructure.NewRouter()
 
 	footPrintRepository := repository.NewFootPrintRepository(db)
 	footPrintUsecase := usecase.NewFootPrintUsecase(footPrintRepository)
@@ -42,11 +39,11 @@ func main() {
 	router.Users(userController)
 	router.Profile(profileController)
 
-	router.Engine.GET("/foot_prints", func(c *gin.Context) { footPrintController.Index(c) })
-	router.Engine.POST("/users/:uid/likes", func(c *gin.Context) { likeController.Create(c) })
-	router.Engine.GET("/likes", func(c *gin.Context) { likeController.Index(c) })
-	router.Engine.PUT("/likes/:sent_uesr_uid/consent", func(c *gin.Context) { likeController.Consent(c) })
-	router.Engine.PUT("/likes/:sent_uesr_uid/next", func(c *gin.Context) { likeController.Next(c) })
+	router.Engine.GET("/foot_prints", footPrintController.Index)
+	router.Engine.POST("/users/:uid/likes", likeController.Create)
+	router.Engine.GET("/likes", likeController.Index)
+	router.Engine.PUT("/likes/:sent_uesr_uid/consent", likeController.Consent)
+	router.Engine.PUT("/likes/:sent_uesr_uid/next", likeController.Next)
 	// router.Engine.GET("/likes/recieved", func(c *gin.Context) { likeController.Recieved(c) })
 	// router.Engine.GET("/likes/sent", func(c *gin.Context) { likeController.Sent(c) })
 
