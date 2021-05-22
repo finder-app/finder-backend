@@ -10,6 +10,7 @@ type FootPrintRepository interface {
 	GetFootPrintsByUid(currentUserUid string) ([]domain.FootPrint, error)
 	CreateFootPrint(footPrint *domain.FootPrint) error
 	UpdateToAlreadyRead(currentUserUid string) error
+	GetUnreadCount(currentUserUid string) (int, error)
 }
 
 type footPrintRepository struct {
@@ -47,7 +48,16 @@ func (r *footPrintRepository) UpdateToAlreadyRead(currentUserUid string) error {
 	if err := result.Error; err != nil {
 		return err
 	}
-	// TODO: このアクションに現在の未読数を返すobjectを追加したい。
-	// headerで表示してるはずなので、それを更新できるように。state.UnreadFootPrintCountを変える？仕様は検討する
 	return nil
+}
+
+func (r *footPrintRepository) GetUnreadCount(currentUserUid string) (int, error) {
+	var unreadCount int
+	query := `SELECT count(*) AS unreadCount FROM foot_prints WHERE user_uid = ? AND unread = 1`
+	row := r.db.Raw(query, currentUserUid).Row()
+	if err := row.Err(); err != nil {
+		return 0, err
+	}
+	row.Scan(&unreadCount)
+	return unreadCount, nil
 }

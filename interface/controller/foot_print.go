@@ -27,4 +27,12 @@ func (c *footPrintController) Index(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, footPrints)
 }
 
-// 未読の足跡数を返すエンドポイント
+func (c *footPrintController) UnreadCount(ctx *gin.Context) {
+	currentUserUid := ctx.Value("currentUserUid").(string)
+	unreadCount, err := c.footPrintUsecase.GetUnreadCount(currentUserUid)
+	if err != nil {
+		ErrorResponse(ctx, http.StatusInternalServerError, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, unreadCount)
+}

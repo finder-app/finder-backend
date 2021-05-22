@@ -34,15 +34,15 @@ func (r *userRepository) GetUsersByGender(genderToSearch string) ([]domain.User,
 }
 
 func (r *userRepository) GetUserByUid(uid string) (domain.User, error) {
-	return getUserByUid(r, uid)
+	return r.getUserByUid(uid)
 }
 
 // NOTE: testを通すために、GetUserByUidと全く同じメソッドを作成する。
 func (r *userRepository) GetUserByVisitorUid(visitorUid string) (domain.User, error) {
-	return getUserByUid(r, visitorUid)
+	return r.getUserByUid(visitorUid)
 }
 
-func getUserByUid(r *userRepository, uid string) (domain.User, error) {
+func (r *userRepository) getUserByUid(uid string) (domain.User, error) {
 	user := domain.User{}
 	if err := r.db.Where("uid = ?", uid).Take(&user).Error; err != nil {
 		return domain.User{}, err

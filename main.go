@@ -40,6 +40,7 @@ func main() {
 	router.Profile(profileController)
 
 	router.Engine.GET("/foot_prints", footPrintController.Index)
+	router.Engine.GET("/foot_prints/unread_count", footPrintController.UnreadCount)
 	router.Engine.POST("/users/:uid/likes", likeController.Create)
 	router.Engine.GET("/likes", likeController.Index)
 	router.Engine.PUT("/likes/:sent_uesr_uid/consent", likeController.Consent)

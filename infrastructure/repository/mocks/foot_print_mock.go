@@ -26,3 +26,7 @@ func (r *FootPrintRepository) CreateFootPrint(footPrint *domain.FootPrint) error
 func (r *FootPrintRepository) UpdateToAlreadyRead(currentUserUid string) error {
 	return nil
 }
+
+func (r *FootPrintRepository) GetUnreadCount(currentUserUid string) (int, error) {
+	return 0, nil
+}

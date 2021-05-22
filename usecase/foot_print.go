@@ -7,6 +7,7 @@ import (
 
 type FootPrintUsecase interface {
 	GetFootPrintsByUid(currentUserUid string) ([]domain.FootPrint, error)
+	GetUnreadCount(currentUserUid string) (int, error)
 }
 
 type footPrintUsecase struct {
@@ -28,4 +29,8 @@ func (u *footPrintUsecase) GetFootPrintsByUid(currentUserUid string) ([]domain.F
 		return nil, err
 	}
 	return footPrints, nil
+}
+
+func (u *footPrintUsecase) GetUnreadCount(currentUserUid string) (int, error) {
+	return u.footPrintRepository.GetUnreadCount(currentUserUid)
 }
