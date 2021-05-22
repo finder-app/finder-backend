@@ -7,7 +7,7 @@ import (
 )
 
 type LikeRepository interface {
-	CreateLike(sentUesrUid string, recievedUserUid string) (*domain.Like, error)
+	CreateLike(like *domain.Like) (*domain.Like, error)
 	GetOldestLikeByUid(currentUserUid string) (*domain.Like, error)
 	NopeUserByUid(recievedUserUid string, sentUesrUid string) error
 	Begin() *gorm.DB
@@ -24,12 +24,7 @@ func NewLikeRepository(db *gorm.DB) *likeRepository {
 	}
 }
 
-func (r *likeRepository) CreateLike(sentUesrUid string, recievedUserUid string) (*domain.Like, error) {
-	// TODO: usecaseでstructを作成するようにする！
-	like := &domain.Like{
-		SentUserUid:     sentUesrUid,
-		RecievedUserUid: recievedUserUid,
-	}
+func (r *likeRepository) CreateLike(like *domain.Like) (*domain.Like, error) {
 	if err := r.db.Create(like).Error; err != nil {
 		return nil, err
 	}

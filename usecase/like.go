@@ -31,19 +31,15 @@ func NewLikeUsecase(
 }
 
 func (u *likeUsecase) CreateLike(sentUesrUid string, recievedUserUid string) (*domain.Like, error) {
-	like, err := u.likeRepository.CreateLike(sentUesrUid, recievedUserUid)
-	if err != nil {
-		return nil, err
+	like := domain.Like{
+		SentUserUid:     sentUesrUid,
+		RecievedUserUid: recievedUserUid,
 	}
-	return like, nil
+	return u.likeRepository.CreateLike(&like)
 }
 
 func (u *likeUsecase) GetOldestLikeByUid(currentUserUid string) (*domain.Like, error) {
-	like, err := u.likeRepository.GetOldestLikeByUid(currentUserUid)
-	if err != nil {
-		return nil, err
-	}
-	return like, nil
+	return u.likeRepository.GetOldestLikeByUid(currentUserUid)
 }
 
 func (u *likeUsecase) GetNextUserByUid(recievedUserUid string, sentUesrUid string) (*domain.Like, error) {
