@@ -56,13 +56,11 @@ func main() {
 	// router.Engine.GET("/likes/sent", func(c *gin.Context) { likeController.Sent(c) })
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
-	playGroundHandler := playground.Handler("GraphQL playground", "/query")
-
 	router.Engine.POST("/query", func(c *gin.Context) {
 		srv.ServeHTTP(c.Writer, c.Request)
 	})
 
-	// TODO: 現状playgroundを使うには認証を消さないといけないので、何とかする
+	playGroundHandler := playground.Handler("GraphQL playground", "/query")
 	router.Engine.GET("/", func(c *gin.Context) {
 		playGroundHandler.ServeHTTP(c.Writer, c.Request)
 	})
