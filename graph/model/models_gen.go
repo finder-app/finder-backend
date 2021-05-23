@@ -4,7 +4,11 @@ package model
 
 type NewTodo struct {
 	Text   string `json:"text"`
-	UserID string `json:"userID"`
+	UserID string `json:"userId"`
+}
+
+type NewUser struct {
+	Name string `json:"name"`
 }
 
 type Todo struct {
@@ -12,9 +16,11 @@ type Todo struct {
 	Text   string `json:"text"`
 	Done   bool   `json:"done"`
 	UserID string `json:"userID"`
+	User   *User  `json:"user"`
 }
 
 type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID    string  `json:"id"`
+	Name  string  `json:"name"`
+	Todos []*Todo `json:"todos"`
 }
