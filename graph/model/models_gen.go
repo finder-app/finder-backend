@@ -16,7 +16,7 @@ type Todo struct {
 	Text   string `json:"text"`
 	Done   bool   `json:"done"`
 	UserID string `json:"userID"`
-	User   *User  `json:"user"`
+	User2  *User  `json:"user2"`
 }
 
 type User struct {

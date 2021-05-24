@@ -23,7 +23,7 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
 	user := &model.User{
-		ID:   "2",
+		ID:   "3",
 		Name: input.Name,
 	}
 	if err := r.DB.Table("user").Create(user).Error; err != nil {
@@ -34,10 +34,12 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 }
 
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
+	// NOTE: テーブル変えたらバグってるから使うな
 	var todos []*model.Todo
-	if err := r.DB.Table("todo").Find(todos).Error; err != nil {
-		return nil, err
-	}
+	// if err := r.DB.Table("todos").Preload("User2").Find(&todos).Error; err != nil {
+	// 	fmt.Println(err)
+	// 	return nil, err
+	// }
 	return todos, nil
 }
 
@@ -46,12 +48,16 @@ func (r *queryResolver) Todo(ctx context.Context, id string) (*model.Todo, error
 }
 
 func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	users := []*model.User{}
+	if err := r.DB.Table("users2").Preload("Todos").Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
 }
 
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
 	user := &model.User{}
-	if err := r.DB.Table("user").Where("id = ?", id).Take(user).Error; err != nil {
+	if err := r.DB.Table("users2").Where("id = ?", id).Preload("Todos").Take(user).Error; err != nil {
 		return nil, err
 	}
 	return user, nil
