@@ -21,12 +21,24 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 	return todo, nil
 }
 
-func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (string, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
+	user := &model.User{
+		ID:   "2",
+		Name: input.Name,
+	}
+	if err := r.DB.Table("user").Create(user).Error; err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return user, nil
 }
 
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	return r.todos, nil
+	var todos []*model.Todo
+	if err := r.DB.Table("todo").Find(todos).Error; err != nil {
+		return nil, err
+	}
+	return todos, nil
 }
 
 func (r *queryResolver) Todo(ctx context.Context, id string) (*model.Todo, error) {
@@ -38,7 +50,11 @@ func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
 }
 
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	user := &model.User{}
+	if err := r.DB.Table("user").Where("id = ?", id).Take(user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

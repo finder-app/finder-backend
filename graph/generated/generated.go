@@ -72,7 +72,7 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error)
-	CreateUser(ctx context.Context, input model.NewUser) (string, error)
+	CreateUser(ctx context.Context, input model.NewUser) (*model.User, error)
 }
 type QueryResolver interface {
 	Todos(ctx context.Context) ([]*model.Todo, error)
@@ -302,6 +302,7 @@ type Query {
 
   users: [User!]!
   user(id: ID!): User!
+  # todos(user: User!): [Todo!]!
 }
 
 input NewTodo {
@@ -315,7 +316,7 @@ input NewUser {
 
 type Mutation {
   createTodo(input: NewTodo!): Todo!
-  createUser(input: NewUser!): ID!
+  createUser(input: NewUser!): User!
 }
 `, BuiltIn: false},
 }
@@ -517,9 +518,9 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*model.User)
 	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖfinderᚋgraphᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_todos(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {

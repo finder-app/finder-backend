@@ -1,11 +1,16 @@
 package graph
 
-import "finder/graph/model"
+import (
+	"finder/graph/model"
+
+	"github.com/jinzhu/gorm"
+)
 
 // This file will not be regenerated automatically.
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
+	DB    *gorm.DB
 	todos []*model.Todo
 }

@@ -55,7 +55,11 @@ func main() {
 	// router.Engine.GET("/likes/recieved", func(c *gin.Context) { likeController.Recieved(c) })
 	// router.Engine.GET("/likes/sent", func(c *gin.Context) { likeController.Sent(c) })
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	generatedConfig := generated.Config{
+		Resolvers: &graph.Resolver{
+			DB: db,
+		}}
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generatedConfig))
 	router.Engine.POST("/query", func(c *gin.Context) {
 		srv.ServeHTTP(c.Writer, c.Request)
 	})
