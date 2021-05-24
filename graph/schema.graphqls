@@ -2,12 +2,38 @@
 #
 # https://gqlgen.com/getting-started/
 
+# query user {
+#     user(id: "1") {
+#         id
+#         name
+#         todos {
+#             id
+#             text
+#         }
+#     }
+# }
+# query user {
+#     users {
+#         id
+#         name
+#         todos {
+#             id
+#             text
+#         }
+#     }
+# }
+# mutation createUser {
+#     createUser(input: {name: "kaito"}) {
+#         name
+#     }
+# }
+
 type Todo {
   id: ID!
   text: String!
   done: Boolean!
   userID: String!
-  user: User!
+  user2: User!
 }
 
 type User {

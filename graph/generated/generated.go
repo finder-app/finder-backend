@@ -59,7 +59,7 @@ type ComplexityRoot struct {
 		Done   func(childComplexity int) int
 		ID     func(childComplexity int) int
 		Text   func(childComplexity int) int
-		User   func(childComplexity int) int
+		User2  func(childComplexity int) int
 		UserID func(childComplexity int) int
 	}
 
@@ -179,12 +179,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Todo.Text(childComplexity), true
 
-	case "Todo.user":
-		if e.complexity.Todo.User == nil {
+	case "Todo.user2":
+		if e.complexity.Todo.User2 == nil {
 			break
 		}
 
-		return e.complexity.Todo.User(childComplexity), true
+		return e.complexity.Todo.User2(childComplexity), true
 
 	case "Todo.userID":
 		if e.complexity.Todo.UserID == nil {
@@ -282,12 +282,38 @@ var sources = []*ast.Source{
 #
 # https://gqlgen.com/getting-started/
 
+# query user {
+#     user(id: "1") {
+#         id
+#         name
+#         todos {
+#             id
+#             text
+#         }
+#     }
+# }
+# query user {
+#     users {
+#         id
+#         name
+#         todos {
+#             id
+#             text
+#         }
+#     }
+# }
+# mutation createUser {
+#     createUser(input: {name: "kaito"}) {
+#         name
+#     }
+# }
+
 type Todo {
   id: ID!
   text: String!
   done: Boolean!
   userID: String!
-  user: User!
+  user2: User!
 }
 
 type User {
@@ -302,7 +328,6 @@ type Query {
 
   users: [User!]!
   user(id: ID!): User!
-  # todos(user: User!): [Todo!]!
 }
 
 input NewTodo {
@@ -888,7 +913,7 @@ func (ec *executionContext) _Todo_userID(ctx context.Context, field graphql.Coll
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Todo_user(ctx context.Context, field graphql.CollectedField, obj *model.Todo) (ret graphql.Marshaler) {
+func (ec *executionContext) _Todo_user2(ctx context.Context, field graphql.CollectedField, obj *model.Todo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -906,7 +931,7 @@ func (ec *executionContext) _Todo_user(ctx context.Context, field graphql.Collec
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.User, nil
+		return obj.User2, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2324,8 +2349,8 @@ func (ec *executionContext) _Todo(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "user":
-			out.Values[i] = ec._Todo_user(ctx, field, obj)
+		case "user2":
+			out.Values[i] = ec._Todo_user2(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
