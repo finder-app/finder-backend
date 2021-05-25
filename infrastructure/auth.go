@@ -1,6 +1,7 @@
 package infrastructure
 
 import (
+	"context"
 	"finder/interface/controller"
 	"fmt"
 	"net/http"
@@ -26,7 +27,12 @@ func Auth() gin.HandlerFunc {
 		// NOTE: c.Setする時にinterfaceにされるけど、型が分かるからキャストする
 		currentUserUid := token.Claims["user_id"].(string)
 		fmt.Printf("currentUserUid:%v\nemail:%v\n", currentUserUid, token.Claims["email"])
+		// NOTE: controllerの時はc.Setでok
 		c.Set("currentUserUid", currentUserUid)
+
+		// NOTE: GraphQLの時はserver.HTTPしてるから、c.RequestにWithContextする必要あり
+		ctx = context.WithValue(ctx, "currentUserUid", currentUserUid)
+		c.Request = c.Request.WithContext(ctx)
 		c.Next()
 	}
 }

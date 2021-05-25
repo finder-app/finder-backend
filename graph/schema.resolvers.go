@@ -5,62 +5,19 @@ package graph
 
 import (
 	"context"
+	"finder/domain"
 	"finder/graph/generated"
 	"finder/graph/model"
 	"fmt"
 )
 
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	todo := &model.Todo{
-		Text:   input.Text,
-		ID:     "1",
-		UserID: input.UserID,
-		// User: &model.User{ID: input.UserID, Name: "user " + input.UserID},
-	}
-	r.todos = append(r.todos, todo)
-	return todo, nil
-}
-
-func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
-	user := &model.User{
-		ID:   "3",
-		Name: input.Name,
-	}
-	if err := r.DB.Table("user").Create(user).Error; err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-	return user, nil
-}
-
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	// NOTE: テーブル変えたらバグってるから使うな
-	var todos []*model.Todo
-	// if err := r.DB.Table("todos").Preload("User2").Find(&todos).Error; err != nil {
-	// 	fmt.Println(err)
-	// 	return nil, err
-	// }
-	return todos, nil
-}
-
-func (r *queryResolver) Todo(ctx context.Context, id string) (*model.Todo, error) {
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*domain.User, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
-	users := []*model.User{}
-	if err := r.DB.Table("users2").Preload("Todos").Find(&users).Error; err != nil {
-		return nil, err
-	}
-	return users, nil
-}
-
-func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
-	user := &model.User{}
-	if err := r.DB.Table("users2").Where("id = ?", id).Preload("Todos").Take(user).Error; err != nil {
-		return nil, err
-	}
-	return user, nil
+func (r *queryResolver) GetUsers(ctx context.Context) ([]*domain.User, error) {
+	currentUserUid := ctx.Value("currentUserUid").(string)
+	return r.userUsecase.GetUsersByUid(currentUserUid)
 }
 
 // Mutation returns generated.MutationResolver implementation.

@@ -2,17 +2,12 @@ package main
 
 import (
 	"finder/graph"
-	"finder/graph/generated"
 	"finder/infrastructure"
 	"finder/infrastructure/logger"
 	"finder/infrastructure/repository"
 	"finder/interface/controller"
 	"finder/usecase"
 	"os"
-
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -55,19 +50,12 @@ func main() {
 	// router.Engine.GET("/likes/recieved", func(c *gin.Context) { likeController.Recieved(c) })
 	// router.Engine.GET("/likes/sent", func(c *gin.Context) { likeController.Sent(c) })
 
-	generatedConfig := generated.Config{
-		Resolvers: &graph.Resolver{
-			DB: db,
-		}}
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generatedConfig))
-	router.Engine.POST("/query", func(c *gin.Context) {
-		srv.ServeHTTP(c.Writer, c.Request)
-	})
-
-	playGroundHandler := playground.Handler("GraphQL playground", "/query")
-	router.Engine.GET("/", func(c *gin.Context) {
-		playGroundHandler.ServeHTTP(c.Writer, c.Request)
-	})
+	resolver := graph.NewResolver(
+		userUsecase,
+	)
+	server := infrastructure.NewGraphQLHandler(resolver)
+	playGroundHandler := infrastructure.NewPlayGroundHandler()
+	router.GraphQL(server, playGroundHandler)
 
 	router.Engine.Run(":" + os.Getenv("PORT"))
 }

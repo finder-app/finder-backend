@@ -2,7 +2,9 @@ package infrastructure
 
 import (
 	"finder/interface/controller"
+	"net/http"
 
+	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,9 +22,19 @@ func NewRouter() *Router {
 	}
 }
 
+func (r *Router) GraphQL(server *handler.Server, playGroundHandler http.Handler) {
+	r.Engine.POST("/query", func(c *gin.Context) {
+		server.ServeHTTP(c.Writer, c.Request)
+	})
+	r.Engine.GET("/", func(c *gin.Context) {
+		playGroundHandler.ServeHTTP(c.Writer, c.Request)
+	})
+}
+
 // NOTE: routingのテストをするため、router配下に書くこと
 func (r *Router) Users(userController *controller.UserController) {
-	r.Engine.GET("/users", userController.Index)
+	// GraphQL化
+	// r.Engine.GET("/users", userController.Index)
 	r.Engine.POST("/users", userController.Create)
 	r.Engine.GET("/users/:uid", userController.Show)
 }

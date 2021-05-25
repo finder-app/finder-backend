@@ -18,15 +18,15 @@ func NewUserController(uu usecase.UserUsecase) *UserController {
 	}
 }
 
-func (c *UserController) Index(ctx *gin.Context) {
-	currentUserUid := ctx.Value("currentUserUid").(string)
-	users, err := c.userUsecase.GetUsersByUid(currentUserUid)
-	if err != nil {
-		ErrorResponse(ctx, http.StatusInternalServerError, err)
-		return
-	}
-	ctx.JSON(http.StatusOK, users)
-}
+// func (c *UserController) Index(ctx *gin.Context) {
+// 	currentUserUid := ctx.Value("currentUserUid").(string)
+// 	users, err := c.userUsecase.GetUsersByUid(currentUserUid)
+// 	if err != nil {
+// 		ErrorResponse(ctx, http.StatusInternalServerError, err)
+// 		return
+// 	}
+// 	ctx.JSON(http.StatusOK, users)
+// }
 
 func (c *UserController) Create(ctx *gin.Context) {
 	user := &domain.User{}

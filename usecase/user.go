@@ -7,7 +7,7 @@ import (
 )
 
 type UserUsecase interface {
-	GetUsersByUid(uid string) ([]domain.User, error)
+	GetUsersByUid(uid string) ([]*domain.User, error)
 	GetUserByUid(uid string, visitorUid string) (domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
 }
@@ -24,7 +24,7 @@ func NewUserUsecase(ur repository.UserRepository, fpr repository.FootPrintReposi
 	}
 }
 
-func (u *userUsecase) GetUsersByUid(uid string) ([]domain.User, error) {
+func (u *userUsecase) GetUsersByUid(uid string) ([]*domain.User, error) {
 	user, _ := u.userRepository.GetUserByUid(uid)
 	genderToSearch := getGenderForSearch(user.Gender)
 	return u.userRepository.GetUsersByGender(genderToSearch)
@@ -58,6 +58,7 @@ func (u *userUsecase) CreateUser(user *domain.User) (*domain.User, error) {
 	return u.userRepository.CreateUser(user)
 }
 
+// NOTE: 男性なら女性を、女性なら男性のユーザーを検索するように
 func getGenderForSearch(userGender string) string {
 	male, female := "男性", "女性"
 	switch userGender {

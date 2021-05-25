@@ -2,64 +2,29 @@
 #
 # https://gqlgen.com/getting-started/
 
-# query user {
-#     user(id: "1") {
-#         id
-#         name
-#         todos {
-#             id
-#             text
-#         }
-#     }
-# }
-# query user {
-#     users {
-#         id
-#         name
-#         todos {
-#             id
-#             text
-#         }
-#     }
-# }
-# mutation createUser {
-#     createUser(input: {name: "kaito"}) {
-#         name
-#     }
-# }
+# NOTE: `scalar Time`の意味：http://spec.graphql.org/June2018/#example-cb7e7
+scalar Time
 
-type Todo {
-  id: ID!
-  text: String!
-  done: Boolean!
-  userID: String!
-  user2: User!
+type Query {
+  GetUsers: [User!]!
+}
+
+type Mutation {
+  # NOTE: 今後実装する
+  createUser(input: NewUser!): User!
 }
 
 type User {
-  id: ID!
-  name: String!
-  todos: [Todo!]!
-}
-
-type Query {
-  todos: [Todo!]!
-  todo(id: ID!): Todo!
-
-  users: [User!]!
-  user(id: ID!): User!
-}
-
-input NewTodo {
-  text: String!
-  userId: String!
+  Uid: String!
+  Email: String!
+  LastName: String!
+  FirstName: String!
+  Gender: String!
+  CreatedAt: Time!
+  UpdatedAt: Time!
+  DeletedAt: Time!
 }
 
 input NewUser {
   name: String!
-}
-
-type Mutation {
-  createTodo(input: NewTodo!): Todo!
-  createUser(input: NewUser!): User!
 }

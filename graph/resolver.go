@@ -1,9 +1,7 @@
 package graph
 
 import (
-	"finder/graph/model"
-
-	"github.com/jinzhu/gorm"
+	"finder/usecase"
 )
 
 // This file will not be regenerated automatically.
@@ -11,6 +9,13 @@ import (
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	DB    *gorm.DB
-	todos []*model.Todo
+	userUsecase usecase.UserUsecase
+}
+
+func NewResolver(
+	userUsecase usecase.UserUsecase,
+) *Resolver {
+	return &Resolver{
+		userUsecase,
+	}
 }
