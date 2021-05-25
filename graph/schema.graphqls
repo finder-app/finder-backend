@@ -25,6 +25,11 @@ type User {
   DeletedAt: Time!
 }
 
+type FootPrint {
+  CreatedAt: Time!
+  UpdatedAt: Time!
+}
+
 input NewUser {
   name: String!
 }
