@@ -5,6 +5,8 @@
 # NOTE: `scalar Time`の意味：http://spec.graphql.org/June2018/#example-cb7e7
 scalar Time
 
+directive @authentication on FIELD_DEFINITION
+
 type Query {
   GetUsers: [User!]!
 }

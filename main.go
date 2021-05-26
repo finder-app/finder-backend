@@ -15,27 +15,24 @@ func main() {
 	logger.NewLogger(db)
 	router := infrastructure.NewRouter()
 
-	footPrintRepository := repository.NewFootPrintRepository(db)
-	footPrintUsecase := usecase.NewFootPrintUsecase(footPrintRepository)
-	footPrintController := controller.NewFootPrintController(footPrintUsecase)
-
 	userRepository := repository.NewUserRepository(db)
-	userUsecase := usecase.NewUserUsecase(userRepository, footPrintRepository)
-	userController := controller.NewUserController(userUsecase)
-
+	footPrintRepository := repository.NewFootPrintRepository(db)
+	likeRepository := repository.NewLikeRepository(db)
 	roomRepository := repository.NewRoomRepository(db)
-
 	roomUserRepository := repository.NewRoomUserRepository(db)
 
-	likeRepository := repository.NewLikeRepository(db)
+	footPrintUsecase := usecase.NewFootPrintUsecase(footPrintRepository)
+	userUsecase := usecase.NewUserUsecase(userRepository, footPrintRepository)
 	likeUsecase := usecase.NewLikeUsecase(
 		likeRepository,
 		roomRepository,
 		roomUserRepository,
 	)
-	likeController := controller.NewLikeController(likeUsecase)
-
 	profileUsecase := usecase.NewProfileUsecase(userRepository)
+
+	userController := controller.NewUserController(userUsecase)
+	footPrintController := controller.NewFootPrintController(footPrintUsecase)
+	likeController := controller.NewLikeController(likeUsecase)
 	profileController := controller.NewProfileController(profileUsecase)
 
 	router.Users(userController)
@@ -53,8 +50,8 @@ func main() {
 	resolver := graph.NewResolver(
 		userUsecase,
 	)
-	server := infrastructure.NewGraphQLHandler(resolver)
-	playGroundHandler := infrastructure.NewPlayGroundHandler()
+	server := graph.NewGraphQLHandler(resolver)
+	playGroundHandler := graph.NewPlayGroundHandler()
 	router.GraphQL(server, playGroundHandler)
 
 	router.Engine.Run(":" + os.Getenv("PORT"))

@@ -42,6 +42,7 @@ type ResolverRoot interface {
 }
 
 type DirectiveRoot struct {
+	Authentication func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error)
 }
 
 type ComplexityRoot struct {
@@ -251,6 +252,8 @@ var sources = []*ast.Source{
 
 # NOTE: ` + "`" + `scalar Time` + "`" + `の意味：http://spec.graphql.org/June2018/#example-cb7e7
 scalar Time
+
+directive @authentication on FIELD_DEFINITION
 
 type Query {
   GetUsers: [User!]!
