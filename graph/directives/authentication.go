@@ -15,13 +15,16 @@ func Authentication(ctx context.Context, obj interface{}, next graphql.Resolver)
 		// returnする時にerr.statusは含まれてる
 		// return nil, err
 
-		// ここに書いてもreturnされない！！！
+		// // ここに書いてもreturnされない！！！
 		hoge := &gqlerror.Error{
 			Message: err.Error(),
 			Extensions: map[string]interface{}{
 				"status": http.StatusUnauthorized,
 			},
 		}
+		// ↓のAddErrorするとpanicする
+		// graphql.AddError(ctx, hoge)
+		// return nil, err
 		return nil, hoge
 	}
 	return next(ctx)
