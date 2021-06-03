@@ -5,10 +5,11 @@
 # NOTE: `scalar Time`の意味：http://spec.graphql.org/June2018/#example-cb7e7
 scalar Time
 
+# 認証するクエリに @authentication をつけると認証が走る
 directive @authentication on FIELD_DEFINITION
 
 type Query {
-  GetUsers: [User!]!
+  GetUsers: [User!]! @authentication
 }
 
 type Mutation {

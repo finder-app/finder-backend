@@ -18,3 +18,6 @@ m-down:
 
 m-force:
 	migrate -source file://./db/migrate -database 'mysql://root:finder0501@tcp(localhost:13306)/finder_development' force $(v)
+
+gqlgen:
+	go run github.com/99designs/gqlgen generate

@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"finder/graph"
+	"finder/graph/directives"
 	"finder/graph/generated"
 	"net/http"
 
@@ -13,9 +14,9 @@ func NewGraphQLHandler(r *graph.Resolver) *handler.Server {
 	c := generated.Config{
 		Resolvers: r,
 	}
-	// TODO: 今後実装する
-	// c.Directives.Authentication = directives.Authentication
-
+	c.Directives.Authentication = directives.Authentication
+	// 認証で弾かれると、↓は実行されない
+	// fmt.Println(c.Directives.Authentication, "c.Directives.Authentication")
 	return handler.NewDefaultServer(generated.NewExecutableSchema(c))
 }
 

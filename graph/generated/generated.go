@@ -8,6 +8,7 @@ import (
 	"errors"
 	"finder/domain"
 	"finder/graph/model"
+	"fmt"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -253,10 +254,11 @@ var sources = []*ast.Source{
 # NOTE: ` + "`" + `scalar Time` + "`" + `の意味：http://spec.graphql.org/June2018/#example-cb7e7
 scalar Time
 
+# 認証するクエリに @authentication をつけると認証が走る
 directive @authentication on FIELD_DEFINITION
 
 type Query {
-  GetUsers: [User!]!
+  GetUsers: [User!]! @authentication
 }
 
 type Mutation {
@@ -488,8 +490,28 @@ func (ec *executionContext) _Query_GetUsers(ctx context.Context, field graphql.C
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetUsers(rctx)
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().GetUsers(rctx)
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Authentication == nil {
+				return nil, errors.New("directive authentication is not implemented")
+			}
+			return ec.directives.Authentication(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.([]*domain.User); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*finder/domain.User`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
