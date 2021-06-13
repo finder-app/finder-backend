@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"io"
 	"log"
 	"os"
 
@@ -8,13 +9,17 @@ import (
 )
 
 func NewLogger(db *gorm.DB) {
-	// NOTE: ログ出力先
-	file, err := os.OpenFile("./infrastructure/logger/logfile", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	// ログファイルを開く。CREATE=作成 WRONLYで読み書き APPENDで後ろに追加
+	logfile, err := os.OpenFile("./infrastructure/logger/logfile.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		panic(err.Error())
 	}
-	// logにファイルを出力するようにする
-	log.SetOutput(file)
+	// SetOutPutで出力先を指定 MultiWriterで2つの出力先を指定できる
+	log.SetOutput(io.MultiWriter(logfile, os.Stdout))
+	// ログを吐いた時間を出す
+	log.SetFlags(log.Ldate | log.Ltime)
+	// LogMode true でログを吐き出すように
 	db.LogMode(true)
-	db.SetLogger(log.New(file, "", 0))
+	// 標準出力で出力するように。SetLogger先は一つしか選べないっぽい
+	db.SetLogger(log.New(os.Stdout, "", 0))
 }

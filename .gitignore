@@ -1,11 +1,11 @@
 # ログファイル
-infrastructure/logger/logfile
+infrastructure/logger/logfile.log
 
 # mac OS
 .DS_Store
 
-# realize
-main
+# fresh
+tmp
 
 # 環境変数
 .env
