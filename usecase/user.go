@@ -8,7 +8,7 @@ import (
 
 type UserUsecase interface {
 	GetUsersByUid(uid string) ([]*domain.User, error)
-	GetUserByUid(uid string, visitorUid string) (domain.User, error)
+	GetUserByUid(uid string, visitorUid string) (*domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
 }
 
@@ -30,17 +30,17 @@ func (u *userUsecase) GetUsersByUid(uid string) ([]*domain.User, error) {
 	return u.userRepository.GetUsersByGender(genderToSearch)
 }
 
-func (u *userUsecase) GetUserByUid(uid string, visitorUid string) (domain.User, error) {
+func (u *userUsecase) GetUserByUid(uid string, visitorUid string) (*domain.User, error) {
 	user, err := u.userRepository.GetUserByUid(uid)
 	if err != nil {
-		return domain.User{}, err
+		return nil, err
 	}
 	visitor, err := u.userRepository.GetUserByVisitorUid(visitorUid)
 	if err != nil {
-		return domain.User{}, err
+		return nil, err
 	}
 	if user.Gender == visitor.Gender {
-		return domain.User{}, errors.New("該当するユーザーは表示できません")
+		return nil, errors.New("該当するユーザーは表示できません")
 	}
 
 	footPrint := &domain.FootPrint{
@@ -49,7 +49,7 @@ func (u *userUsecase) GetUserByUid(uid string, visitorUid string) (domain.User, 
 		Unread:     true,
 	}
 	if err := u.footPrintRepository.CreateFootPrint(footPrint); err != nil {
-		return domain.User{}, err
+		return nil, err
 	}
 	return user, nil
 }

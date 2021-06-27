@@ -39,11 +39,11 @@ func setCurrentUserUid() gin.HandlerFunc {
 	}
 }
 
-func setMockUsers(t *testing.T) []domain.User {
-	mockUser := domain.User{}
+func setMockUsers(t *testing.T) []*domain.User {
+	mockUser := &domain.User{}
 	err := faker.FakeData(&mockUser)
 	assert.NoError(t, err)
-	mockUsers := []domain.User{mockUser}
+	mockUsers := []*domain.User{mockUser}
 	return mockUsers
 }
 

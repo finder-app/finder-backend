@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func setMockUsers(t *testing.T) (mockMaleUser domain.User, mockFemaleUser domain.User) {
+func setMockUsers(t *testing.T) (mockMaleUser *domain.User, mockFemaleUser *domain.User) {
 	err := faker.FakeData(&mockMaleUser)
 	assert.NoError(t, err)
 	mockMaleUser.Gender = "男性"
@@ -29,8 +29,8 @@ func TestGetUsersByUid(t *testing.T) {
 	mockUsecase := usecase.NewUserUsecase(mockUserRepository, mockFootPrintRepository)
 
 	mockMaleUser, mockFemaleUser := setMockUsers(t)
-	mockMaleUsers := []domain.User{mockMaleUser}
-	mockFemaleUsers := []domain.User{mockFemaleUser}
+	mockMaleUsers := []*domain.User{mockMaleUser}
+	mockFemaleUsers := []*domain.User{mockFemaleUser}
 
 	t.Run("正常値（男性が女性の一覧を取得）", func(t *testing.T) {
 		mockUserRepository.On("GetUserByUid", mock.AnythingOfType("string")).Return(mockMaleUser, nil).Once()
@@ -96,17 +96,15 @@ func TestGetUserByUidError(t *testing.T) {
 		newError := errors.New("record not found")
 		mockUserRepository.On("GetUserByUid", mock.AnythingOfType("string")).Return(nil, newError).Once()
 
-		user, err := mockUsecase.GetUserByUid(mockFemaleUser.Uid, mockMaleUser.Uid)
+		_, err := mockUsecase.GetUserByUid(mockFemaleUser.Uid, mockMaleUser.Uid)
 		assert.Error(t, err)
-		assert.Equal(t, domain.User{}, user)
 	})
 	t.Run("異常値（同性の詳細へリクエストを送った場合）", func(t *testing.T) {
 		mockUserRepository.On("GetUserByUid", mock.AnythingOfType("string")).Return(mockMaleUser, nil).Once()
 		mockUserRepository.On("GetUserByVisitorUid", mock.AnythingOfType("string")).Return(mockMaleUser, nil).Once()
 
-		user, err := mockUsecase.GetUserByUid(mockMaleUser.Uid, mockMaleUser.Uid)
+		_, err := mockUsecase.GetUserByUid(mockMaleUser.Uid, mockMaleUser.Uid)
 		assert.Error(t, err)
-		assert.Equal(t, domain.User{}, user)
 	})
 	t.Run("異常値（足跡が作成できない）", func(t *testing.T) {
 		mockUserRepository.On("GetUserByUid", mock.AnythingOfType("string")).Return(mockMaleUser, nil).Once()
@@ -114,9 +112,8 @@ func TestGetUserByUidError(t *testing.T) {
 		err := errors.New("StatusUnprocessable Entity")
 		mockFootPrintRepository.On("CreateFootPrint", mock.AnythingOfType("*domain.FootPrint")).Return(err).Once()
 
-		user, err := mockUsecase.GetUserByUid(mockMaleUser.Uid, mockFemaleUser.Uid)
-		assert.Error(t, err)
-		assert.Equal(t, domain.User{}, user)
+		_, err2 := mockUsecase.GetUserByUid(mockMaleUser.Uid, mockFemaleUser.Uid)
+		assert.Error(t, err2)
 	})
 }
 
@@ -127,8 +124,8 @@ func TestCreateUser(t *testing.T) {
 	mockMaleUser, _ := setMockUsers(t)
 
 	t.Run("正常値", func(t *testing.T) {
-		mockUserRepository.On("CreateUser", mock.AnythingOfType("*domain.User")).Return(&mockMaleUser, nil).Once()
-		user, err := mockUsecase.CreateUser(&mockMaleUser)
+		mockUserRepository.On("CreateUser", mock.AnythingOfType("*domain.User")).Return(mockMaleUser, nil).Once()
+		user, err := mockUsecase.CreateUser(mockMaleUser)
 		assert.NoError(t, err)
 		assert.Equal(t, user.Uid, mockMaleUser.Uid)
 	})
@@ -137,7 +134,7 @@ func TestCreateUser(t *testing.T) {
 		mockUserRepository.On("CreateUser", mock.AnythingOfType("*domain.User")).Return(nil, err).Once()
 		// NOTE: 多分pointerでuserを渡してるから、userの値が返ってきちゃう。userの値のテストしない。
 		// errが返ってくるかのテストなので。go-clean-archも確認してない。あれは返り値ないからだけど
-		_, err = mockUsecase.CreateUser(&mockMaleUser)
+		_, err = mockUsecase.CreateUser(mockMaleUser)
 		assert.Error(t, err)
 	})
 }
