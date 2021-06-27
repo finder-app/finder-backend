@@ -27,23 +27,23 @@ func NewMockGormConnect(t *testing.T) (*gorm.DB, sqlmock.Sqlmock) {
 	return db, mock
 }
 
-func setMockUsers() []domain.User {
-	mockMaleUser := domain.User{}
-	faker.FakeData(&mockMaleUser)
+func setMockUsers() []*domain.User {
+	mockMaleUser := &domain.User{}
+	faker.FakeData(mockMaleUser)
 	mockMaleUser.Gender = "男性"
 
-	femockMaleUser := domain.User{}
-	faker.FakeData(&femockMaleUser)
+	femockMaleUser := &domain.User{}
+	faker.FakeData(femockMaleUser)
 	mockMaleUser.Gender = "女性"
 
-	mockUsers := []domain.User{
+	mockUsers := []*domain.User{
 		mockMaleUser,
 		femockMaleUser,
 	}
 	return mockUsers
 }
 
-func getRows(mockUser domain.User) *sqlmock.Rows {
+func getRows(mockUser *domain.User) *sqlmock.Rows {
 	rows := sqlmock.NewRows([]string{
 		"uid",
 		"email",
@@ -123,7 +123,7 @@ func TestCreateUser(t *testing.T) {
 	mock.ExpectCommit()
 
 	userRepository := repository.NewUserRepository(db)
-	user, err := userRepository.CreateUser(&mockUser)
+	user, err := userRepository.CreateUser(mockUser)
 	assert.NoError(t, err)
 	assert.NotNil(t, user)
 }
@@ -154,7 +154,7 @@ func TestUpdateUser(t *testing.T) {
 	mock.ExpectCommit()
 
 	userRepository := repository.NewUserRepository(db)
-	user, err := userRepository.UpdateUser(&mockUser)
+	user, err := userRepository.UpdateUser(mockUser)
 	assert.NoError(t, err)
 	assert.Equal(t, mockUser.LastName, user.LastName)
 }

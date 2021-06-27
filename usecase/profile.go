@@ -7,7 +7,7 @@ import (
 )
 
 type ProfileUsecase interface {
-	GetProfileByUid(currentUserUid string) (domain.User, error)
+	GetProfileByUid(currentUserUid string) (*domain.User, error)
 	UpdateUser(currentUserUid string, user *domain.User) (*domain.User, error)
 }
 
@@ -21,10 +21,10 @@ func NewProfileUsecase(ur repository.UserRepository) *profileUsecase {
 	}
 }
 
-func (i *profileUsecase) GetProfileByUid(currentUserUid string) (domain.User, error) {
+func (i *profileUsecase) GetProfileByUid(currentUserUid string) (*domain.User, error) {
 	user, err := i.userRepository.GetUserByUid(currentUserUid)
 	if err != nil {
-		return domain.User{}, err
+		return nil, err
 	}
 	return user, nil
 }

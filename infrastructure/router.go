@@ -22,19 +22,19 @@ func NewRouter() *Router {
 	}
 }
 
+// TODO: GraphQLは今後導入予定のため、一旦コメントアウトで使わないようにしておく
 func (r *Router) GraphQL(server *handler.Server, playGroundHandler http.Handler) {
-	r.Engine.POST("/query", func(c *gin.Context) {
-		server.ServeHTTP(c.Writer, c.Request)
-	})
-	r.Engine.GET("/", func(c *gin.Context) {
-		playGroundHandler.ServeHTTP(c.Writer, c.Request)
-	})
+	// r.Engine.POST("/query", func(c *gin.Context) {
+	// 	server.ServeHTTP(c.Writer, c.Request)
+	// })
+	// r.Engine.GET("/", func(c *gin.Context) {
+	// 	playGroundHandler.ServeHTTP(c.Writer, c.Request)
+	// })
 }
 
 // NOTE: routingのテストをするため、router配下に書くこと
 func (r *Router) Users(userController *controller.UserController) {
-	// GraphQL化
-	// r.Engine.GET("/users", userController.Index)
+	r.Engine.GET("/users", userController.Index)
 	r.Engine.POST("/users", userController.Create)
 	r.Engine.GET("/users/:uid", userController.Show)
 }
