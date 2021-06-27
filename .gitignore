@@ -1,5 +1,5 @@
 # ログファイル
-infrastructure/logger/logfile.log
+api/infrastructure/logger/logfile.log
 
 # mac OS
 .DS_Store
