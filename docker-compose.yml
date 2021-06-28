@@ -16,17 +16,14 @@ services:
       - .env
 
   db:
-    build:
-      context: ./api
-      dockerfile: docker/db/Dockerfile
+    image: mysql:8.0
     environment:
       MYSQL_DATABASE: finder_development
       MYSQL_ROOT_PASSWORD: finder0501
       TZ: "Asia/Tokyo"
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    # command: --default-authentication-plugin=mysql_native_password
     volumes:
       - db-data:/var/lib/mysql
-      - .api/docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
       - 13306:3306
 
