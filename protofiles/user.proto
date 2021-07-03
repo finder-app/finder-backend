@@ -8,14 +8,24 @@ option go_package = "./pb";
 
 service UserService {
   rpc GetUsers(GetUsersReq) returns (GetUsersRes) {}
+  rpc GetUserByUid(GetUserByUidReq) returns (GetUserByUidRes) {}
 }
 
 message GetUsersReq {
-  string uid = 1;
+  string current_user_uid = 1;
 }
 
 message GetUsersRes {
   repeated User users = 1;
+}
+
+message GetUserByUidReq {
+  string uid = 1;
+  string visitor_uid = 2;
+}
+
+message GetUserByUidRes {
+  User user = 1;
 }
 
 message User {
@@ -26,4 +36,5 @@ message User {
   google.protobuf.Timestamp created_at = 5;
   google.protobuf.Timestamp updated_at = 6;
   string gender = 7;
+  string full_name = 8;
 }

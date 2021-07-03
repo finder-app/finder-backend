@@ -22,9 +22,10 @@ func ConvertUser(user *domain.User) *pb.User {
 		Email:     user.Email,
 		LastName:  user.LastName,
 		FirstName: user.FirstName,
-		Gender:    user.Gender,
 		CreatedAt: timestamppb.New(user.CreatedAt),
 		UpdatedAt: timestamppb.New(user.UpdatedAt),
+		Gender:    user.Gender,
+		FullName:  user.LastName + user.FirstName,
 	}
 	return pbUser
 }

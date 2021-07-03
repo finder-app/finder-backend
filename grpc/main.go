@@ -17,7 +17,9 @@ func main() {
 	grpcServer := infrastructure.NewGrpcServer()
 
 	userRepository := repository.NewUserRepository(db)
-	userUsecase := usecase.NewUserUseuserUsecase(userRepository)
+	footPrintRepository := repository.NewFootPrintRepository(db)
+
+	userUsecase := usecase.NewUserUseuserUsecase(userRepository, footPrintRepository)
 	pb.RegisterUserServiceServer(grpcServer, userUsecase)
 
 	listener, err := net.Listen("tcp", ":"+os.Getenv("GRPC_SERVER_PORT")) // [::]:50051

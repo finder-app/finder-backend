@@ -26,7 +26,7 @@ func (c *UserController) Index(ctx *gin.Context) {
 	// currentUserUid := ctx.Value("currentUserUid").(string)
 	// users, err := c.userUsecase.GetUsersByUid(currentUserUid)
 	req := &pb.GetUsersReq{
-		Uid: ctx.Value("currentUserUid").(string),
+		CurrentUserUid: ctx.Value("currentUserUid").(string),
 	}
 	users, err := c.userClient.GetUsers(ctx, req)
 	if err != nil {
@@ -51,9 +51,14 @@ func (c *UserController) Create(ctx *gin.Context) {
 }
 
 func (c *UserController) Show(ctx *gin.Context) {
-	VisitorUid := ctx.Value("currentUserUid").(string)
+	visitorUid := ctx.Value("currentUserUid").(string)
 	uid := ctx.Param("uid")
-	user, err := c.userUsecase.GetUserByUid(uid, VisitorUid)
+	// user, err := c.userUsecase.GetUserByUid(uid, VisitorUid)
+	req := &pb.GetUserByUidReq{
+		Uid:        uid,
+		VisitorUid: visitorUid,
+	}
+	user, err := c.userClient.GetUserByUid(ctx, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusNotFound, err)
 		return
