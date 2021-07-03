@@ -2,6 +2,7 @@ package controller
 
 import (
 	"finder/domain"
+	"finder/pb"
 	"finder/usecase"
 	"net/http"
 
@@ -10,17 +11,23 @@ import (
 
 type UserController struct {
 	userUsecase usecase.UserUsecase
+	userClient  pb.UserServiceClient
 }
 
-func NewUserController(uu usecase.UserUsecase) *UserController {
+func NewUserController(uu usecase.UserUsecase, userClient pb.UserServiceClient) *UserController {
 	return &UserController{
 		userUsecase: uu,
+		userClient:  userClient,
 	}
 }
 
 func (c *UserController) Index(ctx *gin.Context) {
-	currentUserUid := ctx.Value("currentUserUid").(string)
-	users, err := c.userUsecase.GetUsersByUid(currentUserUid)
+	// currentUserUid := ctx.Value("currentUserUid").(string)
+	// users, err := c.userUsecase.GetUsersByUid(currentUserUid)
+	req := &pb.GetUsersReq{
+		Uid: ctx.Value("currentUserUid").(string),
+	}
+	users, err := c.userClient.GetUsers(ctx, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return

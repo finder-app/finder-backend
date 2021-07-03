@@ -6,8 +6,11 @@ import (
 	"finder/infrastructure/logger"
 	"finder/infrastructure/repository"
 	"finder/interface/controller"
+	"finder/pb"
 	"finder/usecase"
 	"os"
+
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -30,7 +33,15 @@ func main() {
 	)
 	profileUsecase := usecase.NewProfileUsecase(userRepository)
 
-	userController := controller.NewUserController(userUsecase)
+	target := os.Getenv("GRPC_SERVER_NAME") + ":" + os.Getenv("GRPC_SERVER_PORT")
+	grpcClientConn, err := grpc.Dial(target, grpc.WithInsecure())
+	if err != nil {
+		panic(err)
+	}
+	defer grpcClientConn.Close()
+	userClient := pb.NewUserServiceClient(grpcClientConn)
+
+	userController := controller.NewUserController(userUsecase, userClient)
 	footPrintController := controller.NewFootPrintController(footPrintUsecase)
 	likeController := controller.NewLikeController(likeUsecase)
 	profileController := controller.NewProfileController(profileUsecase)
