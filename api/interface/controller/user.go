@@ -22,6 +22,7 @@ func NewUserController(uu usecase.UserUsecase, userClient pb.UserServiceClient) 
 }
 
 func (c *UserController) Index(ctx *gin.Context) {
+	// NOTE: gRPCに移行
 	// currentUserUid := ctx.Value("currentUserUid").(string)
 	// users, err := c.userUsecase.GetUsersByUid(currentUserUid)
 	req := &pb.GetUsersReq{

@@ -9,9 +9,6 @@ import (
 	"finder/graph/generated"
 	"finder/graph/model"
 	"fmt"
-	"net/http"
-
-	"github.com/vektah/gqlparser/gqlerror"
 )
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*domain.User, error) {
@@ -20,16 +17,18 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 
 func (r *queryResolver) GetUsers(ctx context.Context) ([]*domain.User, error) {
 	// NOTE: 仮のエラーハンドリング。// c.Directives.Authenticationを設定したら、それに移行する
-	if ctx.Value("currentUserUid") == nil {
-		return nil, &gqlerror.Error{
-			Message: "not token error",
-			Extensions: map[string]interface{}{
-				"status": http.StatusUnauthorized,
-			},
-		}
-	}
-	currentUserUid := ctx.Value("currentUserUid").(string)
-	return r.userUsecase.GetUsersByUid(currentUserUid)
+	// if ctx.Value("currentUserUid") == nil {
+	// 	return nil, &gqlerror.Error{
+	// 		Message: "not token error",
+	// 		Extensions: map[string]interface{}{
+	// 			"status": http.StatusUnauthorized,
+	// 		},
+	// 	}
+	// }
+	// currentUserUid := ctx.Value("currentUserUid").(string)
+	// return r.userUsecase.GetUsersByUid(currentUserUid)
+	var users []*domain.User
+	return users, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

@@ -7,7 +7,7 @@ import (
 )
 
 type UserUsecase interface {
-	GetUsersByUid(uid string) ([]*domain.User, error)
+	// GetUsersByUid(uid string) ([]*domain.User, error)
 	GetUserByUid(uid string, visitorUid string) (*domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
 }
@@ -24,11 +24,11 @@ func NewUserUsecase(ur repository.UserRepository, fpr repository.FootPrintReposi
 	}
 }
 
-func (u *userUsecase) GetUsersByUid(uid string) ([]*domain.User, error) {
-	user, _ := u.userRepository.GetUserByUid(uid)
-	genderToSearch := getGenderForSearch(user.Gender)
-	return u.userRepository.GetUsersByGender(genderToSearch)
-}
+// func (u *userUsecase) GetUsersByUid(uid string) ([]*domain.User, error) {
+// 	user, _ := u.userRepository.GetUserByUid(uid)
+// 	genderToSearch := getGenderForSearch(user.Gender)
+// 	return u.userRepository.GetUsersByGender(genderToSearch)
+// }
 
 func (u *userUsecase) GetUserByUid(uid string, visitorUid string) (*domain.User, error) {
 	user, err := u.userRepository.GetUserByUid(uid)

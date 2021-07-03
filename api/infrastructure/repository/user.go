@@ -8,7 +8,7 @@ import (
 )
 
 type UserRepository interface {
-	GetUsersByGender(genderToSearch string) ([]*domain.User, error)
+	// GetUsersByGender(genderToSearch string) ([]*domain.User, error)
 	GetUserByUid(uid string) (*domain.User, error)
 	GetUserByVisitorUid(visitorUid string) (*domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
@@ -25,13 +25,13 @@ func NewUserRepository(db *gorm.DB) *userRepository {
 	}
 }
 
-func (r *userRepository) GetUsersByGender(genderToSearch string) ([]*domain.User, error) {
-	var users []*domain.User
-	if err := r.db.Where("gender = ?", genderToSearch).Find(&users).Error; err != nil {
-		return nil, err
-	}
-	return users, nil
-}
+// func (r *userRepository) GetUsersByGender(genderToSearch string) ([]*domain.User, error) {
+// 	var users []*domain.User
+// 	if err := r.db.Where("gender = ?", genderToSearch).Find(&users).Error; err != nil {
+// 		return nil, err
+// 	}
+// 	return users, nil
+// }
 
 func (r *userRepository) GetUserByUid(uid string) (*domain.User, error) {
 	return r.getUserByUid(uid)

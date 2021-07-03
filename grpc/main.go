@@ -4,6 +4,7 @@ import (
 	"grpc/infrastructure"
 	"grpc/infrastructure/logger"
 	"grpc/pb"
+	"grpc/repository"
 	"grpc/usecase"
 	"log"
 	"net"
@@ -13,9 +14,10 @@ import (
 func main() {
 	db := infrastructure.NewGormConnect()
 	logger.NewLogger(db)
-
 	grpcServer := infrastructure.NewGrpcServer()
-	userUsecase := usecase.NewUserUseuserUsecase()
+
+	userRepository := repository.NewUserRepository(db)
+	userUsecase := usecase.NewUserUseuserUsecase(userRepository)
 	pb.RegisterUserServiceServer(grpcServer, userUsecase)
 
 	listener, err := net.Listen("tcp", ":"+os.Getenv("GRPC_SERVER_PORT")) // [::]:50051
