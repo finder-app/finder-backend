@@ -51,12 +51,10 @@ func (c *UserController) Create(ctx *gin.Context) {
 }
 
 func (c *UserController) Show(ctx *gin.Context) {
-	visitorUid := ctx.Value("currentUserUid").(string)
-	uid := ctx.Param("uid")
 	// user, err := c.userUsecase.GetUserByUid(uid, VisitorUid)
 	req := &pb.GetUserByUidReq{
-		Uid:        uid,
-		VisitorUid: visitorUid,
+		Uid:        ctx.Param("uid"),
+		VisitorUid: ctx.Value("currentUserUid").(string),
 	}
 	user, err := c.userClient.GetUserByUid(ctx, req)
 	if err != nil {
