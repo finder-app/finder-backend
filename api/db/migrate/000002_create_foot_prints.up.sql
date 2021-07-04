@@ -1,9 +1,11 @@
 CREATE TABLE foot_prints(
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   visitor_uid VARCHAR(255) NOT NULL,
 	user_uid VARCHAR(255) NOT NULL,
   unread BOOLEAN NOT NULL DEFAULT '1',
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
   KEY `index_foot_prints_on_visitor_uid` (`visitor_uid`),
   KEY `index_foot_prints_on_user_uid` (`user_uid`),
   UNIQUE INDEX (`visitor_uid`, `user_uid`),
