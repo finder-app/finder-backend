@@ -1,7 +1,6 @@
 package main
 
 import (
-	"finder/graph"
 	"finder/infrastructure"
 	"finder/infrastructure/logger"
 	"finder/infrastructure/repository"
@@ -25,7 +24,7 @@ func main() {
 	roomUserRepository := repository.NewRoomUserRepository(db)
 
 	footPrintUsecase := usecase.NewFootPrintUsecase(footPrintRepository)
-	userUsecase := usecase.NewUserUsecase(userRepository, footPrintRepository)
+	// userUsecase := usecase.NewUserUsecase(userRepository, footPrintRepository)
 	likeUsecase := usecase.NewLikeUsecase(
 		likeRepository,
 		roomRepository,
@@ -41,7 +40,7 @@ func main() {
 	defer grpcClientConn.Close()
 	userClient := pb.NewUserServiceClient(grpcClientConn)
 
-	userController := controller.NewUserController(userUsecase, userClient)
+	userController := controller.NewUserController(userClient)
 	footPrintController := controller.NewFootPrintController(footPrintUsecase)
 	likeController := controller.NewLikeController(likeUsecase)
 	profileController := controller.NewProfileController(profileUsecase)
@@ -58,12 +57,12 @@ func main() {
 	// router.Engine.GET("/likes/recieved", func(c *gin.Context) { likeController.Recieved(c) })
 	// router.Engine.GET("/likes/sent", func(c *gin.Context) { likeController.Sent(c) })
 
-	resolver := graph.NewResolver(
-		userUsecase,
-	)
-	server := graph.NewGraphQLHandler(resolver)
-	playGroundHandler := graph.NewPlayGroundHandler()
-	router.GraphQL(server, playGroundHandler)
+	// resolver := graph.NewResolver(
+	// 	userUsecase,
+	// )
+	// server := graph.NewGraphQLHandler(resolver)
+	// playGroundHandler := graph.NewPlayGroundHandler()
+	// router.GraphQL(server, playGroundHandler)
 
 	router.Engine.Run(":" + os.Getenv("PORT"))
 }

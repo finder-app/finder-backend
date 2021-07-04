@@ -2,28 +2,22 @@ package controller
 
 import (
 	"finder/pb"
-	"finder/usecase"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type UserController struct {
-	userUsecase usecase.UserUsecase
-	userClient  pb.UserServiceClient
+	userClient pb.UserServiceClient
 }
 
-func NewUserController(uu usecase.UserUsecase, userClient pb.UserServiceClient) *UserController {
+func NewUserController(userClient pb.UserServiceClient) *UserController {
 	return &UserController{
-		userUsecase: uu,
-		userClient:  userClient,
+		userClient: userClient,
 	}
 }
 
 func (c *UserController) Index(ctx *gin.Context) {
-	// NOTE: gRPCに移行
-	// currentUserUid := ctx.Value("currentUserUid").(string)
-	// users, err := c.userUsecase.GetUsersByUid(currentUserUid)
 	req := &pb.GetUsersReq{
 		CurrentUserUid: ctx.Value("currentUserUid").(string),
 	}
@@ -53,7 +47,6 @@ func (c *UserController) Create(ctx *gin.Context) {
 }
 
 func (c *UserController) Show(ctx *gin.Context) {
-	// user, err := c.userUsecase.GetUserByUid(uid, VisitorUid)
 	req := &pb.GetUserByUidReq{
 		Uid:        ctx.Param("uid"),
 		VisitorUid: ctx.Value("currentUserUid").(string),

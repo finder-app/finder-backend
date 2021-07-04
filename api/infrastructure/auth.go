@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/vektah/gqlparser/gqlerror"
 )
 
 func Auth() gin.HandlerFunc {
@@ -21,21 +20,21 @@ func Auth() gin.HandlerFunc {
 		token, err := authClient.VerifyIDToken(ctx, idToken)
 		if err != nil {
 			// NOTE: GraphQLへのリクエストの時
-			if c.Request.URL.Path == "/query" {
-				ctx = context.WithValue(
-					ctx,
-					"AuthenticationError",
-					&gqlerror.Error{
-						Message: err.Error(),
-						Extensions: map[string]interface{}{
-							"status": http.StatusUnauthorized,
-						},
-					},
-				)
-				c.Request = c.Request.WithContext(ctx)
-				c.Next()
-				return
-			}
+			// if c.Request.URL.Path == "/query" {
+			// 	ctx = context.WithValue(
+			// 		ctx,
+			// 		"AuthenticationError",
+			// 		&gqlerror.Error{
+			// 			Message: err.Error(),
+			// 			Extensions: map[string]interface{}{
+			// 				"status": http.StatusUnauthorized,
+			// 			},
+			// 		},
+			// 	)
+			// 	c.Request = c.Request.WithContext(ctx)
+			// 	c.Next()
+			// 	return
+			// }
 			// NOTE: REST APIのリクエストの時
 			controller.ErrorResponse(c, http.StatusUnauthorized, err)
 			return
