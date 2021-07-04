@@ -12,6 +12,7 @@ import (
 type UserUsecase interface {
 	GetUsers(ctx context.Context, req *pb.GetUsersReq) (*pb.GetUsersRes, error)
 	GetUserByUid(ctx context.Context, req *pb.GetUserByUidReq) (*pb.GetUserByUidRes, error)
+	CreateUser(ctx context.Context, req *pb.CreateUserReq) (*pb.CreateUserRes, error)
 }
 
 type userUsecase struct {
@@ -76,6 +77,27 @@ func (u *userUsecase) GetUserByUid(ctx context.Context, req *pb.GetUserByUidReq)
 		return nil, err
 	}
 	return &pb.GetUserByUidRes{
+		User: converter.ConvertUser(user),
+	}, nil
+}
+
+func (u *userUsecase) CreateUser(ctx context.Context, req *pb.CreateUserReq) (*pb.CreateUserRes, error) {
+	// TODO: validationを追加したい
+	// if err := validations.ValidateUser(user); err != nil {
+	// 	return nil, err
+	// }
+	inputUser := &domain.User{
+		Uid:       req.User.Uid,
+		Email:     req.User.Email,
+		LastName:  req.User.LastName,
+		FirstName: req.User.FirstName,
+		Gender:    req.User.Gender,
+	}
+	user, err := u.userRepository.CreateUser(inputUser)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.CreateUserRes{
 		User: converter.ConvertUser(user),
 	}, nil
 }

@@ -10,7 +10,7 @@ type UserRepository interface {
 	GetUserByUid(uid string) (*domain.User, error)
 	GetUsersByGender(genderToSearch string) ([]*domain.User, error)
 	GetUserByVisitorUid(visitorUid string) (*domain.User, error)
-	// CreateUser(user *domain.User) (*domain.User, error)
+	CreateUser(user *domain.User) (*domain.User, error)
 	// UpdateUser(user *domain.User) (*domain.User, error)
 }
 
@@ -47,4 +47,11 @@ func (r *userRepository) GetUsersByGender(genderToSearch string) ([]*domain.User
 		return nil, err
 	}
 	return users, nil
+}
+
+func (r *userRepository) CreateUser(user *domain.User) (*domain.User, error) {
+	if err := r.db.Create(user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
 }

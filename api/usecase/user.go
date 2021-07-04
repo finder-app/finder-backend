@@ -1,14 +1,13 @@
 package usecase
 
 import (
-	"finder/domain"
 	"finder/infrastructure/repository"
 )
 
 type UserUsecase interface {
 	// GetUsersByUid(uid string) ([]*domain.User, error)
-	// GetUserByUid(uid string, visitorUid string) (*domain.User, error)
-	CreateUser(user *domain.User) (*domain.User, error)
+	// // GetUserByUid(uid string, visitorUid string) (*domain.User, error)
+	// CreateUser(user *domain.User) (*domain.User, error)
 }
 
 type userUsecase struct {
@@ -53,9 +52,9 @@ func NewUserUsecase(ur repository.UserRepository, fpr repository.FootPrintReposi
 // 	return user, nil
 // }
 
-func (u *userUsecase) CreateUser(user *domain.User) (*domain.User, error) {
-	return u.userRepository.CreateUser(user)
-}
+// func (u *userUsecase) CreateUser(user *domain.User) (*domain.User, error) {
+// 	return u.userRepository.CreateUser(user)
+// }
 
 // NOTE: 男性なら女性を、女性なら男性のユーザーを検索するように
 // func getGenderForSearch(userGender string) string {

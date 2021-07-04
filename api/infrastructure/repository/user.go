@@ -12,7 +12,7 @@ type UserRepository interface {
 	// profileのためにGetUserByUidは残しておく
 	GetUserByUid(uid string) (*domain.User, error)
 	// GetUserByVisitorUid(visitorUid string) (*domain.User, error)
-	CreateUser(user *domain.User) (*domain.User, error)
+	// CreateUser(user *domain.User) (*domain.User, error)
 	UpdateUser(user *domain.User) (*domain.User, error)
 }
 
@@ -51,15 +51,15 @@ func (r *userRepository) getUserByUid(uid string) (*domain.User, error) {
 	return user, nil
 }
 
-func (r *userRepository) CreateUser(user *domain.User) (*domain.User, error) {
-	if err := validations.ValidateUser(user); err != nil {
-		return nil, err
-	}
-	if err := r.db.Create(user).Error; err != nil {
-		return nil, err
-	}
-	return user, nil
-}
+// func (r *userRepository) CreateUser(user *domain.User) (*domain.User, error) {
+// 	if err := validations.ValidateUser(user); err != nil {
+// 		return nil, err
+// 	}
+// 	if err := r.db.Create(user).Error; err != nil {
+// 		return nil, err
+// 	}
+// 	return user, nil
+// }
 
 func (r *userRepository) UpdateUser(user *domain.User) (*domain.User, error) {
 	if err := validations.ValidateUser(user); err != nil {

@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"finder/domain"
 	"finder/pb"
 	"finder/usecase"
 	"net/http"
@@ -37,12 +36,15 @@ func (c *UserController) Index(ctx *gin.Context) {
 }
 
 func (c *UserController) Create(ctx *gin.Context) {
-	user := &domain.User{}
-	if err := ctx.BindJSON(user); err != nil {
+	reqUser := &pb.User{}
+	if err := ctx.BindJSON(reqUser); err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
-	user, err := c.userUsecase.CreateUser(user)
+	req := &pb.CreateUserReq{
+		User: reqUser,
+	}
+	user, err := c.userClient.CreateUser(ctx, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
 		return

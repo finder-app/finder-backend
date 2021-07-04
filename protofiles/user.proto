@@ -9,6 +9,7 @@ option go_package = "./pb";
 service UserService {
   rpc GetUsers(GetUsersReq) returns (GetUsersRes) {}
   rpc GetUserByUid(GetUserByUidReq) returns (GetUserByUidRes) {}
+  rpc CreateUser(CreateUserReq) returns (CreateUserRes) {}
 }
 
 message GetUsersReq {
@@ -25,6 +26,14 @@ message GetUserByUidReq {
 }
 
 message GetUserByUidRes {
+  User user = 1;
+}
+
+message CreateUserReq {
+  User user = 1;
+}
+
+message CreateUserRes {
   User user = 1;
 }
 

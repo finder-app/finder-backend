@@ -42,7 +42,8 @@ func Auth() gin.HandlerFunc {
 		}
 		// NOTE: c.Setする時にinterfaceにされるけど、型が分かるからキャストする
 		currentUserUid := token.Claims["user_id"].(string)
-		fmt.Printf("currentUserUid:%v\nemail:%v\n", currentUserUid, token.Claims["email"])
+		fmt.Println("-------------------------------------------")
+		fmt.Printf("\ncurrentUserUid:%v\nemail:%v\n", currentUserUid, token.Claims["email"])
 		// NOTE: REST API時はc.Setでok
 		c.Set("currentUserUid", currentUserUid)
 
