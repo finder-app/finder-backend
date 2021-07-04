@@ -7,9 +7,9 @@ import (
 )
 
 type FootPrintRepository interface {
-	// GetFootPrintsByUid(currentUserUid string) ([]domain.FootPrint, error)
+	GetFootPrintsByUid(currentUserUid string) ([]*domain.FootPrint, error)
 	CreateFootPrint(footPrint *domain.FootPrint) error
-	// UpdateToAlreadyRead(currentUserUid string) error
+	UpdateToAlreadyRead(currentUserUid string) error
 	GetUnreadCount(currentUserUid string) (unreadCount int, err error)
 }
 
@@ -23,14 +23,14 @@ func NewFootPrintRepository(db *gorm.DB) FootPrintRepository {
 	}
 }
 
-// func (r *footPrintRepository) GetFootPrintsByUid(currentUserUid string) ([]domain.FootPrint, error) {
-// 	footPrints := []domain.FootPrint{}
-// 	result := r.db.Model(domain.FootPrint{}).Where("user_uid = ?", currentUserUid).Preload("Visitor").Find(&footPrints)
-// 	if err := result.Error; err != nil {
-// 		return nil, err
-// 	}
-// 	return footPrints, nil
-// }
+func (r *footPrintRepository) GetFootPrintsByUid(currentUserUid string) ([]*domain.FootPrint, error) {
+	var footPrints []*domain.FootPrint
+	result := r.db.Model(domain.FootPrint{}).Where("user_uid = ?", currentUserUid).Preload("Visitor").Find(&footPrints)
+	if err := result.Error; err != nil {
+		return nil, err
+	}
+	return footPrints, nil
+}
 
 func (r *footPrintRepository) CreateFootPrint(footPrint *domain.FootPrint) error {
 	where := domain.FootPrint{
@@ -43,13 +43,13 @@ func (r *footPrintRepository) CreateFootPrint(footPrint *domain.FootPrint) error
 	return nil
 }
 
-// func (r *footPrintRepository) UpdateToAlreadyRead(currentUserUid string) error {
-// 	result := r.db.Exec("UPDATE foot_prints SET unread = 0 WHERE unread = 1 AND user_uid = ?", currentUserUid)
-// 	if err := result.Error; err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+func (r *footPrintRepository) UpdateToAlreadyRead(currentUserUid string) error {
+	result := r.db.Exec("UPDATE foot_prints SET unread = 0 WHERE unread = 1 AND user_uid = ?", currentUserUid)
+	if err := result.Error; err != nil {
+		return err
+	}
+	return nil
+}
 
 func (r *footPrintRepository) GetUnreadCount(currentUserUid string) (unreadCount int, err error) {
 	query := `SELECT count(*) AS unreadCount FROM foot_prints WHERE user_uid = ? AND unread = 1`
