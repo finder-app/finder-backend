@@ -18,13 +18,10 @@ func main() {
 	router := infrastructure.NewRouter()
 
 	userRepository := repository.NewUserRepository(db)
-	// footPrintRepository := repository.NewFootPrintRepository(db)
 	likeRepository := repository.NewLikeRepository(db)
 	roomRepository := repository.NewRoomRepository(db)
 	roomUserRepository := repository.NewRoomUserRepository(db)
 
-	// footPrintUsecase := usecase.NewFootPrintUsecase(footPrintRepository)
-	// userUsecase := usecase.NewUserUsecase(userRepository, footPrintRepository)
 	likeUsecase := usecase.NewLikeUsecase(
 		likeRepository,
 		roomRepository,
