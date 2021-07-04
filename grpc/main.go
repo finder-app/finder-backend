@@ -20,7 +20,10 @@ func main() {
 	footPrintRepository := repository.NewFootPrintRepository(db)
 
 	userUsecase := usecase.NewUserUseuserUsecase(userRepository, footPrintRepository)
+	footPrintUsecase := usecase.NewFootPrintUsecase(footPrintRepository)
+
 	pb.RegisterUserServiceServer(grpcServer, userUsecase)
+	pb.RegisterFootPrintServiceServer(grpcServer, footPrintUsecase)
 
 	listener, err := net.Listen("tcp", ":"+os.Getenv("GRPC_SERVER_PORT")) // [::]:50051
 	if err != nil {

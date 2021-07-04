@@ -18,12 +18,12 @@ func main() {
 	router := infrastructure.NewRouter()
 
 	userRepository := repository.NewUserRepository(db)
-	footPrintRepository := repository.NewFootPrintRepository(db)
+	// footPrintRepository := repository.NewFootPrintRepository(db)
 	likeRepository := repository.NewLikeRepository(db)
 	roomRepository := repository.NewRoomRepository(db)
 	roomUserRepository := repository.NewRoomUserRepository(db)
 
-	footPrintUsecase := usecase.NewFootPrintUsecase(footPrintRepository)
+	// footPrintUsecase := usecase.NewFootPrintUsecase(footPrintRepository)
 	// userUsecase := usecase.NewUserUsecase(userRepository, footPrintRepository)
 	likeUsecase := usecase.NewLikeUsecase(
 		likeRepository,
@@ -38,10 +38,12 @@ func main() {
 		panic(err)
 	}
 	defer grpcClientConn.Close()
+
 	userClient := pb.NewUserServiceClient(grpcClientConn)
+	footPrintClient := pb.NewFootPrintServiceClient(grpcClientConn)
 
 	userController := controller.NewUserController(userClient)
-	footPrintController := controller.NewFootPrintController(footPrintUsecase)
+	footPrintController := controller.NewFootPrintController(footPrintClient)
 	likeController := controller.NewLikeController(likeUsecase)
 	profileController := controller.NewProfileController(profileUsecase)
 
