@@ -17,7 +17,7 @@ func main() {
 	logger.NewLogger(db)
 	router := infrastructure.NewRouter()
 
-	userRepository := repository.NewUserRepository(db)
+	// userRepository := repository.NewUserRepository(db)
 	likeRepository := repository.NewLikeRepository(db)
 	roomRepository := repository.NewRoomRepository(db)
 	roomUserRepository := repository.NewRoomUserRepository(db)
@@ -27,7 +27,7 @@ func main() {
 		roomRepository,
 		roomUserRepository,
 	)
-	profileUsecase := usecase.NewProfileUsecase(userRepository)
+	// profileUsecase := usecase.NewProfileUsecase(userRepository)
 
 	target := os.Getenv("GRPC_SERVER_NAME") + ":" + os.Getenv("GRPC_SERVER_PORT")
 	grpcClientConn, err := grpc.Dial(target, grpc.WithInsecure())
@@ -38,11 +38,12 @@ func main() {
 
 	userClient := pb.NewUserServiceClient(grpcClientConn)
 	footPrintClient := pb.NewFootPrintServiceClient(grpcClientConn)
+	profileClint := pb.NewProfileServiceClient(grpcClientConn)
 
 	userController := controller.NewUserController(userClient)
 	footPrintController := controller.NewFootPrintController(footPrintClient)
 	likeController := controller.NewLikeController(likeUsecase)
-	profileController := controller.NewProfileController(profileUsecase)
+	profileController := controller.NewProfileController(profileClint)
 
 	router.Users(userController)
 	router.Profile(profileController)

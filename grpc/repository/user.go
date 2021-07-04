@@ -11,7 +11,7 @@ type UserRepository interface {
 	GetUsersByGender(genderToSearch string) ([]*domain.User, error)
 	GetUserByVisitorUid(visitorUid string) (*domain.User, error)
 	CreateUser(user *domain.User) (*domain.User, error)
-	// UpdateUser(user *domain.User) (*domain.User, error)
+	UpdateUser(inputUser *domain.User) (*domain.User, error)
 }
 
 type userRepository struct {
@@ -54,4 +54,12 @@ func (r *userRepository) CreateUser(user *domain.User) (*domain.User, error) {
 		return nil, err
 	}
 	return user, nil
+}
+
+func (r *userRepository) UpdateUser(inputUser *domain.User) (*domain.User, error) {
+	result := r.db.Model(domain.User{}).Where("uid = ?", inputUser.Uid).Update(inputUser)
+	if err := result.Error; err != nil {
+		return nil, err
+	}
+	return inputUser, nil
 }

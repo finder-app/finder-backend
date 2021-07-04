@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package pb;
+import "google/protobuf/timestamp.proto";
+// import "google/protobuf/empty.proto";
+import "user.proto";
+
+option go_package = "./pb";
+
+service ProfileService {
+  rpc GetProfile(GetProfileReq) returns (GetProfileRes) {}
+  rpc UpdateProfile(UpdateProfileReq) returns (UpdateProfileRes) {}
+}
+
+message GetProfileReq {
+  string current_user_uid = 1;
+}
+
+message GetProfileRes {
+  User user = 1;
+}
+
+message UpdateProfileReq {
+  User user = 1;
+}
+
+message UpdateProfileRes {
+  User user = 1;
+}

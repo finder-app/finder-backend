@@ -6,6 +6,6 @@ import (
 
 func ErrorResponse(ctx *gin.Context, statusCode int, err error) {
 	ctx.AbortWithStatusJSON(statusCode, gin.H{
-		"errorMessage": string(err.Error()),
+		"errorMessage": err.Error(),
 	})
 }
