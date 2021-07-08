@@ -1,7 +1,3 @@
-## info
-### DB設計　ER図
-https://lucid.app/lucidchart/7a209f76-55c7-40f9-b1b4-daf1ff28962b/edit?beaconFlowId=DC3826091DD1CD46&page=0_0#
-
 ### 機能一覧
 https://docs.google.com/spreadsheets/d/1Y520iO3APF-pI23YjKtTqdSzs1fTduwQ7NaB2hnUnko/edit#gid=0
 
