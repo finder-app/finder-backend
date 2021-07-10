@@ -1,26 +1,28 @@
 package controller
 
 import (
-	"finder/usecase"
+	"finder/pb"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type LikeController struct {
-	likeUsecase usecase.LikeUsecase
+	likeClinet pb.LikeServiceClient
 }
 
-func NewLikeController(lu usecase.LikeUsecase) *LikeController {
+func NewLikeController(likeClinet pb.LikeServiceClient) *LikeController {
 	return &LikeController{
-		likeUsecase: lu,
+		likeClinet: likeClinet,
 	}
 }
 
 func (c *LikeController) Create(ctx *gin.Context) {
-	sentUesrUid := ctx.Value("currentUserUid").(string)
-	recievedUserUid := ctx.Param("uid")
-	like, err := c.likeUsecase.CreateLike(sentUesrUid, recievedUserUid)
+	req := &pb.CreateLikeReq{
+		SentUserUid:     ctx.Value("currentUserUid").(string),
+		RecievedUserUid: ctx.Param("uid"),
+	}
+	like, err := c.likeClinet.CreateLike(ctx, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
 		return
@@ -29,36 +31,36 @@ func (c *LikeController) Create(ctx *gin.Context) {
 }
 
 func (c *LikeController) Index(ctx *gin.Context) {
-	currentUserUid := ctx.Value("currentUserUid").(string)
-	like, err := c.likeUsecase.GetOldestLikeByUid(currentUserUid)
-	if err != nil {
-		ErrorResponse(ctx, http.StatusNotFound, err)
-		return
-	}
-	ctx.JSON(http.StatusOK, like)
+	// currentUserUid := ctx.Value("currentUserUid").(string)
+	// like, err := c.likeUsecase.GetOldestLikeByUid(currentUserUid)
+	// if err != nil {
+	// 	ErrorResponse(ctx, http.StatusNotFound, err)
+	// 	return
+	// }
+	// ctx.JSON(http.StatusOK, like)
 }
 
 func (c *LikeController) Consent(ctx *gin.Context) {
-	recievedUserUid := ctx.Value("currentUserUid").(string)
-	sentUesrUid := ctx.Param("sent_uesr_uid")
-	like, room, err := c.likeUsecase.Consent(recievedUserUid, sentUesrUid)
-	if err != nil {
-		ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
-		return
-	}
-	ctx.JSON(http.StatusCreated, gin.H{
-		"like": like,
-		"room": room,
-	})
+	// recievedUserUid := ctx.Value("currentUserUid").(string)
+	// sentUesrUid := ctx.Param("sent_uesr_uid")
+	// like, room, err := c.likeUsecase.Consent(recievedUserUid, sentUesrUid)
+	// if err != nil {
+	// 	ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
+	// 	return
+	// }
+	// ctx.JSON(http.StatusCreated, gin.H{
+	// 	"like": like,
+	// 	"room": room,
+	// })
 }
 
 func (c *LikeController) Next(ctx *gin.Context) {
-	recievedUserUid := ctx.Value("currentUserUid").(string)
-	sentUesrUid := ctx.Param("sent_uesr_uid")
-	like, err := c.likeUsecase.GetNextUserByUid(recievedUserUid, sentUesrUid)
-	if err != nil {
-		ErrorResponse(ctx, http.StatusNotFound, err)
-		return
-	}
-	ctx.JSON(http.StatusOK, like)
+	// recievedUserUid := ctx.Value("currentUserUid").(string)
+	// sentUesrUid := ctx.Param("sent_uesr_uid")
+	// like, err := c.likeUsecase.GetNextUserByUid(recievedUserUid, sentUesrUid)
+	// if err != nil {
+	// 	ErrorResponse(ctx, http.StatusNotFound, err)
+	// 	return
+	// }
+	// ctx.JSON(http.StatusOK, like)
 }

@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package pb;
+import "google/protobuf/timestamp.proto";
+// import "google/protobuf/empty.proto";
+import "user.proto";
+
+option go_package = "./pb";
+
+service LikeService {
+  rpc CreateLike(CreateLikeReq) returns (CreateLikeRes) {}
+  // rpc GetUserByUid(GetUserByUidReq) returns (GetUserByUidRes) {}
+  // rpc CreateUser(CreateUserReq) returns (CreateUserRes) {}
+}
+
+message CreateLikeReq {
+  string sent_user_uid = 1;
+  string recieved_user_uid = 2;
+}
+
+message CreateLikeRes {
+  repeated User users = 1;
+}
+
+message Like {
+  uint64 id = 1;
+  string sent_user_uid = 2;
+  User sent_user = 3;
+  string recieved_user_uid = 4;
+  bool skipped = 5;
+  bool consented = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}

@@ -3,29 +3,28 @@ package main
 import (
 	"finder/infrastructure"
 	"finder/infrastructure/logger"
-	"finder/infrastructure/repository"
 	"finder/interface/controller"
 	"finder/pb"
-	"finder/usecase"
 	"os"
 
 	"google.golang.org/grpc"
 )
 
 func main() {
+	// kese
 	db := infrastructure.NewGormConnect()
 	logger.NewLogger(db)
 	router := infrastructure.NewRouter()
 
-	likeRepository := repository.NewLikeRepository(db)
-	roomRepository := repository.NewRoomRepository(db)
-	roomUserRepository := repository.NewRoomUserRepository(db)
+	// likeRepository := repository.NewLikeRepository(db)
+	// roomRepository := repository.NewRoomRepository(db)
+	// roomUserRepository := repository.NewRoomUserRepository(db)
 
-	likeUsecase := usecase.NewLikeUsecase(
-		likeRepository,
-		roomRepository,
-		roomUserRepository,
-	)
+	// likeUsecase := usecase.NewLikeUsecase(
+	// 	likeRepository,
+	// 	roomRepository,
+	// 	roomUserRepository,
+	// )
 
 	target := os.Getenv("GRPC_SERVER_NAME") + ":" + os.Getenv("GRPC_SERVER_PORT")
 	grpcClientConn, err := grpc.Dial(target, grpc.WithInsecure())
