@@ -2,11 +2,12 @@ package validations
 
 import (
 	"errors"
-	"finder/domain"
+	"grpc/domain"
 
 	"github.com/go-playground/validator"
 )
 
+// NOTE: 今は使用していない
 func ValidateUser(user *domain.User) error {
 	validate := validator.New()
 	if err := validate.Struct(user); err != nil {
