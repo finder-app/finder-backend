@@ -7,17 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type footPrintController struct {
+type FootPrintController struct {
 	footPrintClient pb.FootPrintServiceClient
 }
 
-func NewFootPrintController(footPrintClient pb.FootPrintServiceClient) *footPrintController {
-	return &footPrintController{
+func NewFootPrintController(footPrintClient pb.FootPrintServiceClient) *FootPrintController {
+	return &FootPrintController{
 		footPrintClient: footPrintClient,
 	}
 }
 
-func (c *footPrintController) Index(ctx *gin.Context) {
+func (c *FootPrintController) Index(ctx *gin.Context) {
 	req := &pb.GetFootPrintsReq{
 		CurrentUserUid: ctx.Value("currentUserUid").(string),
 	}
@@ -29,7 +29,7 @@ func (c *footPrintController) Index(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, footPrints)
 }
 
-func (c *footPrintController) UnreadCount(ctx *gin.Context) {
+func (c *FootPrintController) UnreadCount(ctx *gin.Context) {
 	req := &pb.GetUnreadCountReq{
 		CurrentUserUid: ctx.Value("currentUserUid").(string),
 	}

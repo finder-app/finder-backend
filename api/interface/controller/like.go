@@ -7,17 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type likeController struct {
+type LikeController struct {
 	likeUsecase usecase.LikeUsecase
 }
 
-func NewLikeController(lu usecase.LikeUsecase) *likeController {
-	return &likeController{
+func NewLikeController(lu usecase.LikeUsecase) *LikeController {
+	return &LikeController{
 		likeUsecase: lu,
 	}
 }
 
-func (c *likeController) Create(ctx *gin.Context) {
+func (c *LikeController) Create(ctx *gin.Context) {
 	sentUesrUid := ctx.Value("currentUserUid").(string)
 	recievedUserUid := ctx.Param("uid")
 	like, err := c.likeUsecase.CreateLike(sentUesrUid, recievedUserUid)
@@ -28,7 +28,7 @@ func (c *likeController) Create(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, like)
 }
 
-func (c *likeController) Index(ctx *gin.Context) {
+func (c *LikeController) Index(ctx *gin.Context) {
 	currentUserUid := ctx.Value("currentUserUid").(string)
 	like, err := c.likeUsecase.GetOldestLikeByUid(currentUserUid)
 	if err != nil {
@@ -38,7 +38,7 @@ func (c *likeController) Index(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, like)
 }
 
-func (c *likeController) Consent(ctx *gin.Context) {
+func (c *LikeController) Consent(ctx *gin.Context) {
 	recievedUserUid := ctx.Value("currentUserUid").(string)
 	sentUesrUid := ctx.Param("sent_uesr_uid")
 	like, room, err := c.likeUsecase.Consent(recievedUserUid, sentUesrUid)
@@ -52,7 +52,7 @@ func (c *likeController) Consent(ctx *gin.Context) {
 	})
 }
 
-func (c *likeController) Next(ctx *gin.Context) {
+func (c *LikeController) Next(ctx *gin.Context) {
 	recievedUserUid := ctx.Value("currentUserUid").(string)
 	sentUesrUid := ctx.Param("sent_uesr_uid")
 	like, err := c.likeUsecase.GetNextUserByUid(recievedUserUid, sentUesrUid)

@@ -45,15 +45,8 @@ func main() {
 
 	router.Users(userController)
 	router.Profile(profileController)
-
-	router.Engine.GET("/foot_prints", footPrintController.Index)
-	router.Engine.GET("/foot_prints/unread_count", footPrintController.UnreadCount)
-	router.Engine.POST("/users/:uid/likes", likeController.Create)
-	router.Engine.GET("/likes", likeController.Index)
-	router.Engine.PUT("/likes/:sent_uesr_uid/consent", likeController.Consent)
-	router.Engine.PUT("/likes/:sent_uesr_uid/next", likeController.Next)
-	// router.Engine.GET("/likes/recieved", func(c *gin.Context) { likeController.Recieved(c) })
-	// router.Engine.GET("/likes/sent", func(c *gin.Context) { likeController.Sent(c) })
+	router.FootPrints(footPrintController)
+	router.Likes(likeController)
 
 	// NOTE: GraphQLの導入は保留中なのでコメントアウト
 	// resolver := graph.NewResolver(

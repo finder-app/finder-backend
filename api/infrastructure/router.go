@@ -43,3 +43,17 @@ func (r *Router) Profile(profileController *controller.ProfileController) {
 	r.Engine.GET("/profile", profileController.Index)
 	r.Engine.PUT("/profile", profileController.Update)
 }
+
+func (r *Router) FootPrints(footPrintController *controller.FootPrintController) {
+	r.Engine.GET("/foot_prints", footPrintController.Index)
+	r.Engine.GET("/foot_prints/unread_count", footPrintController.UnreadCount)
+}
+
+func (r *Router) Likes(likeController *controller.LikeController) {
+	r.Engine.POST("/users/:uid/likes", likeController.Create)
+	r.Engine.GET("/likes", likeController.Index)
+	r.Engine.PUT("/likes/:sent_uesr_uid/consent", likeController.Consent)
+	r.Engine.PUT("/likes/:sent_uesr_uid/next", likeController.Next)
+	// router.Engine.GET("/likes/recieved", func(c *gin.Context) { likeController.Recieved(c) })
+	// router.Engine.GET("/likes/sent", func(c *gin.Context) { likeController.Sent(c) })
+}
