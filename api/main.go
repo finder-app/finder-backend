@@ -17,7 +17,6 @@ func main() {
 	logger.NewLogger(db)
 	router := infrastructure.NewRouter()
 
-	// userRepository := repository.NewUserRepository(db)
 	likeRepository := repository.NewLikeRepository(db)
 	roomRepository := repository.NewRoomRepository(db)
 	roomUserRepository := repository.NewRoomUserRepository(db)
@@ -27,7 +26,6 @@ func main() {
 		roomRepository,
 		roomUserRepository,
 	)
-	// profileUsecase := usecase.NewProfileUsecase(userRepository)
 
 	target := os.Getenv("GRPC_SERVER_NAME") + ":" + os.Getenv("GRPC_SERVER_PORT")
 	grpcClientConn, err := grpc.Dial(target, grpc.WithInsecure())
@@ -57,6 +55,7 @@ func main() {
 	// router.Engine.GET("/likes/recieved", func(c *gin.Context) { likeController.Recieved(c) })
 	// router.Engine.GET("/likes/sent", func(c *gin.Context) { likeController.Sent(c) })
 
+	// NOTE: GraphQLの導入は保留中なのでコメントアウト
 	// resolver := graph.NewResolver(
 	// 	userUsecase,
 	// )
