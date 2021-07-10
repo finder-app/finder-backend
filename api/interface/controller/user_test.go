@@ -1,79 +1,70 @@
 package controller_test
 
-// import (
-// 	"encoding/json"
-// 	"errors"
-// 	"finder/domain"
-// 	"finder/infrastructure"
-// 	"finder/interface/controller"
-// 	"finder/usecase/mocks"
-// 	"net/http"
-// 	"net/http/httptest"
-// 	"strings"
-// 	"testing"
+import (
+	"errors"
+	"finder/infrastructure"
+	"finder/interface/controller"
+	"finder/mocks"
+	"net/http"
+	"net/http/httptest"
+	"testing"
 
-// 	"github.com/bxcodec/faker"
-// 	"github.com/gin-gonic/gin"
-// 	"github.com/stretchr/testify/assert"
-// 	"github.com/stretchr/testify/mock"
-// )
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/mock"
+	"gopkg.in/go-playground/assert.v1"
+)
 
-// // FIXME: ここmockUsecaseを引数に渡すの微妙な気がする
-// func getUsersRouter(mockUseCase *mocks.UserUsecase) *infrastructure.Router {
-// 	userController := controller.NewUserController(mockUseCase)
-// 	router := &infrastructure.Router{
-// 		Engine: gin.Default(),
-// 	}
-// 	router.Engine.Use(setCurrentUserUid())
-// 	router.Users(userController)
-// 	return router
-// }
+func newRouter() *infrastructure.Router {
+	router := &infrastructure.Router{
+		Engine: gin.Default(),
+	}
+	router.Engine.Use(setMockUserUid())
+	return router
+}
 
-// func setCurrentUserUid() gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-// 		mockUser := domain.User{}
-// 		faker.FakeData(&mockUser)
-// 		currentUserUid := mockUser.Uid
-// 		c.Set("currentUserUid", currentUserUid)
-// 		c.Next()
-// 	}
-// }
+func setMockUserUid() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Set("currentUserUid", "mock_user_uid")
+		c.Next()
+	}
+}
 
-// func setMockUsers(t *testing.T) []*domain.User {
-// 	mockUser := &domain.User{}
-// 	err := faker.FakeData(&mockUser)
-// 	assert.NoError(t, err)
-// 	mockUsers := []*domain.User{mockUser}
-// 	return mockUsers
-// }
+func TestIndex(t *testing.T) {
+	response := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(response)
+	ctx.Request, _ = http.NewRequest("GET", "/users", nil)
 
-// func TestIndex(t *testing.T) {
-// 	response := httptest.NewRecorder()
-// 	ctx, _ := gin.CreateTestContext(response)
-// 	ctx.Request, _ = http.NewRequest("GET", "/users", nil)
+	mockUserClient := new(mocks.UserClient)
+	// NOTE: context.Contextはmock.Anythingにする必要ありそう
+	// FIXME: mockのmethod内で型を参照できないため、mock.Anythingで対応
+	mockUserClient.On("GetUsers", mock.Anything, mock.Anything).
+		Return(mock.Anything, nil).Once()
+	// Return(mock.AnythingOfType("*pb.GetUsersRes"), nil).Once()
 
-// 	mockUseCase := new(mocks.UserUsecase)
-// 	mockUsers := setMockUsers(t)
-// 	mockUseCase.On("GetUsersByUid", mock.AnythingOfType("string")).Return(mockUsers, nil).Once()
+	router := newRouter()
+	userController := controller.NewUserController(mockUserClient)
+	router.Users(userController)
+	router.Engine.ServeHTTP(response, ctx.Request)
+	assert.Equal(t, http.StatusOK, response.Code)
+}
 
-// 	router := getUsersRouter(mockUseCase)
-// 	router.Engine.ServeHTTP(response, ctx.Request)
-// 	assert.Equal(t, http.StatusOK, response.Code)
-// }
+func TestIndexError(t *testing.T) {
+	response := httptest.NewRecorder()
+	ctx, _ := gin.CreateTestContext(response)
+	ctx.Request, _ = http.NewRequest("GET", "/users", nil)
 
-// func TestIndexError(t *testing.T) {
-// 	response := httptest.NewRecorder()
-// 	ctx, _ := gin.CreateTestContext(response)
-// 	ctx.Request, _ = http.NewRequest("GET", "/users", nil)
+	mockUserClient := new(mocks.UserClient)
+	err := errors.New("Unexpexted Error")
+	mockUserClient.On("GetUsers", mock.Anything, mock.Anything).Return(nil, err).Once()
 
-// 	mockUseCase := new(mocks.UserUsecase)
-// 	err := errors.New("Unexpexted Error")
-// 	mockUseCase.On("GetUsersByUid", mock.AnythingOfType("string")).Return(nil, err).Once()
+	router := newRouter()
+	userController := controller.NewUserController(mockUserClient)
+	router.Users(userController)
+	router.Engine.ServeHTTP(response, ctx.Request)
+	assert.Equal(t, http.StatusInternalServerError, response.Code)
+}
 
-// 	router := getUsersRouter(mockUseCase)
-// 	router.Engine.ServeHTTP(response, ctx.Request)
-// 	assert.Equal(t, http.StatusInternalServerError, response.Code)
-// }
+// TODO: showとcreateのテストは今後実装する
 
 // func TestShow(t *testing.T) {
 // 	mockUseCase := new(mocks.UserUsecase)
