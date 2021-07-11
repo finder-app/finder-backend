@@ -1,10 +1,10 @@
 package controller_test
 
 import (
+	"api/infrastructure"
+	"api/interface/controller"
+	"api/mocks"
 	"errors"
-	"finder/infrastructure"
-	"finder/interface/controller"
-	"finder/mocks"
 	"net/http"
 	"net/http/httptest"
 	"testing"

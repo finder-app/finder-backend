@@ -1,8 +1,8 @@
 package mocks
 
 import (
+	"api/pb"
 	"context"
-	"finder/pb"
 	"fmt"
 
 	"github.com/stretchr/testify/mock"

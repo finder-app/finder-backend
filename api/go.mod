@@ -1,4 +1,4 @@
-module finder
+module api
 
 go 1.16
 

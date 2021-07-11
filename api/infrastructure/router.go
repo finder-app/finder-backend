@@ -1,7 +1,7 @@
 package infrastructure
 
 import (
-	"finder/interface/controller"
+	"api/interface/controller"
 	"net/http"
 
 	"github.com/99designs/gqlgen/graphql/handler"

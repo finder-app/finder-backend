@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"finder/pb"
+	"api/pb"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

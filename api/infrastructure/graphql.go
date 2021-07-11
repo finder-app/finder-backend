@@ -1,9 +1,9 @@
 package infrastructure
 
 // import (
-// 	"finder/graph"
-// 	"finder/graph/directives"
-// 	"finder/graph/generated"
+// 	"api/graph"
+// 	"api/graph/directives"
+// 	"api/graph/generated"
 // 	"net/http"
 
 // 	"github.com/99designs/gqlgen/graphql/handler"

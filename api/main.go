@@ -1,10 +1,10 @@
 package main
 
 import (
-	"finder/infrastructure"
-	"finder/infrastructure/logger"
-	"finder/interface/controller"
-	"finder/pb"
+	"api/infrastructure"
+	"api/infrastructure/logger"
+	"api/interface/controller"
+	"api/pb"
 	"log"
 	"os"
 
