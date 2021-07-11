@@ -46,4 +46,5 @@ message User {
   google.protobuf.Timestamp updated_at = 6;
   string gender = 7;
   string full_name = 8;
+  bool liked = 9;
 }

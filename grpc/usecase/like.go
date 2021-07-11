@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"grpc/domain"
+	"grpc/interface/converter"
 	"grpc/pb"
 	"grpc/repository"
 )
@@ -40,7 +41,9 @@ func (u *likeUsecase) CreateLike(ctx context.Context, req *pb.CreateLikeReq) (*p
 	if _, err := u.likeRepository.CreateLike(like); err != nil {
 		return nil, err
 	}
-	return nil, nil
+	return &pb.CreateLikeRes{
+		Like: converter.ConvertLike(like),
+	}, nil
 }
 
 // func (u *likeUsecase) GetOldestLikeByUid(currentUserUid string) (*domain.Like, error) {
