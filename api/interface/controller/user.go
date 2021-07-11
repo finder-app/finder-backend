@@ -56,16 +56,19 @@ func (c *UserController) Show(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusNotFound, err)
 		return
 	}
+
 	// NOTE: gRPCが生成したstructにomitemptyがあり、Likedがfalseだとkeyが返せない
-	// なのでフロントでuser.likedが取得できず、いいねした時にいいね済みにならない
+	// keyがないとフロントでuser.likedが取得できず、いいねした時にいいね済みにならない
 	// そのため、自前でstructを作って返す
-	user := map[string]interface{}{
-		"Uid":       res.User.Uid,
-		"LastName":  res.User.LastName,
-		"FirstName": res.User.FirstName,
-		"FullName":  res.User.FullName,
-		"Email":     res.User.Email,
-		"Liked":     res.User.Liked,
+	type responseUser struct {
+		*pb.User
+		// TODO: Likedのoptionがどこまで必要か要検証。
+		Liked bool `json:"liked"`
+		// Liked bool `protobuf:"varint,9,opt,name=liked,proto3" json:"liked"`
+	}
+	user := responseUser{
+		User:  res.User,
+		Liked: res.User.Liked,
 	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"user": user,
