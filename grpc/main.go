@@ -14,7 +14,6 @@ import (
 func main() {
 	db := infrastructure.NewGormConnect()
 	logger.NewLogger(db)
-	grpcServer := infrastructure.NewGrpcServer()
 
 	userRepository := repository.NewUserRepository(db)
 	footPrintRepository := repository.NewFootPrintRepository(db)
@@ -35,6 +34,7 @@ func main() {
 		roomUserRepository,
 	)
 
+	grpcServer := infrastructure.NewGrpcServer()
 	pb.RegisterUserServiceServer(grpcServer, userUsecase)
 	pb.RegisterFootPrintServiceServer(grpcServer, footPrintUsecase)
 	pb.RegisterProfileServiceServer(grpcServer, profileUsecase)

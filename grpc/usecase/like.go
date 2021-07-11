@@ -10,7 +10,7 @@ import (
 
 type LikeUsecase interface {
 	CreateLike(ctx context.Context, req *pb.CreateLikeReq) (*pb.CreateLikeRes, error)
-	// GetOldestLikeByUid(currentUserUid string) (*domain.Like, error)
+	GetOldestLike(ctx context.Context, req *pb.GetOldestLikeReq) (*pb.GetOldestLikeRes, error)
 	// GetNextUserByUid(recievedUserUid string, sentUesrUid string) (*domain.Like, error)
 	// Consent(recievedUserUid string, sentUesrUid string) (domain.Like, domain.Room, error)
 }
@@ -46,9 +46,16 @@ func (u *likeUsecase) CreateLike(ctx context.Context, req *pb.CreateLikeReq) (*p
 	}, nil
 }
 
-// func (u *likeUsecase) GetOldestLikeByUid(currentUserUid string) (*domain.Like, error) {
-// 	return u.likeRepository.GetOldestLikeByUid(currentUserUid)
-// }
+func (u *likeUsecase) GetOldestLike(ctx context.Context, req *pb.GetOldestLikeReq) (*pb.GetOldestLikeRes, error) {
+	currentUserUid := req.CurrentUserUid
+	like, err := u.likeRepository.GetOldestLikeByUid(currentUserUid)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.GetOldestLikeRes{
+		Like: converter.ConvertLike(like),
+	}, nil
+}
 
 // func (u *likeUsecase) GetNextUserByUid(recievedUserUid string, sentUesrUid string) (*domain.Like, error) {
 // 	if err := u.likeRepository.NopeUserByUid(recievedUserUid, sentUesrUid); err != nil {

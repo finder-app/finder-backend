@@ -50,7 +50,28 @@ func (r *userRepository) GetUsersByGender(genderToSearch string) ([]*domain.User
 }
 
 func (r *userRepository) CreateUser(user *domain.User) (*domain.User, error) {
-	if err := r.db.Create(user).Error; err != nil {
+	// NOTE: likedがDBに存在しないカラムなので、gormを使うとlikedってカラムはないエラー出るため、自前で実装
+	query := `INSERT INTO users (
+							uid,
+							email,
+							last_name,
+							first_name,
+							gender
+						) VALUES (
+							?,
+							?,
+							?,
+							?,
+							?
+						)`
+	result := r.db.Exec(query,
+		user.Uid,
+		user.Email,
+		user.LastName,
+		user.FirstName,
+		user.Gender,
+	)
+	if err := result.Error; err != nil {
 		return nil, err
 	}
 	return user, nil

@@ -50,7 +50,7 @@ func (r *likeRepository) Liked(user *domain.User, visitorUid string) error {
 
 func (r *likeRepository) GetOldestLikeByUid(currentUserUid string) (*domain.Like, error) {
 	like := &domain.Like{}
-	result := r.db.Model(domain.Like{}).
+	result := r.db.Model(like).
 		Where(`recieved_user_uid = ? AND skipped = 0 AND consented = 0`, currentUserUid).
 		Order("CAST(created_at AS DATE) ASC").
 		Preload("SentUser").

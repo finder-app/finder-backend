@@ -31,13 +31,15 @@ func (c *LikeController) Create(ctx *gin.Context) {
 }
 
 func (c *LikeController) Index(ctx *gin.Context) {
-	// currentUserUid := ctx.Value("currentUserUid").(string)
-	// like, err := c.likeUsecase.GetOldestLikeByUid(currentUserUid)
-	// if err != nil {
-	// 	ErrorResponse(ctx, http.StatusNotFound, err)
-	// 	return
-	// }
-	// ctx.JSON(http.StatusOK, like)
+	req := &pb.GetOldestLikeReq{
+		CurrentUserUid: ctx.Value("currentUserUid").(string),
+	}
+	like, err := c.likeClinet.GetOldestLike(ctx, req)
+	if err != nil {
+		ErrorResponse(ctx, http.StatusNotFound, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, like)
 }
 
 func (c *LikeController) Consent(ctx *gin.Context) {

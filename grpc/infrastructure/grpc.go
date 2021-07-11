@@ -23,7 +23,7 @@ func NewGrpcServer() *grpc.Server {
 		)),
 	)
 
-	// NOTE: grpcurl用 development環境でのみ実行する
+	// NOTE: grpcurl用
 	reflection.Register(grpcServer)
 
 	return grpcServer

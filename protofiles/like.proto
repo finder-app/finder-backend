@@ -9,7 +9,7 @@ option go_package = "./pb";
 
 service LikeService {
   rpc CreateLike(CreateLikeReq) returns (CreateLikeRes) {}
-  // rpc GetUserByUid(GetUserByUidReq) returns (GetUserByUidRes) {}
+  rpc GetOldestLike(GetOldestLikeReq) returns (GetOldestLikeRes) {}
   // rpc CreateUser(CreateUserReq) returns (CreateUserRes) {}
 }
 
@@ -19,6 +19,14 @@ message CreateLikeReq {
 }
 
 message CreateLikeRes {
+  Like like = 1;
+}
+
+message GetOldestLikeReq {
+  string current_user_uid = 1;
+}
+
+message GetOldestLikeRes {
   Like like = 1;
 }
 
