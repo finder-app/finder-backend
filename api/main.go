@@ -5,26 +5,15 @@ import (
 	"finder/infrastructure/logger"
 	"finder/interface/controller"
 	"finder/pb"
+	"log"
 	"os"
 
 	"google.golang.org/grpc"
 )
 
 func main() {
-	// kese
-	db := infrastructure.NewGormConnect()
-	logger.NewLogger(db)
+	logger.NewLogger()
 	router := infrastructure.NewRouter()
-
-	// likeRepository := repository.NewLikeRepository(db)
-	// roomRepository := repository.NewRoomRepository(db)
-	// roomUserRepository := repository.NewRoomUserRepository(db)
-
-	// likeUsecase := usecase.NewLikeUsecase(
-	// 	likeRepository,
-	// 	roomRepository,
-	// 	roomUserRepository,
-	// )
 
 	target := os.Getenv("GRPC_SERVER_NAME") + ":" + os.Getenv("GRPC_SERVER_PORT")
 	grpcClientConn, err := grpc.Dial(target, grpc.WithInsecure())
@@ -56,5 +45,6 @@ func main() {
 	// playGroundHandler := graph.NewPlayGroundHandler()
 	// router.GraphQL(server, playGroundHandler)
 
+	log.Print("http server start")
 	router.Engine.Run(":" + os.Getenv("PORT"))
 }
