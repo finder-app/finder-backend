@@ -51,10 +51,23 @@ func (c *UserController) Show(ctx *gin.Context) {
 		Uid:        ctx.Param("uid"),
 		VisitorUid: ctx.Value("currentUserUid").(string),
 	}
-	user, err := c.userClient.GetUserByUid(ctx, req)
+	res, err := c.userClient.GetUserByUid(ctx, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusNotFound, err)
 		return
 	}
-	ctx.JSON(http.StatusOK, user)
+	// NOTE: gRPCが生成したstructにomitemptyがあり、Likedがfalseだとkeyが返せない
+	// なのでフロントでuser.likedが取得できず、いいねした時にいいね済みにならない
+	// そのため、自前でstructを作って返す
+	user := map[string]interface{}{
+		"Uid":       res.User.Uid,
+		"LastName":  res.User.LastName,
+		"FirstName": res.User.FirstName,
+		"FullName":  res.User.FullName,
+		"Email":     res.User.Email,
+		"Liked":     res.User.Liked,
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"user": user,
+	})
 }

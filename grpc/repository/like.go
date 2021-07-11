@@ -8,6 +8,7 @@ import (
 
 type LikeRepository interface {
 	CreateLike(like *domain.Like) (*domain.Like, error)
+	Liked(user *domain.User, visitorUid string) error
 	GetOldestLikeByUid(currentUserUid string) (*domain.Like, error)
 	NopeUserByUid(recievedUserUid string, sentUesrUid string) error
 	Begin() *gorm.DB
@@ -29,6 +30,22 @@ func (r *likeRepository) CreateLike(like *domain.Like) (*domain.Like, error) {
 		return nil, err
 	}
 	return like, nil
+}
+
+func (r *likeRepository) Liked(user *domain.User, visitorUid string) error {
+	query := `SELECT EXISTS (
+							SELECT *
+							FROM likes
+							WHERE recieved_user_uid = ?
+							AND sent_user_uid = ?
+						) AS 'liked'
+						FROM likes`
+	row := r.db.Raw(query, user.Uid, visitorUid).Row()
+	if err := row.Err(); err != nil {
+		return err
+	}
+	row.Scan(&user.Liked)
+	return nil
 }
 
 func (r *likeRepository) GetOldestLikeByUid(currentUserUid string) (*domain.Like, error) {

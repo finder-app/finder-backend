@@ -22,7 +22,11 @@ func main() {
 	roomRepository := repository.NewRoomRepository(db)
 	roomUserRepository := repository.NewRoomUserRepository(db)
 
-	userUsecase := usecase.NewUserUseuserUsecase(userRepository, footPrintRepository)
+	userUsecase := usecase.NewUserUseuserUsecase(
+		userRepository,
+		footPrintRepository,
+		likeRepository,
+	)
 	footPrintUsecase := usecase.NewFootPrintUsecase(footPrintRepository)
 	profileUsecase := usecase.NewProfileUsecase(userRepository)
 	likeUsecase := usecase.NewLikeUsecase(

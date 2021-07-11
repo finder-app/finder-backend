@@ -35,12 +35,13 @@ func main() {
 
 	userClient := pb.NewUserServiceClient(grpcClientConn)
 	footPrintClient := pb.NewFootPrintServiceClient(grpcClientConn)
-	profileClint := pb.NewProfileServiceClient(grpcClientConn)
+	profileClient := pb.NewProfileServiceClient(grpcClientConn)
+	likeClient := pb.NewLikeServiceClient(grpcClientConn)
 
 	userController := controller.NewUserController(userClient)
 	footPrintController := controller.NewFootPrintController(footPrintClient)
-	likeController := controller.NewLikeController(likeUsecase)
-	profileController := controller.NewProfileController(profileClint)
+	likeController := controller.NewLikeController(likeClient)
+	profileController := controller.NewProfileController(profileClient)
 
 	router.Users(userController)
 	router.Profile(profileController)

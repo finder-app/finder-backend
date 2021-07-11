@@ -19,7 +19,7 @@ message CreateLikeReq {
 }
 
 message CreateLikeRes {
-  repeated User users = 1;
+  Like like = 1;
 }
 
 message Like {
