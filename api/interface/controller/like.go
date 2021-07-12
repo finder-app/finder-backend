@@ -42,6 +42,19 @@ func (c *LikeController) Index(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, like)
 }
 
+func (c *LikeController) Skip(ctx *gin.Context) {
+	req := &pb.SkipReq{
+		SentUserUid:     ctx.Param("sent_uesr_uid"),
+		RecievedUserUid: ctx.Value("currentUserUid").(string),
+	}
+	empty, err := c.likeClinet.Skip(ctx, req)
+	if err != nil {
+		ErrorResponse(ctx, http.StatusNotFound, err)
+		return
+	}
+	ctx.JSON(http.StatusOK, empty)
+}
+
 func (c *LikeController) Consent(ctx *gin.Context) {
 	// recievedUserUid := ctx.Value("currentUserUid").(string)
 	// sentUesrUid := ctx.Param("sent_uesr_uid")
@@ -54,15 +67,4 @@ func (c *LikeController) Consent(ctx *gin.Context) {
 	// 	"like": like,
 	// 	"room": room,
 	// })
-}
-
-func (c *LikeController) Next(ctx *gin.Context) {
-	// recievedUserUid := ctx.Value("currentUserUid").(string)
-	// sentUesrUid := ctx.Param("sent_uesr_uid")
-	// like, err := c.likeUsecase.GetNextUserByUid(recievedUserUid, sentUesrUid)
-	// if err != nil {
-	// 	ErrorResponse(ctx, http.StatusNotFound, err)
-	// 	return
-	// }
-	// ctx.JSON(http.StatusOK, like)
 }

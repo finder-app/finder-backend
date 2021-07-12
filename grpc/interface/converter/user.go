@@ -25,7 +25,7 @@ func ConvertUser(user *domain.User) *pb.User {
 		CreatedAt: timestamppb.New(user.CreatedAt),
 		UpdatedAt: timestamppb.New(user.UpdatedAt),
 		Gender:    user.Gender,
-		FullName:  user.LastName + user.FirstName,
+		FullName:  user.FullName(),
 		Liked:     user.Liked,
 	}
 	return pbUser

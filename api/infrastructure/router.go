@@ -52,8 +52,8 @@ func (r *Router) FootPrints(footPrintController *controller.FootPrintController)
 func (r *Router) Likes(likeController *controller.LikeController) {
 	r.Engine.POST("/users/:uid/likes", likeController.Create)
 	r.Engine.GET("/likes", likeController.Index)
+	r.Engine.PUT("/likes/:sent_uesr_uid/skip", likeController.Skip)
 	r.Engine.PUT("/likes/:sent_uesr_uid/consent", likeController.Consent)
-	r.Engine.PUT("/likes/:sent_uesr_uid/next", likeController.Next)
 	// router.Engine.GET("/likes/recieved", func(c *gin.Context) { likeController.Recieved(c) })
 	// router.Engine.GET("/likes/sent", func(c *gin.Context) { likeController.Sent(c) })
 }

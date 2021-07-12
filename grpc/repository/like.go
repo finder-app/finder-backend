@@ -10,7 +10,7 @@ type LikeRepository interface {
 	CreateLike(like *domain.Like) (*domain.Like, error)
 	Liked(user *domain.User, visitorUid string) error
 	GetOldestLikeByUid(currentUserUid string) (*domain.Like, error)
-	NopeUserByUid(recievedUserUid string, sentUesrUid string) error
+	Skip(like *domain.Like) error
 	Begin() *gorm.DB
 	Consent(tx *gorm.DB, like *domain.Like) error
 }
@@ -61,10 +61,10 @@ func (r *likeRepository) GetOldestLikeByUid(currentUserUid string) (*domain.Like
 	return like, nil
 }
 
-func (r *likeRepository) NopeUserByUid(recievedUserUid string, sentUesrUid string) error {
+func (r *likeRepository) Skip(like *domain.Like) error {
 	query := `UPDATE likes SET skipped = 1
-		WHERE recieved_user_uid = ? AND sent_user_uid = ?`
-	if err := r.db.Exec(query, recievedUserUid, sentUesrUid).Error; err != nil {
+		WHERE sent_user_uid = ? AND recieved_user_uid = ?`
+	if err := r.db.Exec(query, like.SentUserUid, like.RecievedUserUid).Error; err != nil {
 		return err
 	}
 	return nil

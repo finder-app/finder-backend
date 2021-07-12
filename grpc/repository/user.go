@@ -78,7 +78,7 @@ func (r *userRepository) CreateUser(user *domain.User) (*domain.User, error) {
 }
 
 func (r *userRepository) UpdateUser(inputUser *domain.User) (*domain.User, error) {
-	result := r.db.Model(domain.User{}).Where("uid = ?", inputUser.Uid).Update(inputUser)
+	result := r.db.Model(inputUser).Where("uid = ?", inputUser.Uid).Update(inputUser)
 	if err := result.Error; err != nil {
 		return nil, err
 	}

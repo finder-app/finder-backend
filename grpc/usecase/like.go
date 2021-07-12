@@ -6,12 +6,15 @@ import (
 	"grpc/interface/converter"
 	"grpc/pb"
 	"grpc/repository"
+
+	"github.com/golang/protobuf/ptypes/empty"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type LikeUsecase interface {
 	CreateLike(ctx context.Context, req *pb.CreateLikeReq) (*pb.CreateLikeRes, error)
 	GetOldestLike(ctx context.Context, req *pb.GetOldestLikeReq) (*pb.GetOldestLikeRes, error)
-	// GetNextUserByUid(recievedUserUid string, sentUesrUid string) (*domain.Like, error)
+	Skip(ctx context.Context, req *pb.SkipReq) (*empty.Empty, error)
 	// Consent(recievedUserUid string, sentUesrUid string) (domain.Like, domain.Room, error)
 }
 
@@ -57,16 +60,16 @@ func (u *likeUsecase) GetOldestLike(ctx context.Context, req *pb.GetOldestLikeRe
 	}, nil
 }
 
-// func (u *likeUsecase) GetNextUserByUid(recievedUserUid string, sentUesrUid string) (*domain.Like, error) {
-// 	if err := u.likeRepository.NopeUserByUid(recievedUserUid, sentUesrUid); err != nil {
-// 		return nil, err
-// 	}
-// 	like, err := u.likeRepository.GetOldestLikeByUid(recievedUserUid)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return like, nil
-// }
+func (u *likeUsecase) Skip(ctx context.Context, req *pb.SkipReq) (*empty.Empty, error) {
+	like := &domain.Like{
+		SentUserUid:     req.SentUserUid,
+		RecievedUserUid: req.RecievedUserUid,
+	}
+	if err := u.likeRepository.Skip(like); err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
+}
 
 // func (u *likeUsecase) Consent(recievedUserUid string, sentUesrUid string) (domain.Like, domain.Room, error) {
 // 	tx := u.likeRepository.Begin()

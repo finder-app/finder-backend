@@ -16,3 +16,7 @@ type User struct {
 	UpdatedAt time.Time
 	DeletedAt *time.Time `sql:"index"`
 }
+
+func (user *User) FullName() string {
+	return user.LastName + user.FirstName
+}

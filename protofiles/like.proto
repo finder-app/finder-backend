@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package pb;
 import "google/protobuf/timestamp.proto";
-// import "google/protobuf/empty.proto";
+import "google/protobuf/empty.proto";
 import "user.proto";
 
 option go_package = "./pb";
@@ -10,7 +10,7 @@ option go_package = "./pb";
 service LikeService {
   rpc CreateLike(CreateLikeReq) returns (CreateLikeRes) {}
   rpc GetOldestLike(GetOldestLikeReq) returns (GetOldestLikeRes) {}
-  // rpc CreateUser(CreateUserReq) returns (CreateUserRes) {}
+  rpc Skip(SkipReq) returns (google.protobuf.Empty) {}
 }
 
 message CreateLikeReq {
@@ -28,6 +28,11 @@ message GetOldestLikeReq {
 
 message GetOldestLikeRes {
   Like like = 1;
+}
+
+message SkipReq {
+  string sent_user_uid = 1;
+  string recieved_user_uid = 2;
 }
 
 message Like {
