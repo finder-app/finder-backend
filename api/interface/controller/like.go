@@ -36,6 +36,11 @@ func (c *LikeController) Index(ctx *gin.Context) {
 	}
 	like, err := c.likeClinet.GetOldestLike(ctx, req)
 	if err != nil {
+		// レコードが1件もなかった場合は200を返す。errと定数だと一致しなかったのでError()の結果を比較
+		if err.Error() == ErrorRecordNotFound.Error() {
+			ctx.JSON(http.StatusOK, nil)
+			return
+		}
 		ErrorResponse(ctx, http.StatusNotFound, err)
 		return
 	}
