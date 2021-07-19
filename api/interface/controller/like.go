@@ -61,15 +61,17 @@ func (c *LikeController) Skip(ctx *gin.Context) {
 }
 
 func (c *LikeController) Consent(ctx *gin.Context) {
-	// recievedUserUid := ctx.Value("currentUserUid").(string)
-	// sentUesrUid := ctx.Param("sent_uesr_uid")
-	// like, room, err := c.likeUsecase.Consent(recievedUserUid, sentUesrUid)
-	// if err != nil {
-	// 	ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
-	// 	return
-	// }
-	// ctx.JSON(http.StatusCreated, gin.H{
-	// 	"like": like,
-	// 	"room": room,
-	// })
+	req := &pb.ConsentLikeReq{
+		RecievedUserUid: ctx.Value("currentUserUid").(string),
+		SentUserUid:     ctx.Param("sent_uesr_uid"),
+	}
+	res, err := c.likeClinet.ConsentLike(ctx, req)
+	if err != nil {
+		ErrorResponse(ctx, http.StatusUnprocessableEntity, err)
+		return
+	}
+	ctx.JSON(http.StatusCreated, gin.H{
+		"like": res.Like,
+		"room": "今後roomオブジェクトが返されます。room_userのネストはしない",
+	})
 }

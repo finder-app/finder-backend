@@ -12,6 +12,7 @@ type LikeRepository interface {
 	GetOldestLikeByUid(currentUserUid string) (*domain.Like, error)
 	Skip(like *domain.Like) error
 	Begin() *gorm.DB
+	GetLike(like *domain.Like) error
 	Consent(tx *gorm.DB, like *domain.Like) error
 }
 
@@ -62,7 +63,7 @@ func (r *likeRepository) GetOldestLikeByUid(currentUserUid string) (*domain.Like
 }
 
 func (r *likeRepository) Skip(like *domain.Like) error {
-	query := `UPDATE likes SET skipped = 1
+	query := `UPDATE likes SET skipped = true
 		WHERE sent_user_uid = ? AND recieved_user_uid = ?`
 	if err := r.db.Exec(query, like.SentUserUid, like.RecievedUserUid).Error; err != nil {
 		return err
@@ -74,10 +75,26 @@ func (r *likeRepository) Begin() *gorm.DB {
 	return r.db.Begin()
 }
 
+func (r *likeRepository) GetLike(like *domain.Like) error {
+	query := `SELECT *
+						FROM likes
+						WHERE recieved_user_uid = ?
+						AND sent_user_uid = ?`
+	// HACK: Raw.Scanで値が取れる理由が確定できていない。Rawで1行全体が取得できるから？
+	row := r.db.Raw(query, like.RecievedUserUid, like.SentUserUid)
+	if err := row.Error; err != nil {
+		return err
+	}
+	if err := row.Scan(like).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r *likeRepository) Consent(tx *gorm.DB, like *domain.Like) error {
-	query := `UPDATE likes SET consented = ?
+	query := `UPDATE likes SET consented = true
 	WHERE recieved_user_uid = ? AND sent_user_uid = ?`
-	if err := tx.Exec(query, like.Consented, like.RecievedUserUid, like.SentUserUid).Error; err != nil {
+	if err := tx.Exec(query, like.RecievedUserUid, like.SentUserUid).Error; err != nil {
 		return err
 	}
 	return nil

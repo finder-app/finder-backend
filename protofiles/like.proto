@@ -10,7 +10,9 @@ option go_package = "./pb";
 service LikeService {
   rpc CreateLike(CreateLikeReq) returns (CreateLikeRes) {}
   rpc GetOldestLike(GetOldestLikeReq) returns (GetOldestLikeRes) {}
+  // skipもSkipLikeにしたい。命名規則としてserviceの名前をmethodに入れたい
   rpc Skip(SkipReq) returns (google.protobuf.Empty) {}
+  rpc ConsentLike(ConsentLikeReq) returns (ConsentLikeRes) {}
 }
 
 message CreateLikeReq {
@@ -33,6 +35,17 @@ message GetOldestLikeRes {
 message SkipReq {
   string sent_user_uid = 1;
   string recieved_user_uid = 2;
+}
+
+message ConsentLikeReq {
+  string sent_user_uid = 1;
+  string recieved_user_uid = 2;
+}
+
+// 一旦likeのResponseを返すまで 今後roomを返すようにする
+message ConsentLikeRes {
+  Like like = 1;
+  Like room = 2;
 }
 
 message Like {

@@ -277,6 +277,117 @@ func (x *SkipReq) GetRecievedUserUid() string {
 	return ""
 }
 
+type ConsentLikeReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	SentUserUid     string `protobuf:"bytes,1,opt,name=sent_user_uid,json=sentUserUid,proto3" json:"sent_user_uid,omitempty"`
+	RecievedUserUid string `protobuf:"bytes,2,opt,name=recieved_user_uid,json=recievedUserUid,proto3" json:"recieved_user_uid,omitempty"`
+}
+
+func (x *ConsentLikeReq) Reset() {
+	*x = ConsentLikeReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_like_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ConsentLikeReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConsentLikeReq) ProtoMessage() {}
+
+func (x *ConsentLikeReq) ProtoReflect() protoreflect.Message {
+	mi := &file_like_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConsentLikeReq.ProtoReflect.Descriptor instead.
+func (*ConsentLikeReq) Descriptor() ([]byte, []int) {
+	return file_like_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ConsentLikeReq) GetSentUserUid() string {
+	if x != nil {
+		return x.SentUserUid
+	}
+	return ""
+}
+
+func (x *ConsentLikeReq) GetRecievedUserUid() string {
+	if x != nil {
+		return x.RecievedUserUid
+	}
+	return ""
+}
+
+// 一旦likeのResponseを返すまで 今後roomを返すようにする
+type ConsentLikeRes struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Like *Like `protobuf:"bytes,1,opt,name=like,proto3" json:"like,omitempty"`
+	Room *Like `protobuf:"bytes,2,opt,name=room,proto3" json:"room,omitempty"`
+}
+
+func (x *ConsentLikeRes) Reset() {
+	*x = ConsentLikeRes{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_like_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ConsentLikeRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConsentLikeRes) ProtoMessage() {}
+
+func (x *ConsentLikeRes) ProtoReflect() protoreflect.Message {
+	mi := &file_like_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConsentLikeRes.ProtoReflect.Descriptor instead.
+func (*ConsentLikeRes) Descriptor() ([]byte, []int) {
+	return file_like_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ConsentLikeRes) GetLike() *Like {
+	if x != nil {
+		return x.Like
+	}
+	return nil
+}
+
+func (x *ConsentLikeRes) GetRoom() *Like {
+	if x != nil {
+		return x.Room
+	}
+	return nil
+}
+
 type Like struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -295,7 +406,7 @@ type Like struct {
 func (x *Like) Reset() {
 	*x = Like{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_like_proto_msgTypes[5]
+		mi := &file_like_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -308,7 +419,7 @@ func (x *Like) String() string {
 func (*Like) ProtoMessage() {}
 
 func (x *Like) ProtoReflect() protoreflect.Message {
-	mi := &file_like_proto_msgTypes[5]
+	mi := &file_like_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -321,7 +432,7 @@ func (x *Like) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Like.ProtoReflect.Descriptor instead.
 func (*Like) Descriptor() ([]byte, []int) {
-	return file_like_proto_rawDescGZIP(), []int{5}
+	return file_like_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *Like) GetId() uint64 {
@@ -410,7 +521,18 @@ var file_like_proto_rawDesc = []byte{
 	0x6e, 0x74, 0x55, 0x73, 0x65, 0x72, 0x55, 0x69, 0x64, 0x12, 0x2a, 0x0a, 0x11, 0x72, 0x65, 0x63,
 	0x69, 0x65, 0x76, 0x65, 0x64, 0x5f, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x75, 0x69, 0x64, 0x18, 0x02,
 	0x20, 0x01, 0x28, 0x09, 0x52, 0x0f, 0x72, 0x65, 0x63, 0x69, 0x65, 0x76, 0x65, 0x64, 0x55, 0x73,
-	0x65, 0x72, 0x55, 0x69, 0x64, 0x22, 0xbb, 0x02, 0x0a, 0x04, 0x4c, 0x69, 0x6b, 0x65, 0x12, 0x0e,
+	0x65, 0x72, 0x55, 0x69, 0x64, 0x22, 0x60, 0x0a, 0x0e, 0x43, 0x6f, 0x6e, 0x73, 0x65, 0x6e, 0x74,
+	0x4c, 0x69, 0x6b, 0x65, 0x52, 0x65, 0x71, 0x12, 0x22, 0x0a, 0x0d, 0x73, 0x65, 0x6e, 0x74, 0x5f,
+	0x75, 0x73, 0x65, 0x72, 0x5f, 0x75, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b,
+	0x73, 0x65, 0x6e, 0x74, 0x55, 0x73, 0x65, 0x72, 0x55, 0x69, 0x64, 0x12, 0x2a, 0x0a, 0x11, 0x72,
+	0x65, 0x63, 0x69, 0x65, 0x76, 0x65, 0x64, 0x5f, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x75, 0x69, 0x64,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0f, 0x72, 0x65, 0x63, 0x69, 0x65, 0x76, 0x65, 0x64,
+	0x55, 0x73, 0x65, 0x72, 0x55, 0x69, 0x64, 0x22, 0x4c, 0x0a, 0x0e, 0x43, 0x6f, 0x6e, 0x73, 0x65,
+	0x6e, 0x74, 0x4c, 0x69, 0x6b, 0x65, 0x52, 0x65, 0x73, 0x12, 0x1c, 0x0a, 0x04, 0x6c, 0x69, 0x6b,
+	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x70, 0x62, 0x2e, 0x4c, 0x69, 0x6b,
+	0x65, 0x52, 0x04, 0x6c, 0x69, 0x6b, 0x65, 0x12, 0x1c, 0x0a, 0x04, 0x72, 0x6f, 0x6f, 0x6d, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x70, 0x62, 0x2e, 0x4c, 0x69, 0x6b, 0x65, 0x52,
+	0x04, 0x72, 0x6f, 0x6f, 0x6d, 0x22, 0xbb, 0x02, 0x0a, 0x04, 0x4c, 0x69, 0x6b, 0x65, 0x12, 0x0e,
 	0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x02, 0x69, 0x64, 0x12, 0x22,
 	0x0a, 0x0d, 0x73, 0x65, 0x6e, 0x74, 0x5f, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x75, 0x69, 0x64, 0x18,
 	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x73, 0x65, 0x6e, 0x74, 0x55, 0x73, 0x65, 0x72, 0x55,
@@ -430,7 +552,7 @@ var file_like_proto_rawDesc = []byte{
 	0x74, 0x65, 0x64, 0x5f, 0x61, 0x74, 0x18, 0x08, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x67,
 	0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x54,
 	0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x52, 0x09, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65,
-	0x64, 0x41, 0x74, 0x32, 0xb1, 0x01, 0x0a, 0x0b, 0x4c, 0x69, 0x6b, 0x65, 0x53, 0x65, 0x72, 0x76,
+	0x64, 0x41, 0x74, 0x32, 0xea, 0x01, 0x0a, 0x0b, 0x4c, 0x69, 0x6b, 0x65, 0x53, 0x65, 0x72, 0x76,
 	0x69, 0x63, 0x65, 0x12, 0x34, 0x0a, 0x0a, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x4c, 0x69, 0x6b,
 	0x65, 0x12, 0x11, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x4c, 0x69, 0x6b,
 	0x65, 0x52, 0x65, 0x71, 0x1a, 0x11, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
@@ -441,8 +563,11 @@ var file_like_proto_rawDesc = []byte{
 	0x69, 0x6b, 0x65, 0x52, 0x65, 0x73, 0x22, 0x00, 0x12, 0x2d, 0x0a, 0x04, 0x53, 0x6b, 0x69, 0x70,
 	0x12, 0x0b, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x6b, 0x69, 0x70, 0x52, 0x65, 0x71, 0x1a, 0x16, 0x2e,
 	0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e,
-	0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x42, 0x06, 0x5a, 0x04, 0x2e, 0x2f, 0x70, 0x62, 0x62,
-	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x12, 0x37, 0x0a, 0x0b, 0x43, 0x6f, 0x6e, 0x73, 0x65,
+	0x6e, 0x74, 0x4c, 0x69, 0x6b, 0x65, 0x12, 0x12, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x6f, 0x6e, 0x73,
+	0x65, 0x6e, 0x74, 0x4c, 0x69, 0x6b, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x12, 0x2e, 0x70, 0x62, 0x2e,
+	0x43, 0x6f, 0x6e, 0x73, 0x65, 0x6e, 0x74, 0x4c, 0x69, 0x6b, 0x65, 0x52, 0x65, 0x73, 0x22, 0x00,
+	0x42, 0x06, 0x5a, 0x04, 0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -457,35 +582,41 @@ func file_like_proto_rawDescGZIP() []byte {
 	return file_like_proto_rawDescData
 }
 
-var file_like_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_like_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_like_proto_goTypes = []interface{}{
 	(*CreateLikeReq)(nil),         // 0: pb.CreateLikeReq
 	(*CreateLikeRes)(nil),         // 1: pb.CreateLikeRes
 	(*GetOldestLikeReq)(nil),      // 2: pb.GetOldestLikeReq
 	(*GetOldestLikeRes)(nil),      // 3: pb.GetOldestLikeRes
 	(*SkipReq)(nil),               // 4: pb.SkipReq
-	(*Like)(nil),                  // 5: pb.Like
-	(*User)(nil),                  // 6: pb.User
-	(*timestamppb.Timestamp)(nil), // 7: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),         // 8: google.protobuf.Empty
+	(*ConsentLikeReq)(nil),        // 5: pb.ConsentLikeReq
+	(*ConsentLikeRes)(nil),        // 6: pb.ConsentLikeRes
+	(*Like)(nil),                  // 7: pb.Like
+	(*User)(nil),                  // 8: pb.User
+	(*timestamppb.Timestamp)(nil), // 9: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),         // 10: google.protobuf.Empty
 }
 var file_like_proto_depIdxs = []int32{
-	5, // 0: pb.CreateLikeRes.like:type_name -> pb.Like
-	5, // 1: pb.GetOldestLikeRes.like:type_name -> pb.Like
-	6, // 2: pb.Like.sent_user:type_name -> pb.User
-	7, // 3: pb.Like.created_at:type_name -> google.protobuf.Timestamp
-	7, // 4: pb.Like.updated_at:type_name -> google.protobuf.Timestamp
-	0, // 5: pb.LikeService.CreateLike:input_type -> pb.CreateLikeReq
-	2, // 6: pb.LikeService.GetOldestLike:input_type -> pb.GetOldestLikeReq
-	4, // 7: pb.LikeService.Skip:input_type -> pb.SkipReq
-	1, // 8: pb.LikeService.CreateLike:output_type -> pb.CreateLikeRes
-	3, // 9: pb.LikeService.GetOldestLike:output_type -> pb.GetOldestLikeRes
-	8, // 10: pb.LikeService.Skip:output_type -> google.protobuf.Empty
-	8, // [8:11] is the sub-list for method output_type
-	5, // [5:8] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	7,  // 0: pb.CreateLikeRes.like:type_name -> pb.Like
+	7,  // 1: pb.GetOldestLikeRes.like:type_name -> pb.Like
+	7,  // 2: pb.ConsentLikeRes.like:type_name -> pb.Like
+	7,  // 3: pb.ConsentLikeRes.room:type_name -> pb.Like
+	8,  // 4: pb.Like.sent_user:type_name -> pb.User
+	9,  // 5: pb.Like.created_at:type_name -> google.protobuf.Timestamp
+	9,  // 6: pb.Like.updated_at:type_name -> google.protobuf.Timestamp
+	0,  // 7: pb.LikeService.CreateLike:input_type -> pb.CreateLikeReq
+	2,  // 8: pb.LikeService.GetOldestLike:input_type -> pb.GetOldestLikeReq
+	4,  // 9: pb.LikeService.Skip:input_type -> pb.SkipReq
+	5,  // 10: pb.LikeService.ConsentLike:input_type -> pb.ConsentLikeReq
+	1,  // 11: pb.LikeService.CreateLike:output_type -> pb.CreateLikeRes
+	3,  // 12: pb.LikeService.GetOldestLike:output_type -> pb.GetOldestLikeRes
+	10, // 13: pb.LikeService.Skip:output_type -> google.protobuf.Empty
+	6,  // 14: pb.LikeService.ConsentLike:output_type -> pb.ConsentLikeRes
+	11, // [11:15] is the sub-list for method output_type
+	7,  // [7:11] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_like_proto_init() }
@@ -556,6 +687,30 @@ func file_like_proto_init() {
 			}
 		}
 		file_like_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ConsentLikeReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_like_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ConsentLikeRes); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_like_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Like); i {
 			case 0:
 				return &v.state
@@ -574,7 +729,7 @@ func file_like_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_like_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -602,7 +757,9 @@ const _ = grpc.SupportPackageIsVersion6
 type LikeServiceClient interface {
 	CreateLike(ctx context.Context, in *CreateLikeReq, opts ...grpc.CallOption) (*CreateLikeRes, error)
 	GetOldestLike(ctx context.Context, in *GetOldestLikeReq, opts ...grpc.CallOption) (*GetOldestLikeRes, error)
+	// skipもSkipLikeにしたい。命名規則としてserviceの名前をmethodに入れたい
 	Skip(ctx context.Context, in *SkipReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ConsentLike(ctx context.Context, in *ConsentLikeReq, opts ...grpc.CallOption) (*ConsentLikeRes, error)
 }
 
 type likeServiceClient struct {
@@ -640,11 +797,22 @@ func (c *likeServiceClient) Skip(ctx context.Context, in *SkipReq, opts ...grpc.
 	return out, nil
 }
 
+func (c *likeServiceClient) ConsentLike(ctx context.Context, in *ConsentLikeReq, opts ...grpc.CallOption) (*ConsentLikeRes, error) {
+	out := new(ConsentLikeRes)
+	err := c.cc.Invoke(ctx, "/pb.LikeService/ConsentLike", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // LikeServiceServer is the server API for LikeService service.
 type LikeServiceServer interface {
 	CreateLike(context.Context, *CreateLikeReq) (*CreateLikeRes, error)
 	GetOldestLike(context.Context, *GetOldestLikeReq) (*GetOldestLikeRes, error)
+	// skipもSkipLikeにしたい。命名規則としてserviceの名前をmethodに入れたい
 	Skip(context.Context, *SkipReq) (*emptypb.Empty, error)
+	ConsentLike(context.Context, *ConsentLikeReq) (*ConsentLikeRes, error)
 }
 
 // UnimplementedLikeServiceServer can be embedded to have forward compatible implementations.
@@ -659,6 +827,9 @@ func (*UnimplementedLikeServiceServer) GetOldestLike(context.Context, *GetOldest
 }
 func (*UnimplementedLikeServiceServer) Skip(context.Context, *SkipReq) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Skip not implemented")
+}
+func (*UnimplementedLikeServiceServer) ConsentLike(context.Context, *ConsentLikeReq) (*ConsentLikeRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConsentLike not implemented")
 }
 
 func RegisterLikeServiceServer(s *grpc.Server, srv LikeServiceServer) {
@@ -719,6 +890,24 @@ func _LikeService_Skip_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _LikeService_ConsentLike_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConsentLikeReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LikeServiceServer).ConsentLike(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.LikeService/ConsentLike",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LikeServiceServer).ConsentLike(ctx, req.(*ConsentLikeReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _LikeService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.LikeService",
 	HandlerType: (*LikeServiceServer)(nil),
@@ -734,6 +923,10 @@ var _LikeService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Skip",
 			Handler:    _LikeService_Skip_Handler,
+		},
+		{
+			MethodName: "ConsentLike",
+			Handler:    _LikeService_ConsentLike_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

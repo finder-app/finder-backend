@@ -6,6 +6,7 @@ import (
 	"grpc/interface/converter"
 	"grpc/pb"
 	"grpc/repository"
+	"grpc/usecase/validation"
 
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -13,9 +14,9 @@ import (
 
 type LikeUsecase interface {
 	CreateLike(ctx context.Context, req *pb.CreateLikeReq) (*pb.CreateLikeRes, error)
-	GetOldestLike(ctx context.Context, req *pb.GetOldestLikeReq) (*pb.GetOldestLikeRes, error)
+	GetOldestLike(currentUserUid string) (*domain.Like, error)
 	Skip(ctx context.Context, req *pb.SkipReq) (*empty.Empty, error)
-	// Consent(recievedUserUid string, sentUesrUid string) (domain.Like, domain.Room, error)
+	Consent(recievedUserUid string, sentUesrUid string) (*domain.Like, *domain.Room, error)
 }
 
 type likeUsecase struct {
@@ -49,15 +50,8 @@ func (u *likeUsecase) CreateLike(ctx context.Context, req *pb.CreateLikeReq) (*p
 	}, nil
 }
 
-func (u *likeUsecase) GetOldestLike(ctx context.Context, req *pb.GetOldestLikeReq) (*pb.GetOldestLikeRes, error) {
-	currentUserUid := req.CurrentUserUid
-	like, err := u.likeRepository.GetOldestLikeByUid(currentUserUid)
-	if err != nil {
-		return nil, err
-	}
-	return &pb.GetOldestLikeRes{
-		Like: converter.ConvertLike(like),
-	}, nil
+func (u *likeUsecase) GetOldestLike(currentUserUid string) (*domain.Like, error) {
+	return u.likeRepository.GetOldestLikeByUid(currentUserUid)
 }
 
 func (u *likeUsecase) Skip(ctx context.Context, req *pb.SkipReq) (*empty.Empty, error) {
@@ -71,38 +65,46 @@ func (u *likeUsecase) Skip(ctx context.Context, req *pb.SkipReq) (*empty.Empty, 
 	return &emptypb.Empty{}, nil
 }
 
-// func (u *likeUsecase) Consent(recievedUserUid string, sentUesrUid string) (domain.Like, domain.Room, error) {
-// 	tx := u.likeRepository.Begin()
-// 	like := domain.Like{
-// 		RecievedUserUid: recievedUserUid,
-// 		SentUserUid:     sentUesrUid,
-// 		Consented:       true,
-// 	}
-// 	if err := u.likeRepository.Consent(tx, &like); err != nil {
-// 		tx.Rollback()
-// 		return domain.Like{}, domain.Room{}, err
-// 	}
-// 	room := domain.Room{}
-// 	if err := u.roomRepository.CreateRoom(tx, &room); err != nil {
-// 		tx.Rollback()
-// 		return domain.Like{}, domain.Room{}, err
-// 	}
-// 	roomUser1 := domain.RoomUser{
-// 		RoomId:  room.Id,
-// 		UserUid: recievedUserUid,
-// 	}
-// 	if err := u.roomUserRepository.CreateRoomUser(tx, roomUser1); err != nil {
-// 		tx.Rollback()
-// 		return domain.Like{}, domain.Room{}, err
-// 	}
-// 	roomUser2 := domain.RoomUser{
-// 		RoomId:  room.Id,
-// 		UserUid: sentUesrUid,
-// 	}
-// 	if err := u.roomUserRepository.CreateRoomUser(tx, roomUser2); err != nil {
-// 		tx.Rollback()
-// 		return domain.Like{}, domain.Room{}, err
-// 	}
-// 	tx.Commit()
-// 	return like, room, nil
-// }
+func (u *likeUsecase) Consent(recievedUserUid string, sentUesrUid string) (*domain.Like, *domain.Room, error) {
+	like := &domain.Like{
+		RecievedUserUid: recievedUserUid,
+		SentUserUid:     sentUesrUid,
+	}
+	// NOTE: 既存のいいねを取得していいね済み or スキップ済みか確認する 返り値がtrueならerrorをreturnする
+	if err := u.likeRepository.GetLike(like); err != nil {
+		return nil, nil, err
+	}
+	if err := validation.ValidateLike(like); err != nil {
+		return nil, nil, err
+	}
+
+	tx := u.likeRepository.Begin()
+	if err := u.likeRepository.Consent(tx, like); err != nil {
+		tx.Rollback()
+		return nil, nil, err
+	}
+	room := &domain.Room{}
+	if err := u.roomRepository.CreateRoom(tx, room); err != nil {
+		tx.Rollback()
+		return nil, nil, err
+	}
+	roomUser1, roomUser2 := initializeRoomUsers(room, like)
+	if err := u.roomUserRepository.CreateRoomUsers(tx, roomUser1, roomUser2); err != nil {
+		tx.Rollback()
+		return nil, nil, err
+	}
+	tx.Commit()
+	return like, room, nil
+}
+
+func initializeRoomUsers(room *domain.Room, like *domain.Like) (*domain.RoomUser, *domain.RoomUser) {
+	roomUser1 := &domain.RoomUser{
+		RoomId:  room.Id,
+		UserUid: like.RecievedUserUid,
+	}
+	roomUser2 := &domain.RoomUser{
+		RoomId:  room.Id,
+		UserUid: like.SentUserUid,
+	}
+	return roomUser1, roomUser2
+}

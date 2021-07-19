@@ -3,6 +3,7 @@ package main
 import (
 	"grpc/infrastructure"
 	"grpc/infrastructure/logger"
+	"grpc/interface/controller"
 	"grpc/pb"
 	"grpc/repository"
 	"grpc/usecase"
@@ -34,11 +35,13 @@ func main() {
 		roomUserRepository,
 	)
 
+	likeController := controller.NewLikeController(likeUsecase)
+
 	grpcServer := infrastructure.NewGrpcServer()
 	pb.RegisterUserServiceServer(grpcServer, userUsecase)
 	pb.RegisterFootPrintServiceServer(grpcServer, footPrintUsecase)
 	pb.RegisterProfileServiceServer(grpcServer, profileUsecase)
-	pb.RegisterLikeServiceServer(grpcServer, likeUsecase)
+	pb.RegisterLikeServiceServer(grpcServer, likeController)
 
 	listener, err := net.Listen("tcp", ":"+os.Getenv("GRPC_SERVER_PORT")) // [::]:50051
 	if err != nil {

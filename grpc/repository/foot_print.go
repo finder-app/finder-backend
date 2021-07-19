@@ -44,7 +44,7 @@ func (r *footPrintRepository) CreateFootPrint(footPrint *domain.FootPrint) error
 }
 
 func (r *footPrintRepository) UpdateToAlreadyRead(currentUserUid string) error {
-	result := r.db.Exec("UPDATE foot_prints SET unread = 0 WHERE unread = 1 AND user_uid = ?", currentUserUid)
+	result := r.db.Exec("UPDATE foot_prints SET unread = 0 WHERE unread = true AND user_uid = ?", currentUserUid)
 	if err := result.Error; err != nil {
 		return err
 	}
@@ -52,7 +52,8 @@ func (r *footPrintRepository) UpdateToAlreadyRead(currentUserUid string) error {
 }
 
 func (r *footPrintRepository) GetUnreadCount(currentUserUid string) (unreadCount int, err error) {
-	query := `SELECT count(*) AS unreadCount FROM foot_prints WHERE user_uid = ? AND unread = 1`
+	query := `SELECT count(*) AS unreadCount FROM foot_prints WHERE user_uid = ? AND unread = true`
+	// HACK: Rawだけだと、SQLの結果1行が返されてるのでRowで絞り込み？
 	row := r.db.Raw(query, currentUserUid).Row()
 	if err := row.Err(); err != nil {
 		return 0, err
