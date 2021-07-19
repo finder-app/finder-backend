@@ -21,7 +21,16 @@ func NewLikeController(likeUsecase usecase.LikeUsecase) *LikeController {
 }
 
 func (c *LikeController) CreateLike(ctx context.Context, req *pb.CreateLikeReq) (*pb.CreateLikeRes, error) {
-	return nil, nil
+	like := &domain.Like{
+		SentUserUid:     req.SentUserUid,
+		RecievedUserUid: req.RecievedUserUid,
+	}
+	if _, err := c.likeUsecase.CreateLike(like); err != nil {
+		return nil, err
+	}
+	return &pb.CreateLikeRes{
+		Like: converter.ConvertLike(like),
+	}, nil
 }
 
 func (c *LikeController) GetOldestLike(ctx context.Context, req *pb.GetOldestLikeReq) (*pb.GetOldestLikeRes, error) {

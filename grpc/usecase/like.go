@@ -1,16 +1,13 @@
 package usecase
 
 import (
-	"context"
 	"grpc/domain"
-	"grpc/interface/converter"
-	"grpc/pb"
 	"grpc/repository"
 	"grpc/usecase/validation"
 )
 
 type LikeUsecase interface {
-	CreateLike(ctx context.Context, req *pb.CreateLikeReq) (*pb.CreateLikeRes, error)
+	CreateLike(like *domain.Like) (*domain.Like, error)
 	GetOldestLike(currentUserUid string) (*domain.Like, error)
 	Skip(like *domain.Like) error
 	Consent(recievedUserUid string, sentUesrUid string) (*domain.Like, *domain.Room, error)
@@ -34,17 +31,8 @@ func NewLikeUsecase(
 	}
 }
 
-func (u *likeUsecase) CreateLike(ctx context.Context, req *pb.CreateLikeReq) (*pb.CreateLikeRes, error) {
-	like := &domain.Like{
-		SentUserUid:     req.SentUserUid,
-		RecievedUserUid: req.RecievedUserUid,
-	}
-	if _, err := u.likeRepository.CreateLike(like); err != nil {
-		return nil, err
-	}
-	return &pb.CreateLikeRes{
-		Like: converter.ConvertLike(like),
-	}, nil
+func (u *likeUsecase) CreateLike(like *domain.Like) (*domain.Like, error) {
+	return u.likeRepository.CreateLike(like)
 }
 
 func (u *likeUsecase) GetOldestLike(currentUserUid string) (*domain.Like, error) {
@@ -68,16 +56,19 @@ func (u *likeUsecase) Consent(recievedUserUid string, sentUesrUid string) (*doma
 		return nil, nil, err
 	}
 
+	// NOTE: いいねを行う
 	tx := u.likeRepository.Begin()
 	if err := u.likeRepository.Consent(tx, like); err != nil {
 		tx.Rollback()
 		return nil, nil, err
 	}
+	// NOTE: roomを作成
 	room := &domain.Room{}
 	if err := u.roomRepository.CreateRoom(tx, room); err != nil {
 		tx.Rollback()
 		return nil, nil, err
 	}
+	// NOTE: 作成したroomを元に男女のroomUserを作成
 	roomUser1, roomUser2 := initializeRoomUsers(room, like)
 	if err := u.roomUserRepository.CreateRoomUsers(tx, roomUser1, roomUser2); err != nil {
 		tx.Rollback()
