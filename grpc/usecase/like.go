@@ -7,15 +7,12 @@ import (
 	"grpc/pb"
 	"grpc/repository"
 	"grpc/usecase/validation"
-
-	"github.com/golang/protobuf/ptypes/empty"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type LikeUsecase interface {
 	CreateLike(ctx context.Context, req *pb.CreateLikeReq) (*pb.CreateLikeRes, error)
 	GetOldestLike(currentUserUid string) (*domain.Like, error)
-	Skip(ctx context.Context, req *pb.SkipReq) (*empty.Empty, error)
+	Skip(like *domain.Like) error
 	Consent(recievedUserUid string, sentUesrUid string) (*domain.Like, *domain.Room, error)
 }
 
@@ -54,15 +51,8 @@ func (u *likeUsecase) GetOldestLike(currentUserUid string) (*domain.Like, error)
 	return u.likeRepository.GetOldestLikeByUid(currentUserUid)
 }
 
-func (u *likeUsecase) Skip(ctx context.Context, req *pb.SkipReq) (*empty.Empty, error) {
-	like := &domain.Like{
-		SentUserUid:     req.SentUserUid,
-		RecievedUserUid: req.RecievedUserUid,
-	}
-	if err := u.likeRepository.Skip(like); err != nil {
-		return nil, err
-	}
-	return &emptypb.Empty{}, nil
+func (u *likeUsecase) Skip(like *domain.Like) error {
+	return u.likeRepository.Skip(like)
 }
 
 func (u *likeUsecase) Consent(recievedUserUid string, sentUesrUid string) (*domain.Like, *domain.Room, error) {

@@ -52,7 +52,7 @@ func (c *LikeController) Skip(ctx *gin.Context) {
 		SentUserUid:     ctx.Param("sent_uesr_uid"),
 		RecievedUserUid: ctx.Value("currentUserUid").(string),
 	}
-	empty, err := c.likeClinet.Skip(ctx, req)
+	empty, err := c.likeClinet.SkipLike(ctx, req)
 	if err != nil {
 		ErrorResponse(ctx, http.StatusNotFound, err)
 		return
