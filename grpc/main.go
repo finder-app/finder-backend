@@ -44,12 +44,13 @@ func main() {
 
 	// initiliaze controller
 	userController := controller.NewUserController(userUsecase)
+	footPrintController := controller.NewFootPrintController(footPrintUsecase)
 	likeController := controller.NewLikeController(likeUsecase)
 
 	// register grpc server
 	grpcServer := infrastructure.NewGrpcServer()
 	pb.RegisterUserServiceServer(grpcServer, userController)
-	pb.RegisterFootPrintServiceServer(grpcServer, footPrintUsecase)
+	pb.RegisterFootPrintServiceServer(grpcServer, footPrintController)
 	pb.RegisterProfileServiceServer(grpcServer, profileUsecase)
 	pb.RegisterLikeServiceServer(grpcServer, likeController)
 

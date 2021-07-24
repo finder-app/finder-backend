@@ -1,15 +1,13 @@
 package usecase
 
 import (
-	"context"
-	"grpc/interface/converter"
-	"grpc/pb"
+	"grpc/domain"
 	"grpc/repository"
 )
 
 type FootPrintUsecase interface {
-	GetFootPrints(ctx context.Context, req *pb.GetFootPrintsReq) (*pb.GetFootPrintsRes, error)
-	GetUnreadCount(ctx context.Context, req *pb.GetUnreadCountReq) (*pb.GetUnreadCountRes, error)
+	GetFootPrints(currentUserUid string) ([]*domain.FootPrint, error)
+	GetUnreadCount(currentUserUid string) (int64, error)
 }
 
 type footPrintUsecase struct {
@@ -22,25 +20,13 @@ func NewFootPrintUsecase(footPrintRepository repository.FootPrintRepository) Foo
 	}
 }
 
-func (u *footPrintUsecase) GetFootPrints(ctx context.Context, req *pb.GetFootPrintsReq) (*pb.GetFootPrintsRes, error) {
-	if err := u.footPrintRepository.UpdateToAlreadyRead(req.CurrentUserUid); err != nil {
+func (u *footPrintUsecase) GetFootPrints(currentUserUid string) ([]*domain.FootPrint, error) {
+	if err := u.footPrintRepository.UpdateToAlreadyRead(currentUserUid); err != nil {
 		return nil, err
 	}
-	footPrints, err := u.footPrintRepository.GetFootPrintsByUid(req.CurrentUserUid)
-	if err != nil {
-		return nil, err
-	}
-	return &pb.GetFootPrintsRes{
-		FootPrints: converter.ConvertFootPrints(footPrints),
-	}, nil
+	return u.footPrintRepository.GetFootPrintsByUid(currentUserUid)
 }
 
-func (u *footPrintUsecase) GetUnreadCount(ctx context.Context, req *pb.GetUnreadCountReq) (*pb.GetUnreadCountRes, error) {
-	unreadCount, err := u.footPrintRepository.GetUnreadCount(req.CurrentUserUid)
-	if err != nil {
-		return nil, err
-	}
-	return &pb.GetUnreadCountRes{
-		UnreadCount: int64(unreadCount),
-	}, nil
+func (u *footPrintUsecase) GetUnreadCount(currentUserUid string) (int64, error) {
+	return u.footPrintRepository.GetUnreadCount(currentUserUid)
 }
