@@ -1,16 +1,13 @@
 package usecase
 
 import (
-	"context"
 	"grpc/domain"
-	"grpc/interface/converter"
-	"grpc/pb"
 	"grpc/repository"
 )
 
 type ProfileUsecase interface {
-	GetProfile(ctx context.Context, req *pb.GetProfileReq) (*pb.GetProfileRes, error)
-	UpdateProfile(ctx context.Context, req *pb.UpdateProfileReq) (*pb.UpdateProfileRes, error)
+	GetProfile(currentUserUid string) (*domain.User, error)
+	UpdateProfile(inputUser *domain.User) (*domain.User, error)
 }
 
 type profileUsecase struct {
@@ -23,29 +20,11 @@ func NewProfileUsecase(userRepository repository.UserRepository) ProfileUsecase 
 	}
 }
 
-func (u *profileUsecase) GetProfile(ctx context.Context, req *pb.GetProfileReq) (*pb.GetProfileRes, error) {
-	user, err := u.userRepository.GetUserByUid(req.CurrentUserUid)
-	if err != nil {
-		return nil, err
-	}
-	return &pb.GetProfileRes{
-		User: converter.ConvertUser(user),
-	}, nil
+func (u *profileUsecase) GetProfile(currentUserUid string) (*domain.User, error) {
+	return u.userRepository.GetUserByUid(currentUserUid)
 }
 
-func (u *profileUsecase) UpdateProfile(ctx context.Context, req *pb.UpdateProfileReq) (*pb.UpdateProfileRes, error) {
-	// NOTE: 変更して良いカラムだけ書く uidは更新時にwhereするのに必要
-	inputUser := &domain.User{
-		Uid:       req.User.Uid,
-		LastName:  req.User.LastName,
-		FirstName: req.User.FirstName,
-	}
+func (u *profileUsecase) UpdateProfile(inputUser *domain.User) (*domain.User, error) {
 	// TODO: update前にvalidationしたい
-	user, err := u.userRepository.UpdateUser(inputUser)
-	if err != nil {
-		return nil, err
-	}
-	return &pb.UpdateProfileRes{
-		User: converter.ConvertUser(user),
-	}, nil
+	return u.userRepository.UpdateUser(inputUser)
 }
