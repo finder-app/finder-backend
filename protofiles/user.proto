@@ -30,7 +30,12 @@ message GetUserByUidRes {
 }
 
 message CreateUserReq {
-  User user = 1;
+  string uid = 1;
+  string email = 2;
+  string last_name = 3;
+  string first_name = 4;
+  string gender = 7;
+  bytes thumbnail = 10;
 }
 
 message CreateUserRes {
@@ -47,4 +52,5 @@ message User {
   string gender = 7;
   string full_name = 8;
   bool liked = 9;
+  bytes thumbnail = 10;
 }

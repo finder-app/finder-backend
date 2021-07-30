@@ -44,11 +44,11 @@ func (c *UserController) GetUserByUid(ctx context.Context, req *pb.GetUserByUidR
 
 func (c *UserController) CreateUser(ctx context.Context, req *pb.CreateUserReq) (*pb.CreateUserRes, error) {
 	inputUser := &domain.User{
-		Uid:       req.User.Uid,
-		Email:     req.User.Email,
-		LastName:  req.User.LastName,
-		FirstName: req.User.FirstName,
-		Gender:    req.User.Gender,
+		Uid:       req.Uid,
+		Email:     req.Email,
+		LastName:  req.LastName,
+		FirstName: req.FirstName,
+		Gender:    req.Gender,
 	}
 	user, err := c.userUsecase.CreateUser(inputUser)
 	if err != nil {
