@@ -9,7 +9,7 @@ option go_package = "./pb";
 
 service ProfileService {
   rpc GetProfile(GetProfileReq) returns (GetProfileRes) {}
-  rpc UpdateProfile(UpdateProfileReq) returns (UpdateProfileRes) {}
+  rpc UpdateProfile(stream UpdateProfileReq) returns (UpdateProfileRes) {}
 }
 
 message GetProfileReq {
