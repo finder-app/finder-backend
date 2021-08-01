@@ -32,7 +32,7 @@ func (u *messageUsecase) GetMessages(roomId uint64, currentUserUid string) ([]*d
 	return u.messageRepository.GetMessages(roomId)
 }
 
-// NOTE: roomIdにroomUserが含まれているか確認する。存在しなければerrorを返す
+// NOTE: 指定したroomIdとuser_uidを持ったroomUserが存在するか確認。存在しなければerrorを返す
 func (u *messageUsecase) existsUserInTheRoom(roomId uint64, currentUserUid string) error {
 	_, err := u.roomUserRepository.GetRoomUser(roomId, currentUserUid)
 	if err != nil {
