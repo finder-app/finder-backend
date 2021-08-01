@@ -16,6 +16,7 @@ func main() {
 	// setup db & logger
 	db := infrastructure.NewGormConnect()
 	logger.NewLogger(db)
+	defer db.Close()
 
 	// initialize repository
 	userRepository := repository.NewUserRepository(db)
@@ -23,6 +24,7 @@ func main() {
 	likeRepository := repository.NewLikeRepository(db)
 	roomRepository := repository.NewRoomRepository(db)
 	roomUserRepository := repository.NewRoomUserRepository(db)
+	messageRepository := repository.NewMessageRepository(db)
 
 	// initialize usecase
 	userUsecase := usecase.NewUserUsecase(
@@ -44,6 +46,10 @@ func main() {
 	roomUsecase := usecase.NewRoomUsecase(
 		roomRepository,
 	)
+	messageUsecase := usecase.NewMessageUsecase(
+		messageRepository,
+		roomUserRepository,
+	)
 
 	// initiliaze controller
 	userController := controller.NewUserController(userUsecase)
@@ -51,7 +57,7 @@ func main() {
 	profileController := controller.NewProfileController(profileUsecase)
 	likeController := controller.NewLikeController(likeUsecase)
 	roomController := controller.NewRoomController(roomUsecase)
-	messageController := controller.NewMessageController()
+	messageController := controller.NewMessageController(messageUsecase)
 
 	// register grpc server
 	grpcServer := infrastructure.NewGrpcServer()

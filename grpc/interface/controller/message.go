@@ -2,36 +2,26 @@ package controller
 
 import (
 	"context"
-	"grpc/domain"
 	"grpc/interface/converter"
 	"grpc/pb"
+	"grpc/usecase"
 )
 
 type MessageController struct {
-	// 	messageUsecase usecase.MessageUsecase
+	messageUsecase usecase.MessageUsecase
 }
 
-// func NewMessageController(messageUsecase usecase.MessageUsecase) *MessageController {
-func NewMessageController() *MessageController {
+func NewMessageController(messageUsecase usecase.MessageUsecase) *MessageController {
 	return &MessageController{
-		// messageUsecase: messageUsecase,
+		messageUsecase: messageUsecase,
 	}
 }
 
 func (c *MessageController) GetMessages(ctx context.Context, req *pb.GetMessagesReq) (*pb.GetMessagesRes, error) {
-	// messages, err := c.messageUsecase.GetMessages(req.CurrentUserUid)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	messages := []*domain.Message{}
-	message := &domain.Message{
-		Id:      4545,
-		RoomId:  100,
-		UserUid: "hoge",
-		Text:    "texttttttt",
-		Unread:  false,
+	messages, err := c.messageUsecase.GetMessages(req.RoomId, req.CurrentUserUid)
+	if err != nil {
+		return nil, err
 	}
-	messages = append(messages, message)
 	return &pb.GetMessagesRes{
 		Messages: converter.ConvertMessages(messages),
 	}, nil

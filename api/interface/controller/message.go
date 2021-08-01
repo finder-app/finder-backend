@@ -33,6 +33,5 @@ func (c *MessageController) Index(ctx *gin.Context) {
 		ErrorResponse(ctx, http.StatusInternalServerError, err)
 		return
 	}
-	// res := roomId
 	ctx.JSON(http.StatusOK, res)
 }

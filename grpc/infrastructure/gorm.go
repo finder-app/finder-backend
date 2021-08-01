@@ -20,7 +20,6 @@ func NewGormConnect() *gorm.DB {
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		defer db.Close()
 		return db
 	}
 }
