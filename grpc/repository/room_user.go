@@ -8,6 +8,7 @@ import (
 
 type RoomUserRepository interface {
 	CreateRoomUsers(tx *gorm.DB, roomUser1 *domain.RoomUser, roomUser2 *domain.RoomUser) error
+	GetRoomUser(roomId uint64, currentUserUid string) (*domain.RoomUser, error)
 }
 
 type roomUserRepository struct {
@@ -35,4 +36,14 @@ func createRoomUser(tx *gorm.DB, roomUser *domain.RoomUser) error {
 		return err
 	}
 	return nil
+}
+
+func (r *roomUserRepository) GetRoomUser(roomId uint64, currentUserUid string) (*domain.RoomUser, error) {
+	roomUser := &domain.RoomUser{}
+	query := `SELECT * FROM rooms_users
+						WHERE room_id = ? AND user_uid = ?`
+	if err := r.db.Raw(query, roomId, currentUserUid).Scan(roomUser).Error; err != nil {
+		return nil, err
+	}
+	return roomUser, nil
 }

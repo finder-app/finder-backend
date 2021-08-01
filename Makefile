@@ -16,6 +16,7 @@ m-file:
 m-up:
 	migrate -source file://./grpc/db/migrate -database 'mysql://root:finder0501@tcp(localhost:13306)/finder_development' up
 
+# NOTE: n回分migrationが戻るので、実行時は要注意
 # NOTE: e.g. make m-down n=7
 m-down:
 	migrate -source file://./grpc/db/migrate -database 'mysql://root:finder0501@tcp(localhost:13306)/finder_development' down $(n)

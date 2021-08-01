@@ -63,7 +63,7 @@ func (u *likeUsecase) Consent(recievedUserUid string, sentUesrUid string) (*doma
 		return nil, nil, err
 	}
 	// NOTE: roomを作成
-	room := &domain.Room{}
+	room := domain.NewRoom()
 	if err := u.roomRepository.CreateRoom(tx, room); err != nil {
 		tx.Rollback()
 		return nil, nil, err

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package pb;
+import "google/protobuf/timestamp.proto";
+
+option go_package = "./pb";
+
+service RoomService {
+  rpc GetRooms(GetRoomsReq) returns (GetRoomsRes) {}
+}
+
+message GetRoomsReq {
+  string current_user_uid = 1;
+}
+
+message GetRoomsRes {
+  repeated Room rooms = 1;
+}
+
+message Room {
+  uint64 id = 1;
+  google.protobuf.Timestamp created_at = 2;
+  google.protobuf.Timestamp updated_at = 3;
+  // string last_message = 4;
+}

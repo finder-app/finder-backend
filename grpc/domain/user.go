@@ -10,11 +10,11 @@ type User struct {
 	LastName  string `validate:"required"`
 	FirstName string `validate:"required"`
 	Gender    string `validate:"required"`
-	Liked     bool
-
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time `sql:"index"`
+
+	Liked bool
 }
 
 func (user *User) FullName() string {

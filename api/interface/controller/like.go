@@ -48,7 +48,7 @@ func (c *LikeController) Index(ctx *gin.Context) {
 }
 
 func (c *LikeController) Skip(ctx *gin.Context) {
-	req := &pb.SkipReq{
+	req := &pb.SkipLikeReq{
 		SentUserUid:     ctx.Param("sent_uesr_uid"),
 		RecievedUserUid: ctx.Value("currentUserUid").(string),
 	}
@@ -72,6 +72,6 @@ func (c *LikeController) Consent(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusCreated, gin.H{
 		"like": res.Like,
-		"room": "今後roomオブジェクトが返されます。room_userのネストはしない",
+		"room": res.Room,
 	})
 }

@@ -16,6 +16,7 @@ func main() {
 	// setup db & logger
 	db := infrastructure.NewGormConnect()
 	logger.NewLogger(db)
+	defer db.Close()
 
 	// initialize repository
 	userRepository := repository.NewUserRepository(db)
@@ -23,6 +24,7 @@ func main() {
 	likeRepository := repository.NewLikeRepository(db)
 	roomRepository := repository.NewRoomRepository(db)
 	roomUserRepository := repository.NewRoomUserRepository(db)
+	messageRepository := repository.NewMessageRepository(db)
 
 	// initialize usecase
 	userUsecase := usecase.NewUserUsecase(
@@ -41,12 +43,21 @@ func main() {
 		roomRepository,
 		roomUserRepository,
 	)
+	roomUsecase := usecase.NewRoomUsecase(
+		roomRepository,
+	)
+	messageUsecase := usecase.NewMessageUsecase(
+		messageRepository,
+		roomUserRepository,
+	)
 
 	// initiliaze controller
 	userController := controller.NewUserController(userUsecase)
 	footPrintController := controller.NewFootPrintController(footPrintUsecase)
 	profileController := controller.NewProfileController(profileUsecase)
 	likeController := controller.NewLikeController(likeUsecase)
+	roomController := controller.NewRoomController(roomUsecase)
+	messageController := controller.NewMessageController(messageUsecase)
 
 	// register grpc server
 	grpcServer := infrastructure.NewGrpcServer()
@@ -54,6 +65,8 @@ func main() {
 	pb.RegisterFootPrintServiceServer(grpcServer, footPrintController)
 	pb.RegisterProfileServiceServer(grpcServer, profileController)
 	pb.RegisterLikeServiceServer(grpcServer, likeController)
+	pb.RegisterRoomServiceServer(grpcServer, roomController)
+	pb.RegisterMessageServiceServer(grpcServer, messageController)
 
 	// serve
 	listener, err := net.Listen("tcp", ":"+os.Getenv("GRPC_SERVER_PORT")) // [::]:50051
