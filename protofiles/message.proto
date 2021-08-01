@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package pb;
+import "google/protobuf/timestamp.proto";
+
+option go_package = "./pb";
+
+service MessageService {
+  rpc GetMessages(GetMessagesReq) returns (GetMessagesRes) {}
+  // TODO: To be implemented
+  // rpc CreateMessage(CreateMessageReq) returns (Req) returns Res) {}
+}
+
+message GetMessagesReq {
+  uint64 room_id = 1;
+  // NOTE: IDだけ送ると他のトークルームが見えるため、currentUserUidを送ってvalidationする
+  string current_user_uid = 2;
+}
+
+message GetMessagesRes {
+  repeated Message messages = 1;
+}
+
+message Message {
+  uint64 id = 1;
+  uint64 room_id = 2;
+  string user_uid = 3;
+  string text = 4;
+  bool unread = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
