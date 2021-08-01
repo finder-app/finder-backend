@@ -25,7 +25,7 @@ func NewMessageUsecase(
 }
 
 func (u *messageUsecase) GetMessages(roomId uint64, currentUserUid string) ([]*domain.Message, error) {
-	if err := u.validationGetMessages(roomId, currentUserUid); err != nil {
+	if err := u.existsUserInTheRoom(roomId, currentUserUid); err != nil {
 		return nil, err
 	}
 
@@ -33,7 +33,7 @@ func (u *messageUsecase) GetMessages(roomId uint64, currentUserUid string) ([]*d
 }
 
 // NOTE: roomIdにroomUserが含まれているか確認する。存在しなければerrorを返す
-func (u *messageUsecase) validationGetMessages(roomId uint64, currentUserUid string) error {
+func (u *messageUsecase) existsUserInTheRoom(roomId uint64, currentUserUid string) error {
 	_, err := u.roomUserRepository.GetRoomUser(roomId, currentUserUid)
 	if err != nil {
 		return err
