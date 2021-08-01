@@ -2,24 +2,23 @@ package usecase
 
 import (
 	"grpc/domain"
+	"grpc/repository"
 )
 
 type RoomUsecase interface {
-	GetRooms(currentRoomUid string) ([]*domain.Room, error)
+	GetRooms(currentUserUid string) ([]*domain.Room, error)
 }
 
 type roomUsecase struct {
-	// userRepository repository.RoomRepository
+	roomRepository repository.RoomRepository
 }
 
-// func NewRoomUsecase(roomRepository repository.RoomRepository) RoomUsecase {
-func NewRoomUsecase() RoomUsecase {
+func NewRoomUsecase(roomRepository repository.RoomRepository) RoomUsecase {
 	return &roomUsecase{
-		// userRepository: userRepository,
+		roomRepository: roomRepository,
 	}
 }
 
-func (u *roomUsecase) GetRooms(currentRoomUid string) ([]*domain.Room, error) {
-	// return u.userRepository.GetRoomByUid(currentRoomUid)
-	return nil, nil
+func (u *roomUsecase) GetRooms(currentUserUid string) ([]*domain.Room, error) {
+	return u.roomRepository.GetRooms(currentUserUid)
 }

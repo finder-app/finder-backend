@@ -41,7 +41,9 @@ func main() {
 		roomRepository,
 		roomUserRepository,
 	)
-	roomUsecase := usecase.NewRoomUsecase()
+	roomUsecase := usecase.NewRoomUsecase(
+		roomRepository,
+	)
 
 	// initiliaze controller
 	userController := controller.NewUserController(userUsecase)
