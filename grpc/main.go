@@ -51,6 +51,7 @@ func main() {
 	profileController := controller.NewProfileController(profileUsecase)
 	likeController := controller.NewLikeController(likeUsecase)
 	roomController := controller.NewRoomController(roomUsecase)
+	messageController := controller.NewMessageController()
 
 	// register grpc server
 	grpcServer := infrastructure.NewGrpcServer()
@@ -59,6 +60,7 @@ func main() {
 	pb.RegisterProfileServiceServer(grpcServer, profileController)
 	pb.RegisterLikeServiceServer(grpcServer, likeController)
 	pb.RegisterRoomServiceServer(grpcServer, roomController)
+	pb.RegisterMessageServiceServer(grpcServer, messageController)
 
 	// serve
 	listener, err := net.Listen("tcp", ":"+os.Getenv("GRPC_SERVER_PORT")) // [::]:50051
