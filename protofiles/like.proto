@@ -4,6 +4,7 @@ package pb;
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 import "user.proto";
+import "room.proto";
 
 option go_package = "./pb";
 
@@ -44,7 +45,7 @@ message ConsentLikeReq {
 // 一旦likeのResponseを返すまで 今後roomを返すようにする
 message ConsentLikeRes {
   Like like = 1;
-  Like room = 2;
+  Room room = 2;
 }
 
 message Like {

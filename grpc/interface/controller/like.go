@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"fmt"
 	"grpc/domain"
 	"grpc/interface/converter"
 	"grpc/pb"
@@ -45,7 +46,7 @@ func (c *LikeController) GetOldestLike(ctx context.Context, req *pb.GetOldestLik
 }
 
 // SkipLikeにしたい
-func (c *LikeController) SkipLike(ctx context.Context, req *pb.SkipReq) (*emptypb.Empty, error) {
+func (c *LikeController) SkipLike(ctx context.Context, req *pb.SkipLikeReq) (*emptypb.Empty, error) {
 	like := &domain.Like{
 		SentUserUid:     req.SentUserUid,
 		RecievedUserUid: req.RecievedUserUid,
@@ -59,12 +60,12 @@ func (c *LikeController) SkipLike(ctx context.Context, req *pb.SkipReq) (*emptyp
 func (c *LikeController) ConsentLike(ctx context.Context, req *pb.ConsentLikeReq) (*pb.ConsentLikeRes, error) {
 	recievedUserUid := req.RecievedUserUid
 	sentUserUid := req.SentUserUid
-	like, _, err := c.likeUsecase.Consent(recievedUserUid, sentUserUid)
+	like, room, err := c.likeUsecase.Consent(recievedUserUid, sentUserUid)
 	if err != nil {
 		return nil, err
 	}
 	return &pb.ConsentLikeRes{
 		Like: converter.ConvertLike(like),
-		Room: converter.ConvertLike(like),
+		Room: converter.ConvertRoom(room),
 	}, nil
 }

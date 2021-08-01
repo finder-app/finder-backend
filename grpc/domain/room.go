@@ -5,7 +5,11 @@ import (
 )
 
 type Room struct {
-	Id        uint `gorm:"primaryKey"`
+	Id        uint64 `gorm:"primaryKey"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
+}
+
+func NewRoom() *Room {
+	return &Room{}
 }
