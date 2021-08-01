@@ -57,3 +57,7 @@ func (r *Router) Likes(likeController *controller.LikeController) {
 	// router.Engine.GET("/likes/recieved", func(c *gin.Context) { likeController.Recieved(c) })
 	// router.Engine.GET("/likes/sent", func(c *gin.Context) { likeController.Sent(c) })
 }
+
+func (r *Router) Rooms(roomController *controller.RoomController) {
+	r.Engine.GET("/rooms", roomController.Index)
+}

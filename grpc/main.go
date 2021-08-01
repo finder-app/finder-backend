@@ -41,12 +41,14 @@ func main() {
 		roomRepository,
 		roomUserRepository,
 	)
+	roomUsecase := usecase.NewRoomUsecase()
 
 	// initiliaze controller
 	userController := controller.NewUserController(userUsecase)
 	footPrintController := controller.NewFootPrintController(footPrintUsecase)
 	profileController := controller.NewProfileController(profileUsecase)
 	likeController := controller.NewLikeController(likeUsecase)
+	roomController := controller.NewRoomController(roomUsecase)
 
 	// register grpc server
 	grpcServer := infrastructure.NewGrpcServer()
@@ -54,6 +56,7 @@ func main() {
 	pb.RegisterFootPrintServiceServer(grpcServer, footPrintController)
 	pb.RegisterProfileServiceServer(grpcServer, profileController)
 	pb.RegisterLikeServiceServer(grpcServer, likeController)
+	pb.RegisterRoomServiceServer(grpcServer, roomController)
 
 	// serve
 	listener, err := net.Listen("tcp", ":"+os.Getenv("GRPC_SERVER_PORT")) // [::]:50051

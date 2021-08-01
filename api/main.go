@@ -26,16 +26,19 @@ func main() {
 	footPrintClient := pb.NewFootPrintServiceClient(grpcClientConn)
 	profileClient := pb.NewProfileServiceClient(grpcClientConn)
 	likeClient := pb.NewLikeServiceClient(grpcClientConn)
+	roomClient := pb.NewRoomServiceClient(grpcClientConn)
 
 	userController := controller.NewUserController(userClient)
 	footPrintController := controller.NewFootPrintController(footPrintClient)
 	likeController := controller.NewLikeController(likeClient)
 	profileController := controller.NewProfileController(profileClient)
+	roomController := controller.NewRoomController(roomClient)
 
 	router.Users(userController)
 	router.Profile(profileController)
 	router.FootPrints(footPrintController)
 	router.Likes(likeController)
+	router.Rooms(roomController)
 
 	// NOTE: GraphQLの導入は保留中なのでコメントアウト
 	// resolver := graph.NewResolver(
