@@ -5,23 +5,14 @@ import (
 	"api/infrastructure/logger"
 	"api/interface/controller"
 	"api/pb"
-	"log"
-	"os"
-
-	"google.golang.org/grpc"
 )
 
 func main() {
 	logger.NewLogger()
-	router := infrastructure.NewRouter()
 
-	target := os.Getenv("GRPC_SERVER_NAME") + ":" + os.Getenv("GRPC_SERVER_PORT")
-	grpcClientConn, err := grpc.Dial(target, grpc.WithInsecure())
-	if err != nil {
-		panic(err)
-	}
+	// initialize grpc client
+	grpcClientConn := infrastructure.GrpcClientConn()
 	defer grpcClientConn.Close()
-
 	userClient := pb.NewUserServiceClient(grpcClientConn)
 	footPrintClient := pb.NewFootPrintServiceClient(grpcClientConn)
 	profileClient := pb.NewProfileServiceClient(grpcClientConn)
@@ -29,6 +20,7 @@ func main() {
 	roomClient := pb.NewRoomServiceClient(grpcClientConn)
 	messageClient := pb.NewMessageServiceClient(grpcClientConn)
 
+	// initialize controller
 	userController := controller.NewUserController(userClient)
 	footPrintController := controller.NewFootPrintController(footPrintClient)
 	likeController := controller.NewLikeController(likeClient)
@@ -36,6 +28,8 @@ func main() {
 	roomController := controller.NewRoomController(roomClient)
 	messageController := controller.NewMessageController(messageClient)
 
+	// set router
+	router := infrastructure.NewRouter()
 	router.Users(userController)
 	router.Profile(profileController)
 	router.FootPrints(footPrintController)
@@ -51,6 +45,5 @@ func main() {
 	// playGroundHandler := graph.NewPlayGroundHandler()
 	// router.GraphQL(server, playGroundHandler)
 
-	log.Print("http server start")
-	router.Engine.Run(":" + os.Getenv("PORT"))
+	router.Run()
 }

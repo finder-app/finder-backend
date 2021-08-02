@@ -2,7 +2,9 @@ package infrastructure
 
 import (
 	"api/interface/controller"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/gin-gonic/gin"
@@ -30,6 +32,11 @@ func (r *Router) GraphQL(server *handler.Server, playGroundHandler http.Handler)
 	// r.Engine.GET("/", func(c *gin.Context) {
 	// 	playGroundHandler.ServeHTTP(c.Writer, c.Request)
 	// })
+}
+
+func (r *Router) Run() {
+	log.Print("http server start")
+	r.Engine.Run(":" + os.Getenv("PORT"))
 }
 
 // NOTE: routingのテストをするため、router配下に書くこと
