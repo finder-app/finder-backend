@@ -5,6 +5,7 @@ import (
 	"api/pb"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"mime/multipart"
 	"net/http"
@@ -21,11 +22,16 @@ import (
 
 type ProfileController struct {
 	profileClint pb.ProfileServiceClient
+	stream       pb.ProfileService_TestImageClient
 }
 
-func NewProfileController(profileClint pb.ProfileServiceClient) *ProfileController {
+func NewProfileController(
+	profileClint pb.ProfileServiceClient,
+	stream pb.ProfileService_TestImageClient,
+) *ProfileController {
 	return &ProfileController{
 		profileClint: profileClint,
+		stream:       stream,
 	}
 }
 
@@ -54,10 +60,11 @@ func (c *ProfileController) Update(ctx *gin.Context) {
 		return
 	}
 
-	FileHeader, _ := ctx.FormFile("thumbnail")
-	if FileHeader != nil {
-		preSignS3(FileHeader)
-	}
+	file, _, _ := ctx.Request.FormFile("thumbnail")
+	// defer file.Close()
+	streaaaaaam(c.stream, file)
+	// これをコメントインすると画像が投稿されちゃう
+	// preSignS3(file)
 
 	pbUser := request_helper.NewPbUser(requestUser)
 	req := &pb.UpdateProfileReq{
@@ -71,36 +78,40 @@ func (c *ProfileController) Update(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-var (
-	accessKey  = os.Getenv("AWS_ACCESS_KEY")
-	privateKey = os.Getenv("AWS_PRIVATE_KEY")
-	region     = os.Getenv("AWS_REGION")
-	bucketName = os.Getenv("AWS_BUCKET_NAME")
-)
+func streaaaaaam(stream pb.ProfileService_TestImageClient, file multipart.File) error {
+	fmt.Println("streaaaaaam")
+	buf := make([]byte, 1024)
+	for {
+		_, err := file.Read(buf)
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			fmt.Println(err)
+		}
+		stream.Send(&pb.TestImageReq{Image: buf})
+	}
+	resp, err := stream.CloseAndRecv()
+	if err != nil {
+		return err
+	}
+	fmt.Println("respresprespresp", resp)
+	return nil
+}
 
-func preSignS3(FileHeader *multipart.FileHeader) {
-	file, _ := FileHeader.Open()
-	defer file.Close()
+func preSignS3(file multipart.File) {
+	var (
+		accessKey  = os.Getenv("AWS_ACCESS_KEY")
+		privateKey = os.Getenv("AWS_PRIVATE_KEY")
+		region     = os.Getenv("AWS_REGION")
+		bucketName = os.Getenv("AWS_BUCKET_NAME")
+	)
 
 	creds := credentials.NewStaticCredentials(accessKey, privateKey, "")
 	sess := session.Must(session.NewSession(&aws.Config{
 		Credentials: creds,
 		Region:      aws.String(region),
 	}))
-
-	// s3Client := s3.New(sess)
-	// input := &s3.PutObjectInput{
-	// 	Bucket:      aws.String(bucketName),
-	// 	Key:         aws.String(uuid.New().String()),
-	// 	Body:        file,
-	// 	ACL:         aws.String(s3.BucketCannedACLPublicRead),
-	// 	ContentType: aws.String("image/jpeg"),
-	// }
-	// output, err := s3Client.PutObject(input)
-	// fmt.Println("output", output)
-	// req, output := s3Client.PutObjectRequest(input)
-	// fmt.Println(req, output)
-
 	uploader := s3manager.NewUploader(sess)
 	s3uploadOutput, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket:      aws.String(bucketName),
@@ -109,7 +120,7 @@ func preSignS3(FileHeader *multipart.FileHeader) {
 		ACL:         aws.String(s3.BucketCannedACLPublicRead),
 		ContentType: aws.String("image/jpeg"),
 	})
-	fmt.Println(s3uploadOutput)
+	// fmt.Println(s3uploadOutput)
 	fmt.Println(s3uploadOutput.Location)
 
 	if err != nil {

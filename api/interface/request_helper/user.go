@@ -9,6 +9,7 @@ type RequestUser struct {
 	FirstName string `form:"first_name" binding:"required"`
 	Email     string `form:"email"`
 	Gender    string `form:"gender"`
+	Thumbnail []byte
 }
 
 func NewRequestUser() *RequestUser {
@@ -22,5 +23,6 @@ func NewPbUser(requestUser *RequestUser) *pb.User {
 		FirstName: requestUser.FirstName,
 		Email:     requestUser.Email,
 		Gender:    requestUser.Gender,
+		Thumbnail: requestUser.Thumbnail,
 	}
 }
