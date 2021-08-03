@@ -25,100 +25,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type TestImageReq struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Image []byte `protobuf:"bytes,1,opt,name=image,proto3" json:"image,omitempty"`
-}
-
-func (x *TestImageReq) Reset() {
-	*x = TestImageReq{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_profile_proto_msgTypes[0]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *TestImageReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*TestImageReq) ProtoMessage() {}
-
-func (x *TestImageReq) ProtoReflect() protoreflect.Message {
-	mi := &file_profile_proto_msgTypes[0]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use TestImageReq.ProtoReflect.Descriptor instead.
-func (*TestImageReq) Descriptor() ([]byte, []int) {
-	return file_profile_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *TestImageReq) GetImage() []byte {
-	if x != nil {
-		return x.Image
-	}
-	return nil
-}
-
-type TestImageRes struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Response string `protobuf:"bytes,1,opt,name=response,proto3" json:"response,omitempty"`
-}
-
-func (x *TestImageRes) Reset() {
-	*x = TestImageRes{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_profile_proto_msgTypes[1]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *TestImageRes) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*TestImageRes) ProtoMessage() {}
-
-func (x *TestImageRes) ProtoReflect() protoreflect.Message {
-	mi := &file_profile_proto_msgTypes[1]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use TestImageRes.ProtoReflect.Descriptor instead.
-func (*TestImageRes) Descriptor() ([]byte, []int) {
-	return file_profile_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *TestImageRes) GetResponse() string {
-	if x != nil {
-		return x.Response
-	}
-	return ""
-}
-
 type GetProfileReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -130,7 +36,7 @@ type GetProfileReq struct {
 func (x *GetProfileReq) Reset() {
 	*x = GetProfileReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_profile_proto_msgTypes[2]
+		mi := &file_profile_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -143,7 +49,7 @@ func (x *GetProfileReq) String() string {
 func (*GetProfileReq) ProtoMessage() {}
 
 func (x *GetProfileReq) ProtoReflect() protoreflect.Message {
-	mi := &file_profile_proto_msgTypes[2]
+	mi := &file_profile_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -156,7 +62,7 @@ func (x *GetProfileReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetProfileReq.ProtoReflect.Descriptor instead.
 func (*GetProfileReq) Descriptor() ([]byte, []int) {
-	return file_profile_proto_rawDescGZIP(), []int{2}
+	return file_profile_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *GetProfileReq) GetCurrentUserUid() string {
@@ -177,7 +83,7 @@ type GetProfileRes struct {
 func (x *GetProfileRes) Reset() {
 	*x = GetProfileRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_profile_proto_msgTypes[3]
+		mi := &file_profile_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -190,7 +96,7 @@ func (x *GetProfileRes) String() string {
 func (*GetProfileRes) ProtoMessage() {}
 
 func (x *GetProfileRes) ProtoReflect() protoreflect.Message {
-	mi := &file_profile_proto_msgTypes[3]
+	mi := &file_profile_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -203,7 +109,7 @@ func (x *GetProfileRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetProfileRes.ProtoReflect.Descriptor instead.
 func (*GetProfileRes) Descriptor() ([]byte, []int) {
-	return file_profile_proto_rawDescGZIP(), []int{3}
+	return file_profile_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *GetProfileRes) GetUser() *User {
@@ -218,13 +124,13 @@ type UpdateProfileReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	User *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"` // bytes image = 2;
+	User *User `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 }
 
 func (x *UpdateProfileReq) Reset() {
 	*x = UpdateProfileReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_profile_proto_msgTypes[4]
+		mi := &file_profile_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -237,7 +143,7 @@ func (x *UpdateProfileReq) String() string {
 func (*UpdateProfileReq) ProtoMessage() {}
 
 func (x *UpdateProfileReq) ProtoReflect() protoreflect.Message {
-	mi := &file_profile_proto_msgTypes[4]
+	mi := &file_profile_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -250,7 +156,7 @@ func (x *UpdateProfileReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateProfileReq.ProtoReflect.Descriptor instead.
 func (*UpdateProfileReq) Descriptor() ([]byte, []int) {
-	return file_profile_proto_rawDescGZIP(), []int{4}
+	return file_profile_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *UpdateProfileReq) GetUser() *User {
@@ -271,7 +177,7 @@ type UpdateProfileRes struct {
 func (x *UpdateProfileRes) Reset() {
 	*x = UpdateProfileRes{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_profile_proto_msgTypes[5]
+		mi := &file_profile_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -284,7 +190,7 @@ func (x *UpdateProfileRes) String() string {
 func (*UpdateProfileRes) ProtoMessage() {}
 
 func (x *UpdateProfileRes) ProtoReflect() protoreflect.Message {
-	mi := &file_profile_proto_msgTypes[5]
+	mi := &file_profile_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -297,7 +203,7 @@ func (x *UpdateProfileRes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateProfileRes.ProtoReflect.Descriptor instead.
 func (*UpdateProfileRes) Descriptor() ([]byte, []int) {
-	return file_profile_proto_rawDescGZIP(), []int{5}
+	return file_profile_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *UpdateProfileRes) GetUser() *User {
@@ -314,37 +220,29 @@ var file_profile_proto_rawDesc = []byte{
 	0x02, 0x70, 0x62, 0x1a, 0x1f, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x62, 0x75, 0x66, 0x2f, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x2e, 0x70,
 	0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x0a, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x22, 0x24, 0x0a, 0x0c, 0x54, 0x65, 0x73, 0x74, 0x49, 0x6d, 0x61, 0x67, 0x65, 0x52, 0x65, 0x71,
-	0x12, 0x14, 0x0a, 0x05, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52,
-	0x05, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x22, 0x2a, 0x0a, 0x0c, 0x54, 0x65, 0x73, 0x74, 0x49, 0x6d,
-	0x61, 0x67, 0x65, 0x52, 0x65, 0x73, 0x12, 0x1a, 0x0a, 0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x22, 0x39, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65,
-	0x52, 0x65, 0x71, 0x12, 0x28, 0x0a, 0x10, 0x63, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x5f, 0x75,
-	0x73, 0x65, 0x72, 0x5f, 0x75, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x63,
-	0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x55, 0x73, 0x65, 0x72, 0x55, 0x69, 0x64, 0x22, 0x2d, 0x0a,
-	0x0d, 0x47, 0x65, 0x74, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x12, 0x1c,
+	0x22, 0x39, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x52, 0x65,
+	0x71, 0x12, 0x28, 0x0a, 0x10, 0x63, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x5f, 0x75, 0x73, 0x65,
+	0x72, 0x5f, 0x75, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x63, 0x75, 0x72,
+	0x72, 0x65, 0x6e, 0x74, 0x55, 0x73, 0x65, 0x72, 0x55, 0x69, 0x64, 0x22, 0x2d, 0x0a, 0x0d, 0x47,
+	0x65, 0x74, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x12, 0x1c, 0x0a, 0x04,
+	0x75, 0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x70, 0x62, 0x2e,
+	0x55, 0x73, 0x65, 0x72, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x22, 0x30, 0x0a, 0x10, 0x55, 0x70,
+	0x64, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x12, 0x1c,
 	0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x70,
 	0x62, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x22, 0x30, 0x0a, 0x10,
-	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x71,
+	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x73,
 	0x12, 0x1c, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x08,
-	0x2e, 0x70, 0x62, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x22, 0x30,
-	0x0a, 0x10, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x52,
-	0x65, 0x73, 0x12, 0x1c, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
-	0x32, 0x08, 0x2e, 0x70, 0x62, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72,
-	0x32, 0xba, 0x01, 0x0a, 0x0e, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x53, 0x65, 0x72, 0x76,
-	0x69, 0x63, 0x65, 0x12, 0x34, 0x0a, 0x0a, 0x47, 0x65, 0x74, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c,
-	0x65, 0x12, 0x11, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c,
-	0x65, 0x52, 0x65, 0x71, 0x1a, 0x11, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x50, 0x72, 0x6f,
-	0x66, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x22, 0x00, 0x12, 0x3d, 0x0a, 0x0d, 0x55, 0x70, 0x64,
-	0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x12, 0x14, 0x2e, 0x70, 0x62, 0x2e,
-	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x71,
-	0x1a, 0x14, 0x2e, 0x70, 0x62, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x66,
-	0x69, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x22, 0x00, 0x12, 0x33, 0x0a, 0x09, 0x54, 0x65, 0x73, 0x74,
-	0x49, 0x6d, 0x61, 0x67, 0x65, 0x12, 0x10, 0x2e, 0x70, 0x62, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x49,
-	0x6d, 0x61, 0x67, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x10, 0x2e, 0x70, 0x62, 0x2e, 0x54, 0x65, 0x73,
-	0x74, 0x49, 0x6d, 0x61, 0x67, 0x65, 0x52, 0x65, 0x73, 0x22, 0x00, 0x28, 0x01, 0x42, 0x06, 0x5a,
-	0x04, 0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x2e, 0x70, 0x62, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x32, 0x85,
+	0x01, 0x0a, 0x0e, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x12, 0x34, 0x0a, 0x0a, 0x47, 0x65, 0x74, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x12,
+	0x11, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x52,
+	0x65, 0x71, 0x1a, 0x11, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x50, 0x72, 0x6f, 0x66, 0x69,
+	0x6c, 0x65, 0x52, 0x65, 0x73, 0x22, 0x00, 0x12, 0x3d, 0x0a, 0x0d, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x12, 0x14, 0x2e, 0x70, 0x62, 0x2e, 0x55, 0x70,
+	0x64, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x14,
+	0x2e, 0x70, 0x62, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c,
+	0x65, 0x52, 0x65, 0x73, 0x22, 0x00, 0x42, 0x06, 0x5a, 0x04, 0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -359,28 +257,24 @@ func file_profile_proto_rawDescGZIP() []byte {
 	return file_profile_proto_rawDescData
 }
 
-var file_profile_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_profile_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_profile_proto_goTypes = []interface{}{
-	(*TestImageReq)(nil),     // 0: pb.TestImageReq
-	(*TestImageRes)(nil),     // 1: pb.TestImageRes
-	(*GetProfileReq)(nil),    // 2: pb.GetProfileReq
-	(*GetProfileRes)(nil),    // 3: pb.GetProfileRes
-	(*UpdateProfileReq)(nil), // 4: pb.UpdateProfileReq
-	(*UpdateProfileRes)(nil), // 5: pb.UpdateProfileRes
-	(*User)(nil),             // 6: pb.User
+	(*GetProfileReq)(nil),    // 0: pb.GetProfileReq
+	(*GetProfileRes)(nil),    // 1: pb.GetProfileRes
+	(*UpdateProfileReq)(nil), // 2: pb.UpdateProfileReq
+	(*UpdateProfileRes)(nil), // 3: pb.UpdateProfileRes
+	(*User)(nil),             // 4: pb.User
 }
 var file_profile_proto_depIdxs = []int32{
-	6, // 0: pb.GetProfileRes.user:type_name -> pb.User
-	6, // 1: pb.UpdateProfileReq.user:type_name -> pb.User
-	6, // 2: pb.UpdateProfileRes.user:type_name -> pb.User
-	2, // 3: pb.ProfileService.GetProfile:input_type -> pb.GetProfileReq
-	4, // 4: pb.ProfileService.UpdateProfile:input_type -> pb.UpdateProfileReq
-	0, // 5: pb.ProfileService.TestImage:input_type -> pb.TestImageReq
-	3, // 6: pb.ProfileService.GetProfile:output_type -> pb.GetProfileRes
-	5, // 7: pb.ProfileService.UpdateProfile:output_type -> pb.UpdateProfileRes
-	1, // 8: pb.ProfileService.TestImage:output_type -> pb.TestImageRes
-	6, // [6:9] is the sub-list for method output_type
-	3, // [3:6] is the sub-list for method input_type
+	4, // 0: pb.GetProfileRes.user:type_name -> pb.User
+	4, // 1: pb.UpdateProfileReq.user:type_name -> pb.User
+	4, // 2: pb.UpdateProfileRes.user:type_name -> pb.User
+	0, // 3: pb.ProfileService.GetProfile:input_type -> pb.GetProfileReq
+	2, // 4: pb.ProfileService.UpdateProfile:input_type -> pb.UpdateProfileReq
+	1, // 5: pb.ProfileService.GetProfile:output_type -> pb.GetProfileRes
+	3, // 6: pb.ProfileService.UpdateProfile:output_type -> pb.UpdateProfileRes
+	5, // [5:7] is the sub-list for method output_type
+	3, // [3:5] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
 	3, // [3:3] is the sub-list for extension extendee
 	0, // [0:3] is the sub-list for field type_name
@@ -394,30 +288,6 @@ func file_profile_proto_init() {
 	file_user_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_profile_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*TestImageReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_profile_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*TestImageRes); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_profile_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetProfileReq); i {
 			case 0:
 				return &v.state
@@ -429,7 +299,7 @@ func file_profile_proto_init() {
 				return nil
 			}
 		}
-		file_profile_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_profile_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetProfileRes); i {
 			case 0:
 				return &v.state
@@ -441,7 +311,7 @@ func file_profile_proto_init() {
 				return nil
 			}
 		}
-		file_profile_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_profile_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UpdateProfileReq); i {
 			case 0:
 				return &v.state
@@ -453,7 +323,7 @@ func file_profile_proto_init() {
 				return nil
 			}
 		}
-		file_profile_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_profile_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UpdateProfileRes); i {
 			case 0:
 				return &v.state
@@ -472,7 +342,7 @@ func file_profile_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_profile_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -500,7 +370,6 @@ const _ = grpc.SupportPackageIsVersion6
 type ProfileServiceClient interface {
 	GetProfile(ctx context.Context, in *GetProfileReq, opts ...grpc.CallOption) (*GetProfileRes, error)
 	UpdateProfile(ctx context.Context, in *UpdateProfileReq, opts ...grpc.CallOption) (*UpdateProfileRes, error)
-	TestImage(ctx context.Context, opts ...grpc.CallOption) (ProfileService_TestImageClient, error)
 }
 
 type profileServiceClient struct {
@@ -529,45 +398,10 @@ func (c *profileServiceClient) UpdateProfile(ctx context.Context, in *UpdateProf
 	return out, nil
 }
 
-func (c *profileServiceClient) TestImage(ctx context.Context, opts ...grpc.CallOption) (ProfileService_TestImageClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_ProfileService_serviceDesc.Streams[0], "/pb.ProfileService/TestImage", opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &profileServiceTestImageClient{stream}
-	return x, nil
-}
-
-type ProfileService_TestImageClient interface {
-	Send(*TestImageReq) error
-	CloseAndRecv() (*TestImageRes, error)
-	grpc.ClientStream
-}
-
-type profileServiceTestImageClient struct {
-	grpc.ClientStream
-}
-
-func (x *profileServiceTestImageClient) Send(m *TestImageReq) error {
-	return x.ClientStream.SendMsg(m)
-}
-
-func (x *profileServiceTestImageClient) CloseAndRecv() (*TestImageRes, error) {
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	m := new(TestImageRes)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 // ProfileServiceServer is the server API for ProfileService service.
 type ProfileServiceServer interface {
 	GetProfile(context.Context, *GetProfileReq) (*GetProfileRes, error)
 	UpdateProfile(context.Context, *UpdateProfileReq) (*UpdateProfileRes, error)
-	TestImage(ProfileService_TestImageServer) error
 }
 
 // UnimplementedProfileServiceServer can be embedded to have forward compatible implementations.
@@ -579,9 +413,6 @@ func (*UnimplementedProfileServiceServer) GetProfile(context.Context, *GetProfil
 }
 func (*UnimplementedProfileServiceServer) UpdateProfile(context.Context, *UpdateProfileReq) (*UpdateProfileRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateProfile not implemented")
-}
-func (*UnimplementedProfileServiceServer) TestImage(ProfileService_TestImageServer) error {
-	return status.Errorf(codes.Unimplemented, "method TestImage not implemented")
 }
 
 func RegisterProfileServiceServer(s *grpc.Server, srv ProfileServiceServer) {
@@ -624,32 +455,6 @@ func _ProfileService_UpdateProfile_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProfileService_TestImage_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(ProfileServiceServer).TestImage(&profileServiceTestImageServer{stream})
-}
-
-type ProfileService_TestImageServer interface {
-	SendAndClose(*TestImageRes) error
-	Recv() (*TestImageReq, error)
-	grpc.ServerStream
-}
-
-type profileServiceTestImageServer struct {
-	grpc.ServerStream
-}
-
-func (x *profileServiceTestImageServer) SendAndClose(m *TestImageRes) error {
-	return x.ServerStream.SendMsg(m)
-}
-
-func (x *profileServiceTestImageServer) Recv() (*TestImageReq, error) {
-	m := new(TestImageReq)
-	if err := x.ServerStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 var _ProfileService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.ProfileService",
 	HandlerType: (*ProfileServiceServer)(nil),
@@ -663,12 +468,6 @@ var _ProfileService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _ProfileService_UpdateProfile_Handler,
 		},
 	},
-	Streams: []grpc.StreamDesc{
-		{
-			StreamName:    "TestImage",
-			Handler:       _ProfileService_TestImage_Handler,
-			ClientStreams: true,
-		},
-	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "profile.proto",
 }

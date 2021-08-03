@@ -9,15 +9,7 @@ option go_package = "./pb";
 
 service ProfileService {
   rpc GetProfile(GetProfileReq) returns (GetProfileRes) {}
-  rpc UpdateProfile(UpdateProfileReq) returns (UpdateProfileRes) {}
-}
-
-message TestImageReq {
-  bytes image = 1;
-}
-
-message TestImageRes {
-  string response = 1;
+  rpc UpdateProfile(stream UpdateProfileReq) returns (UpdateProfileRes) {}
 }
 
 message GetProfileReq {
@@ -30,7 +22,6 @@ message GetProfileRes {
 
 message UpdateProfileReq {
   User user = 1;
-  // bytes image = 2;
 }
 
 message UpdateProfileRes {

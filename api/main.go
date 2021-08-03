@@ -5,8 +5,6 @@ import (
 	"api/infrastructure/logger"
 	"api/interface/controller"
 	"api/pb"
-	"context"
-	"log"
 )
 
 func main() {
@@ -26,11 +24,7 @@ func main() {
 	userController := controller.NewUserController(userClient)
 	footPrintController := controller.NewFootPrintController(footPrintClient)
 	likeController := controller.NewLikeController(likeClient)
-	stream, err := profileClient.TestImage(context.Background())
-	if err != nil {
-		log.Fatal(err)
-	}
-	profileController := controller.NewProfileController(profileClient, stream)
+	profileController := controller.NewProfileController(profileClient)
 	roomController := controller.NewRoomController(roomClient)
 	messageController := controller.NewMessageController(messageClient)
 

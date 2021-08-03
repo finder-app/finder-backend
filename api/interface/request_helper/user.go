@@ -9,7 +9,7 @@ type RequestUser struct {
 	FirstName string `form:"first_name" binding:"required"`
 	Email     string `form:"email"`
 	Gender    string `form:"gender"`
-	Thumbnail []byte
+	Thumbnail string `form:"thumbnail"`
 }
 
 func NewRequestUser() *RequestUser {
