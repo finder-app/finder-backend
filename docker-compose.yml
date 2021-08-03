@@ -43,5 +43,19 @@ services:
     env_file:
       - .env
 
+  # NOTE: s3のmock 必要に応じてコメントインする？
+  localstack:
+    image: localstack/localstack
+    ports:
+      - 8080:8080
+      - 4566:4566
+    environment:
+      SERVICES: s3
+      AWS_DEFAULT_REGION: ap-northeast-1
+      DATA_DIR: /tmp/localstack/data
+    volumes:
+      - ./localstack/:/docker-entrypoint-initaws.d
+
 volumes:
   db-data:
+  localstack_data:

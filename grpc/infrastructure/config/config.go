@@ -1,6 +1,8 @@
 package config
 
-import "os"
+import (
+	"os"
+)
 
 var (
 	SqlDriver   string
@@ -14,6 +16,7 @@ func init() {
 	password := os.Getenv("DB_PASSWORD")
 	host := os.Getenv("DB_HOST")
 	dbName := os.Getenv("DB_NAME")
-	database := user + ":" + password + "@" + host + "/" + dbName + "?charset=utf8&parseTime=true&loc=Asia%2FTokyo"
+	options := "charset=utf8&parseTime=true&loc=Asia%2FTokyo"
+	database := user + ":" + password + "@" + host + "/" + dbName + "?" + options
 	DatabaseUrl = database
 }

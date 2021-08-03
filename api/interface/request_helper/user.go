@@ -9,7 +9,8 @@ type RequestUser struct {
 	FirstName string `form:"first_name" binding:"required"`
 	Email     string `form:"email"`
 	Gender    string `form:"gender"`
-	Thumbnail string `form:"thumbnail"`
+	// NOTE: thumbnailはformから値を受け取らないため
+	Thumbnail string
 }
 
 func NewRequestUser() *RequestUser {
