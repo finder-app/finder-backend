@@ -34,6 +34,7 @@ func (c *ProfileController) UpdateProfile(ctx context.Context, req *pb.UpdatePro
 		Uid:       req.User.Uid,
 		LastName:  req.User.LastName,
 		FirstName: req.User.FirstName,
+		Thumbnail: req.User.Thumbnail,
 	}
 	user, err := c.profileUsecase.UpdateProfile(inputUser)
 	if err != nil {

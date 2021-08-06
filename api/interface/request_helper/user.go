@@ -9,7 +9,7 @@ type RequestUser struct {
 	FirstName string `form:"first_name" binding:"required"`
 	Email     string `form:"email"`
 	Gender    string `form:"gender"`
-	// NOTE: thumbnailはformから値を受け取らないため
+	// NOTE: thumbnailはformから値を受け取らないため、formを書かない
 	Thumbnail string
 }
 

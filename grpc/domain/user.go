@@ -13,7 +13,9 @@ type User struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time `sql:"index"`
+	Thumbnail string
 
+	// NOTE: カラムを持たないfield
 	Liked bool
 }
 
