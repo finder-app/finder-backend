@@ -3,14 +3,15 @@ package infrastructure
 import (
 	"grpc/infrastructure/config"
 	"log"
-	"os"
+
+	"grpc/infrastructure/env"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 )
 
 func NewGormConnect() *gorm.DB {
-	switch env := os.Getenv("ENV"); env {
+	switch env.ENV {
 	case "production":
 		// NOTE: 実装中
 		return nil

@@ -1,8 +1,6 @@
 package config
 
-import (
-	"os"
-)
+import "grpc/infrastructure/env"
 
 var (
 	SqlDriver   string
@@ -10,12 +8,12 @@ var (
 )
 
 func init() {
-	SqlDriver = os.Getenv("DB_DRIVER")
+	SqlDriver = env.DB_DRIVER
 
-	user := os.Getenv("DB_USER")
-	password := os.Getenv("DB_PASSWORD")
-	host := os.Getenv("DB_HOST")
-	dbName := os.Getenv("DB_NAME")
+	user := env.DB_USER
+	password := env.DB_PASSWORD
+	host := env.DB_HOST
+	dbName := env.DB_NAME
 	options := "charset=utf8&parseTime=true&loc=Asia%2FTokyo"
 	database := user + ":" + password + "@" + host + "/" + dbName + "?" + options
 	DatabaseUrl = database

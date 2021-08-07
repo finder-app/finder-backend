@@ -3,7 +3,8 @@ package infrastructure
 import (
 	"log"
 	"net"
-	"os"
+
+	"grpc/infrastructure/env"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
@@ -34,7 +35,7 @@ func NewGrpcServer() *grpc.Server {
 }
 
 func GrpcServe(grpcServer *grpc.Server) {
-	listener, err := net.Listen("tcp", ":"+os.Getenv("GRPC_SERVER_PORT")) // [::]:50051
+	listener, err := net.Listen("tcp", ":"+env.GRPC_SERVER_PORT) // [::]:50051
 	if err != nil {
 		log.Fatalf("failed to listen: %v\n", err)
 		return

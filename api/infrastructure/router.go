@@ -3,7 +3,8 @@ package infrastructure
 import (
 	"api/interface/controller"
 	"log"
-	"os"
+
+	"api/infrastructure/env"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,7 +35,7 @@ func NewRouter() *Router {
 
 func (r *Router) Run() {
 	log.Print("http server start")
-	r.Engine.Run(":" + os.Getenv("PORT"))
+	r.Engine.Run(":" + env.PORT)
 }
 
 // NOTE: routingのテストをするため、router配下に書くこと
