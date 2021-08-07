@@ -2,13 +2,16 @@ package main
 
 import (
 	"api/infrastructure"
+	"api/infrastructure/aws"
 	"api/infrastructure/logger"
 	"api/interface/controller"
 	"api/pb"
 )
 
 func main() {
+	// initialize etc...
 	logger.NewLogger()
+	s3uploader := aws.NewS3uplodaer()
 
 	// initialize grpc client
 	grpcClientConn := infrastructure.GrpcClientConn()
@@ -24,7 +27,7 @@ func main() {
 	userController := controller.NewUserController(userClient)
 	footPrintController := controller.NewFootPrintController(footPrintClient)
 	likeController := controller.NewLikeController(likeClient)
-	profileController := controller.NewProfileController(profileClient)
+	profileController := controller.NewProfileController(profileClient, s3uploader)
 	roomController := controller.NewRoomController(roomClient)
 	messageController := controller.NewMessageController(messageClient)
 

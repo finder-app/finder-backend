@@ -1,7 +1,6 @@
 package aws
 
 import (
-	"fmt"
 	"mime/multipart"
 	"os"
 	"strings"
@@ -38,7 +37,7 @@ func init() {
 }
 
 // NOTE: init()で生成したs3managerUploaderを代入
-func News3Uplodaer() S3uploader {
+func NewS3uplodaer() S3uploader {
 	return &s3uploader{
 		uploader: uploader,
 	}
@@ -72,7 +71,11 @@ func (s *s3uploader) Upload(file multipart.File) (location string, err error) {
 	if err != nil {
 		return "", err
 	}
-	return s.replaceUrl(s3uploadOutput.Location), nil
+
+	if os.Getenv("ENV") == "development" {
+		return s.replaceLocation(s3uploadOutput.Location), nil
+	}
+	return s3uploadOutput.Location, nil
 }
 
 func (s *s3uploader) newUploadInput(file multipart.File) *s3manager.UploadInput {
@@ -92,14 +95,9 @@ func (s *s3uploader) newUploadInput(file multipart.File) *s3manager.UploadInput 
 	}
 }
 
-// NOTE: prod環境なら何もせず返す、dev環境ならURLのlocalstackをlocalhostに置換
-func (s *s3uploader) replaceUrl(location string) string {
-	switch env := os.Getenv("ENV"); env {
-	case "production":
-		return location
-	default:
-		location := strings.Replace(location, "localstack", "localhost", 1)
-		fmt.Println("location", location)
-		return location
-	}
+// NOTE: dev環境だったらURLのlocalstackをlocalhostに置換
+// s3output.Locationがhttp://localstackで生成されるため
+func (s *s3uploader) replaceLocation(location string) string {
+	location = strings.Replace(location, "localstack", "localhost", 1)
+	return location
 }

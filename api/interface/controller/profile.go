@@ -12,11 +12,16 @@ import (
 
 type ProfileController struct {
 	profileClint pb.ProfileServiceClient
+	s3uploader   aws.S3uploader
 }
 
-func NewProfileController(profileClint pb.ProfileServiceClient) *ProfileController {
+func NewProfileController(
+	profileClint pb.ProfileServiceClient,
+	s3uploader aws.S3uploader,
+) *ProfileController {
 	return &ProfileController{
 		profileClint: profileClint,
+		s3uploader:   s3uploader,
 	}
 }
 
@@ -49,8 +54,7 @@ func (c *ProfileController) Update(ctx *gin.Context) {
 	file, _, _ := ctx.Request.FormFile("thumbnail")
 	defer file.Close()
 	if file != nil {
-		uploader := aws.News3Uplodaer()
-		location, err := uploader.Upload(file)
+		location, err := c.s3uploader.Upload(file)
 		if err != nil {
 			ErrorResponse(ctx, http.StatusInternalServerError, err)
 			return
