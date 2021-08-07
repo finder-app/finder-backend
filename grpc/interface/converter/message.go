@@ -2,7 +2,7 @@ package converter
 
 import (
 	"grpc/domain"
-	"grpc/pb"
+	"grpc/finder-protocol-buffers/pb"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
