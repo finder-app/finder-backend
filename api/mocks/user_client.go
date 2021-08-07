@@ -1,7 +1,7 @@
 package mocks
 
 import (
-	"api/pb"
+	"api/finder-protocol-buffers/pb"
 	"context"
 	"fmt"
 

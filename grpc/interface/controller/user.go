@@ -3,8 +3,8 @@ package controller
 import (
 	"context"
 	"grpc/domain"
+	"grpc/finder-protocol-buffers/pb"
 	"grpc/interface/converter"
-	"grpc/pb"
 	"grpc/usecase"
 )
 

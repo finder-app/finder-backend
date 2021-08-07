@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"api/pb"
+	"api/finder-protocol-buffers/pb"
 	"net/http"
 	"strconv"
 

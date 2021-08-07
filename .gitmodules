@@ -1,0 +1,6 @@
+[submodule "api/finder-protocol-buffers"]
+	path = api/finder-protocol-buffers
+	url = https://github.com/finder-app/finder-protocol-buffers.git
+[submodule "grpc/finder-protocol-buffers"]
+	path = grpc/finder-protocol-buffers
+	url = https://github.com/finder-app/finder-protocol-buffers.git

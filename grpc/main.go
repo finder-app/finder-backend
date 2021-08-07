@@ -1,10 +1,10 @@
 package main
 
 import (
+	"grpc/finder-protocol-buffers/pb"
 	"grpc/infrastructure"
 	"grpc/infrastructure/logger"
 	"grpc/interface/controller"
-	"grpc/pb"
 	"grpc/repository"
 	"grpc/usecase"
 )
