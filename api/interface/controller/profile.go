@@ -1,9 +1,9 @@
 package controller
 
 import (
+	"api/finder-protocol-buffers/pb"
 	"api/infrastructure/aws"
 	"api/interface/request_helper"
-	"api/pb"
 	"errors"
 	"net/http"
 

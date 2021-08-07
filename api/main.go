@@ -1,11 +1,11 @@
 package main
 
 import (
+	"api/finder-protocol-buffers/pb"
 	"api/infrastructure"
 	"api/infrastructure/aws"
 	"api/infrastructure/logger"
 	"api/interface/controller"
-	"api/pb"
 )
 
 func main() {

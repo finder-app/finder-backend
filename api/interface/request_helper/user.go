@@ -1,6 +1,6 @@
 package request_helper
 
-import "api/pb"
+import "api/finder-protocol-buffers/pb"
 
 // NOTE: 必須カラムはbinding: requiredしてる。Emailはなくてもエラー吐かない
 type RequestUser struct {
