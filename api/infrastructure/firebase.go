@@ -2,7 +2,8 @@ package infrastructure
 
 import (
 	"context"
-	"os"
+
+	"api/infrastructure/env"
 
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
@@ -10,7 +11,7 @@ import (
 )
 
 func NewFirebaseApp() *firebase.App {
-	opt := option.WithCredentialsJSON([]byte(os.Getenv("GOOGLE_SERVICE_ACCOUNT_JSON")))
+	opt := option.WithCredentialsJSON([]byte(env.GOOGLE_SERVICE_ACCOUNT_JSON))
 	// app, err := firebase.NewApp(ctx, nil, opt)
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
