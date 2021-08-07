@@ -30,13 +30,18 @@ func (c *UserController) Index(ctx *gin.Context) {
 }
 
 func (c *UserController) Create(ctx *gin.Context) {
-	reqUser := &pb.User{}
-	if err := ctx.BindJSON(reqUser); err != nil {
+	pbUser := &pb.User{}
+	if err := ctx.BindJSON(pbUser); err != nil {
 		ErrorResponse(ctx, http.StatusBadRequest, err)
 		return
 	}
 	req := &pb.CreateUserReq{
-		User: reqUser,
+		Uid:       pbUser.Uid,
+		Email:     pbUser.Email,
+		LastName:  pbUser.LastName,
+		FirstName: pbUser.FirstName,
+		Gender:    pbUser.Gender,
+		Thumbnail: pbUser.Thumbnail,
 	}
 	user, err := c.userClient.CreateUser(ctx, req)
 	if err != nil {

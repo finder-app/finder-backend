@@ -2,9 +2,9 @@ package infrastructure
 
 import (
 	"api/interface/controller"
-	"net/http"
+	"log"
+	"os"
 
-	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,13 +23,18 @@ func NewRouter() *Router {
 }
 
 // TODO: GraphQLは今後導入予定のため、一旦コメントアウトで使わないようにしておく
-func (r *Router) GraphQL(server *handler.Server, playGroundHandler http.Handler) {
-	// r.Engine.POST("/query", func(c *gin.Context) {
-	// 	server.ServeHTTP(c.Writer, c.Request)
-	// })
-	// r.Engine.GET("/", func(c *gin.Context) {
-	// 	playGroundHandler.ServeHTTP(c.Writer, c.Request)
-	// })
+// func (r *Router) GraphQL(server *handler.Server, playGroundHandler http.Handler) {
+// 	r.Engine.POST("/query", func(c *gin.Context) {
+// 		server.ServeHTTP(c.Writer, c.Request)
+// 	})
+// 	r.Engine.GET("/", func(c *gin.Context) {
+// 		playGroundHandler.ServeHTTP(c.Writer, c.Request)
+// 	})
+// }
+
+func (r *Router) Run() {
+	log.Print("http server start")
+	r.Engine.Run(":" + os.Getenv("PORT"))
 }
 
 // NOTE: routingのテストをするため、router配下に書くこと

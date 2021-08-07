@@ -26,7 +26,10 @@ func ConvertUser(user *domain.User) *pb.User {
 		UpdatedAt: timestamppb.New(user.UpdatedAt),
 		Gender:    user.Gender,
 		FullName:  user.FullName(),
-		Liked:     user.Liked,
+		Thumbnail: user.Thumbnail,
+
+		// NOTE: カラムを持たないfield
+		Liked: user.Liked,
 	}
 	return pbUser
 }
