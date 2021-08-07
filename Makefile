@@ -11,19 +11,19 @@ test-all:
 
 # NOTE: e.g. make m-file name=create_users
 m-file:
-	migrate create -ext sql -dir ./grpc/db/migrate -seq $(name)
+	migrate create -ext sql -dir ./db/migrate -seq $(name)
 
 m-up:
-	migrate -source file://./grpc/db/migrate -database 'mysql://root:finder0501@tcp(localhost:13306)/finder_development' up
+	migrate -source file://./db/migrate -database 'mysql://root:finder0501@tcp(localhost:13306)/finder_development' up
 
 # NOTE: n回分migrationが戻るので、実行時は要注意
 # NOTE: e.g. make m-down n=7
 m-down:
-	migrate -source file://./grpc/db/migrate -database 'mysql://root:finder0501@tcp(localhost:13306)/finder_development' down $(n)
+	migrate -source file://./db/migrate -database 'mysql://root:finder0501@tcp(localhost:13306)/finder_development' down $(n)
 
 # NOTE: e.g. make m-force v=7
 m-force:
-	migrate -source file://./grpc/db/migrate -database 'mysql://root:finder0501@tcp(localhost:13306)/finder_development' force $(v)
+	migrate -source file://./db/migrate -database 'mysql://root:finder0501@tcp(localhost:13306)/finder_development' force $(v)
 
 gqlgen:
 	go run github.com/99designs/gqlgen generate
