@@ -52,8 +52,8 @@ func (c *ProfileController) Update(ctx *gin.Context) {
 
 	// NOTE: 画像が存在すればS3にアップしてuser.thumbnailにS3のURLを代入
 	file, _, _ := ctx.Request.FormFile("thumbnail")
-	defer file.Close()
 	if file != nil {
+		defer file.Close()
 		location, err := c.s3uploader.Upload(file)
 		if err != nil {
 			ErrorResponse(ctx, http.StatusInternalServerError, err)
