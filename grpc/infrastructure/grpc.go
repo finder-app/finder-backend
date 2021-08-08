@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	"grpc/infrastructure/env"
+	"github.com/finder-app/finder-backend/grpc/infrastructure/env"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"

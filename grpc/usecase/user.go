@@ -2,8 +2,9 @@ package usecase
 
 import (
 	"errors"
-	"grpc/domain"
-	"grpc/repository"
+
+	"github.com/finder-app/finder-backend/grpc/domain"
+	"github.com/finder-app/finder-backend/grpc/repository"
 )
 
 type UserUsecase interface {

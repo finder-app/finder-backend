@@ -2,9 +2,9 @@ package usecase_test
 
 // import (
 // 	"errors"
-// 	"grpc/domain"
-// 	"grpc/repository/mocks"
-// 	"grpc/usecase"
+// 	"github.com/finder-app/finder-backend/grpc/domain"
+// 	"github.com/finder-app/finder-backend/grpc/repository/mocks"
+// 	"github.com/finder-app/finder-backend/grpc/usecase"
 // 	"testing"
 
 // 	"github.com/bxcodec/faker"

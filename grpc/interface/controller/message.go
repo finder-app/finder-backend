@@ -2,9 +2,10 @@ package controller
 
 import (
 	"context"
-	"grpc/finder-protocol-buffers/pb"
-	"grpc/interface/converter"
-	"grpc/usecase"
+
+	"github.com/finder-app/finder-backend/grpc/finder-protocol-buffers/pb"
+	"github.com/finder-app/finder-backend/grpc/interface/converter"
+	"github.com/finder-app/finder-backend/grpc/usecase"
 )
 
 type MessageController struct {

@@ -2,7 +2,8 @@ package validation
 
 import (
 	"errors"
-	"grpc/domain"
+
+	"github.com/finder-app/finder-backend/grpc/domain"
 )
 
 func ValidateLike(like *domain.Like) error {

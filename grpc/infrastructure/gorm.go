@@ -3,7 +3,7 @@ package infrastructure
 import (
 	"log"
 
-	"grpc/infrastructure/env"
+	"github.com/finder-app/finder-backend/grpc/infrastructure/env"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"

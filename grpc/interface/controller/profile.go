@@ -2,10 +2,11 @@ package controller
 
 import (
 	"context"
-	"grpc/domain"
-	"grpc/finder-protocol-buffers/pb"
-	"grpc/interface/converter"
-	"grpc/usecase"
+
+	"github.com/finder-app/finder-backend/grpc/domain"
+	"github.com/finder-app/finder-backend/grpc/finder-protocol-buffers/pb"
+	"github.com/finder-app/finder-backend/grpc/interface/converter"
+	"github.com/finder-app/finder-backend/grpc/usecase"
 )
 
 type ProfileController struct {

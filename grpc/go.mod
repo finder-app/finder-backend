@@ -1,4 +1,4 @@
-module grpc
+module github.com/finder-app/finder-backend/grpc
 
 go 1.16
 

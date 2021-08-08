@@ -1,12 +1,12 @@
 package main
 
 import (
-	"grpc/finder-protocol-buffers/pb"
-	"grpc/infrastructure"
-	"grpc/infrastructure/logger"
-	"grpc/interface/controller"
-	"grpc/repository"
-	"grpc/usecase"
+	"github.com/finder-app/finder-backend/grpc/finder-protocol-buffers/pb"
+	"github.com/finder-app/finder-backend/grpc/infrastructure"
+	"github.com/finder-app/finder-backend/grpc/infrastructure/logger"
+	"github.com/finder-app/finder-backend/grpc/interface/controller"
+	"github.com/finder-app/finder-backend/grpc/repository"
+	"github.com/finder-app/finder-backend/grpc/usecase"
 )
 
 func main() {

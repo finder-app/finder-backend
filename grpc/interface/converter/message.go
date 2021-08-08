@@ -1,8 +1,8 @@
 package converter
 
 import (
-	"grpc/domain"
-	"grpc/finder-protocol-buffers/pb"
+	"github.com/finder-app/finder-backend/grpc/domain"
+	"github.com/finder-app/finder-backend/grpc/finder-protocol-buffers/pb"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

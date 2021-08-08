@@ -1,9 +1,9 @@
 package usecase
 
 import (
-	"grpc/domain"
-	"grpc/repository"
-	"grpc/usecase/validation"
+	"github.com/finder-app/finder-backend/grpc/domain"
+	"github.com/finder-app/finder-backend/grpc/repository"
+	"github.com/finder-app/finder-backend/grpc/usecase/validation"
 )
 
 type LikeUsecase interface {

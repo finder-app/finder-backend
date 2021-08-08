@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"grpc/domain"
+	"github.com/finder-app/finder-backend/grpc/domain"
 
 	"github.com/jinzhu/gorm"
 )

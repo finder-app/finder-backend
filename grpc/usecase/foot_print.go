@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"grpc/domain"
-	"grpc/repository"
+	"github.com/finder-app/finder-backend/grpc/domain"
+	"github.com/finder-app/finder-backend/grpc/repository"
 )
 
 type FootPrintUsecase interface {
