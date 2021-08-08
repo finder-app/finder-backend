@@ -1,7 +1,8 @@
-package infrastructure
+package firebase
 
 import (
 	"context"
+	"log"
 
 	"api/infrastructure/env"
 
@@ -10,21 +11,29 @@ import (
 	"google.golang.org/api/option"
 )
 
-func NewFirebaseApp() *firebase.App {
+type FirebaseApp interface {
+	Auth(ctx context.Context) (*auth.Client, error)
+}
+
+type FirebaseClient interface {
+	VerifyIDToken(ctx context.Context, idToken string) (*auth.Token, error)
+}
+
+func NewFirebaseApp() FirebaseApp {
+	// Initialize default app
 	opt := option.WithCredentialsJSON([]byte(env.GOOGLE_SERVICE_ACCOUNT_JSON))
-	// app, err := firebase.NewApp(ctx, nil, opt)
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
-		panic(err.Error())
+		log.Fatalf(err.Error())
 	}
 	return app
 }
 
-func NewAuthClient(app *firebase.App) *auth.Client {
+func NewClient(app FirebaseApp) FirebaseClient {
 	// Access auth service from the default app
 	client, err := app.Auth(context.Background())
 	if err != nil {
-		panic(err.Error())
+		log.Fatalf(err.Error())
 	}
 	return client
 }
