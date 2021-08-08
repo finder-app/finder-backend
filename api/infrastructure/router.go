@@ -22,8 +22,8 @@ func NewRouter() *Router {
 
 	// NOTE: midllewareとしてfirebaseで認証させるように
 	firebaseApp := firebase.NewFirebaseApp()
-	authClient := firebase.NewClient(firebaseApp)
-	engine.Use(Auth(authClient))
+	firebaseClient := firebase.NewClient(firebaseApp)
+	engine.Use(Auth(firebaseClient))
 
 	return &Router{
 		Engine: engine,

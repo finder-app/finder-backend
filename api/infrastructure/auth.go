@@ -11,12 +11,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Auth(authClient firebase.FirebaseClient) gin.HandlerFunc {
+func Auth(firebaseClient firebase.FirebaseClient) gin.HandlerFunc {
 	return func(ginContext *gin.Context) {
 		authorization := ginContext.Request.Header.Get("Authorization")
 		idToken := strings.Replace(authorization, "Bearer ", "", 1)
 		ctx := ginContext.Request.Context()
-		token, err := authClient.VerifyIDToken(ctx, idToken)
+		token, err := firebaseClient.VerifyIDToken(ctx, idToken)
 		if err != nil {
 			// NOTE: GraphQLへのリクエストの時
 			// if ginContext.Request.URL.Path == "/query" {
