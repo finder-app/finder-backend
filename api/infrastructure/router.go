@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"api/infrastructure/env"
+	"api/infrastructure/firebase"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,9 +16,15 @@ type Router struct {
 
 func NewRouter() *Router {
 	engine := gin.Default()
+
 	// NOTE: Cors()を先に設定すること。Auth()で401の場合は処理を中断させるため
 	engine.Use(Cors())
-	engine.Use(Auth())
+
+	// NOTE: midllewareとしてfirebaseで認証させるように
+	firebaseApp := firebase.NewFirebaseApp()
+	authClient := firebase.NewClient(firebaseApp)
+	engine.Use(Auth(authClient))
+
 	return &Router{
 		Engine: engine,
 	}
