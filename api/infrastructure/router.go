@@ -1,11 +1,12 @@
 package infrastructure
 
 import (
-	"api/interface/controller"
 	"log"
 
-	"api/infrastructure/env"
-	"api/infrastructure/firebase"
+	"github.com/finder-app/finder-backend/api/interface/controller"
+
+	"github.com/finder-app/finder-backend/api/infrastructure/env"
+	"github.com/finder-app/finder-backend/api/infrastructure/firebase"
 
 	"github.com/gin-gonic/gin"
 )

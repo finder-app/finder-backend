@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"api/infrastructure/env"
+	"github.com/finder-app/finder-backend/api/infrastructure/env"
 
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"

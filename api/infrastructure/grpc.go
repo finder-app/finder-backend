@@ -1,8 +1,9 @@
 package infrastructure
 
 import (
-	"api/infrastructure/env"
 	"log"
+
+	"github.com/finder-app/finder-backend/api/infrastructure/env"
 
 	"google.golang.org/grpc"
 )

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"api/finder-protocol-buffers/pb"
-	"api/infrastructure"
-	"api/infrastructure/aws"
-	"api/infrastructure/logger"
-	"api/interface/controller"
+	"github.com/finder-app/finder-backend/api/finder-protocol-buffers/pb"
+	"github.com/finder-app/finder-backend/api/infrastructure"
+	"github.com/finder-app/finder-backend/api/infrastructure/aws"
+	"github.com/finder-app/finder-backend/api/infrastructure/logger"
+	"github.com/finder-app/finder-backend/api/interface/controller"
 )
 
 func main() {

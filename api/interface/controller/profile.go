@@ -1,11 +1,12 @@
 package controller
 
 import (
-	"api/finder-protocol-buffers/pb"
-	"api/infrastructure/aws"
-	"api/interface/request_helper"
 	"errors"
 	"net/http"
+
+	"github.com/finder-app/finder-backend/api/finder-protocol-buffers/pb"
+	"github.com/finder-app/finder-backend/api/infrastructure/aws"
+	"github.com/finder-app/finder-backend/api/interface/request_helper"
 
 	"github.com/gin-gonic/gin"
 )

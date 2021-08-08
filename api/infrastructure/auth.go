@@ -1,12 +1,13 @@
 package infrastructure
 
 import (
-	"api/infrastructure/firebase"
-	"api/interface/controller"
 	"context"
 	"fmt"
 	"net/http"
 	"strings"
+
+	"github.com/finder-app/finder-backend/api/infrastructure/firebase"
+	"github.com/finder-app/finder-backend/api/interface/controller"
 
 	"github.com/gin-gonic/gin"
 )

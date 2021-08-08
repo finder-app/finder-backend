@@ -1,8 +1,9 @@
 package controller
 
 import (
-	"api/finder-protocol-buffers/pb"
 	"net/http"
+
+	"github.com/finder-app/finder-backend/api/finder-protocol-buffers/pb"
 
 	"github.com/gin-gonic/gin"
 )

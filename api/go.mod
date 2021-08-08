@@ -1,4 +1,4 @@
-module api
+module github.com/finder-app/finder-backend/api
 
 go 1.16
 

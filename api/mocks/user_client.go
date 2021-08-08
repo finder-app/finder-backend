@@ -1,9 +1,10 @@
 package mocks
 
 import (
-	"api/finder-protocol-buffers/pb"
 	"context"
 	"fmt"
+
+	"github.com/finder-app/finder-backend/api/finder-protocol-buffers/pb"
 
 	"github.com/stretchr/testify/mock"
 	"google.golang.org/grpc"

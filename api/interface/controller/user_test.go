@@ -1,13 +1,14 @@
 package controller_test
 
 import (
-	"api/infrastructure"
-	"api/interface/controller"
-	"api/mocks"
 	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	infrastructure "github.com/finder-app/finder-backend/api/infrastructure"
+	"github.com/finder-app/finder-backend/api/interface/controller"
+	mocks "github.com/finder-app/finder-backend/api/mocks"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/mock"
