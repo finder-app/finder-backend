@@ -40,8 +40,7 @@ func createRoomUser(tx *gorm.DB, roomUser *domain.RoomUser) error {
 
 func (r *roomUserRepository) GetRoomUser(roomId uint64, currentUserUid string) (*domain.RoomUser, error) {
 	roomUser := &domain.RoomUser{}
-	query := `SELECT * FROM rooms_users
-						WHERE room_id = ? AND user_uid = ?`
+	query := `SELECT * FROM rooms_users WHERE room_id = ? AND user_uid = ?`
 	if err := r.db.Raw(query, roomId, currentUserUid).Scan(roomUser).Error; err != nil {
 		return nil, err
 	}
