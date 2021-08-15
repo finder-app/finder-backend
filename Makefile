@@ -1,3 +1,12 @@
+middleware-up:
+	docker-compose -f docker-compose-middleware.yml up
+
+middleware-build:
+	docker-compose -f docker-compose-middleware.yml up --build
+
+middleware-down:
+	docker-compose -f docker-compose-middleware.yml down
+
 attach:
 	docker attach finder-backend_app_1
 
