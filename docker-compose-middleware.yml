@@ -1,6 +1,5 @@
 version: "3"
 services:
-  # NOTE: s3のmock 必要に応じてコメントインする？
   localstack:
     image: localstack/localstack
     ports:
