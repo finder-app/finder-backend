@@ -6,7 +6,7 @@
 - gRPC(microservices化予定のため)
 - zap(logger)
 - MySQL8.0
-- firebase(認証, 画像upload)
+- firebase(認証認可, 画像upload)
 - Clean Archtectureの考え方を取り入れた開発
   - interface層がリクエストを受け取り&返却、usecase層が処理、repository層がdatabaseのCRUD処理を行う
 
