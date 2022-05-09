@@ -2,6 +2,7 @@
 - Golang 1.15.2
 - Docker
 - gin(APIサーバー)
+- GraphQL(一部)
 - Gorm(ORマッパー、一部生sqlも使用)
 - gRPC(microservices化予定のため)
 - zap(logger)
