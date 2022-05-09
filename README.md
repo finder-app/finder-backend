@@ -1,4 +1,12 @@
+## 使用技術
+- Golang 1.15.2
+- Docker
+- gin(APIサーバー)
+- gRPC(microservices予定のため)
+- firebase(画像アップロード)
+
 ### 機能一覧
+今後更新予定
 https://docs.google.com/spreadsheets/d/1Y520iO3APF-pI23YjKtTqdSzs1fTduwQ7NaB2hnUnko/edit#gid=0
 
 ## db管理
