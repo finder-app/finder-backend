@@ -2,6 +2,7 @@
 - Golang 1.15.2
 - Docker
 - gin(APIサーバー)
+- Gorm(ORマッパー、一部生sqlも使用)
 - gRPC(microservices化予定のため)
 - firebase(画像アップロード)
 - Clean Archtectureの考え方を取り入れた開発
