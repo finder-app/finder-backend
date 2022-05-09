@@ -4,6 +4,8 @@
 - gin(APIサーバー)
 - gRPC(microservices予定のため)
 - firebase(画像アップロード)
+- Clean Archtectureの考え方を取り入れた開発
+  - interface層がリクエストを受け取り、usecase層が処理、repository層がdatabaseのCRUD処理を行う
 
 ### 機能一覧
 今後更新予定
